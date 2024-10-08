@@ -4,7 +4,7 @@ metadata:
   name: image-updater
   namespace: argocd
 spec:
-  project: infra
+  project: default
   source:
     repoURL: https://github.com/argoproj-labs/argocd-image-updater
     targetRevision: stable
