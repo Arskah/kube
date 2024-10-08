@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 spec:
   destination:
-    namespace: homepage-production
+    namespace: homepage
     server: {{ .Values.spec.destination.server }}
   project: default
   source:
