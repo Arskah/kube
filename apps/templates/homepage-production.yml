@@ -6,9 +6,9 @@ metadata:
 spec:
   destination:
     namespace: homepage
-    server: {{ .Values.spec.destination.server }}
+    server: https://kubernetes.default.svc
   project: default
   source:
-    path: homepage-production
-    repoURL: {{ .Values.spec.source.repoURL }}
-    targetRevision: {{ .Values.spec.source.targetRevision }}
+    path: k8s/prod
+    repoURL: https://github.com/Arskah/homepage.git
+    targetRevision: HEAD
