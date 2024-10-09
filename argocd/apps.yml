@@ -1,0 +1,55 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: applications
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  # Project description
+  description: Applications
+
+  # Allow manifests to deploy from any Git repos
+  sourceRepos:
+    - "https://github.com/Arskah/kube.git"
+    - "https://github.com/Arskah/homepage.git"
+
+  # TODO: add stricter rules
+  destinations:
+    - namespace: "homepage"
+      server: https://kubernetes.default.svc
+
+  # Deny all cluster-scoped resources from being created, except for Namespace
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+
+  # Allow all namespaced-scoped resources to be created, except for ResourceQuota, LimitRange, NetworkPolicy
+  namespaceResourceBlacklist:
+    - group: ""
+      kind: ResourceQuota
+    - group: ""
+      kind: LimitRange
+    - group: ""
+      kind: NetworkPolicy
+
+  # Deny all namespaced-scoped resources from being created, except for Deployment and StatefulSet
+  # namespaceResourceWhitelist:
+  #   - group: "apps"
+  #     kind: Deployment
+  #   - group: "apps"
+  #     kind: StatefulSet
+
+  # Enables namespace orphaned resource monitoring.
+  orphanedResources:
+    warn: true
+
+  # By default, apps may sync to any cluster specified under the `destinations` field, even if they are not
+  # scoped to this project. Set the following field to `true` to restrict apps in this cluster to only clusters
+  # scoped to this project.
+  # permitOnlyProjectScopedClusters: false
+
+  # When using Applications-in-any-namespace, this field determines which namespaces this AppProject permits
+  # Applications to reside in. Details: https://argo-cd.readthedocs.io/en/stable/operator-manual/app-any-namespace/
+  # sourceNamespaces:
+  #   - "argocd-apps-*"

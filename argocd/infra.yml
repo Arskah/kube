@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: infra
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  # Project description
+  description: Infrastructure apps
+
+  # Allow manifests to deploy from any Git repos
+  sourceRepos:
+    - "https://github.com/Arskah/kube.git"
+
+  # Perhaps stricter namespaces?
+  destinations:
+    - namespace: "*"
+      server: https://kubernetes.default.svc
+
+  # Implements similar scope to default
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
