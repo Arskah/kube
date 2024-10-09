@@ -17,3 +17,11 @@ spec:
       version: v3
       valueFiles:
         - values.yaml
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+  syncOptions:
+    - CreateNamespace=true
+    - PrunePropagationPolicy=foreground
+    - PruneLast=true

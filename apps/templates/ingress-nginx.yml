@@ -33,3 +33,11 @@ spec:
             enabled: true
         rbac:
           create: true
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+  syncOptions:
+    - CreateNamespace=true
+    - PrunePropagationPolicy=foreground
+    - PruneLast=true

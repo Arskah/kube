@@ -40,3 +40,11 @@ spec:
               - secretName: docker-registry-tls
                 hosts:
                   - registry.aarnihalinen.fi
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+  syncOptions:
+    - CreateNamespace=true
+    - PrunePropagationPolicy=foreground
+    - PruneLast=true

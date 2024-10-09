@@ -24,3 +24,11 @@ spec:
     - repoURL: https://github.com/Arskah/kube.git
       path: cert-manager
       targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+  syncOptions:
+    - CreateNamespace=true
+    - PrunePropagationPolicy=foreground
+    - PruneLast=true
