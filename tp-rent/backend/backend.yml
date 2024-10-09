@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: tp-rent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: backend
+          image: registry.gitlab.com/arskah/toiletpaper.rent/backend:latest
+          env:
+            - name: DATABASE_DB
+              valueFrom:
+                secretKeyRef:
+                  name: db-password
+                  key: POSTGRES_DB
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-password
+                  key: POSTGRES_USER
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-password
+                  key: POSTGRES_PASSWORD
+          ports:
+            - containerPort: 8000
+              name: http
+          # securityContext:
+          #   allowPrivilegeEscalation: false
+          #   readOnlyRootFilesystem: true
+          #   runAsUser: 1001
+          #   runAsNonRoot: true
+          #   seccompProfile:
+          #     type: RuntimeDefault
+          #   capabilities:
+          #     drop:
+          #       - ALL
+          # resources:
+          #   limits:
+          #     cpu: "1"
+          #     memory: 1024Mi

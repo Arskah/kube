@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: tp-rent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: frontend
+          image: registry.gitlab.com/arskah/toiletpaper.rent/frontend:latest
+          env:
+            - name: REACT_APP_BACKEND_URL
+              value: https://tp.aarnihalinen.fi/api
+          ports:
+            - containerPort: 80
+              name: http
+          # securityContext:
+          #   allowPrivilegeEscalation: false
+          #   readOnlyRootFilesystem: true
+          #   runAsUser: 1001
+          #   runAsNonRoot: true
+          #   seccompProfile:
+          #     type: RuntimeDefault
+          #   capabilities:
+          #     drop:
+          #       - ALL
+          # resources:
+          #   limits:
+          #     cpu: "1"
+          #     memory: 1024Mi

@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  namespace: tp-rent
+  annotations:
+    cert-manager.io/cluster-issuer: cert-issuer
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.org/client-max-body-size: "10m"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - tp.aarnihalinen.fi
+      secretName: tls-secret
+  rules:
+    - host: tp.aarnihalinen.fi
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend-svc
+                port:
+                  number: 80
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-svc
+                port:
+                  number: 80
