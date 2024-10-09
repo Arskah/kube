@@ -20,7 +20,7 @@ spec:
         version: v3
         valueFiles:
           - values.yaml
-        values: |
+        valuesObject:
           persistence:
             enabled: true
             size: 10Gi
@@ -31,9 +31,8 @@ spec:
           ingress:
             enabled: true
             className: nginx
-            annotations: {
+            annotations:
               nginx.ingress.kubernetes.io/proxy-body-size: "0"
-            }
             path: /
             hosts:
               - registry.aarnihalinen.fi
