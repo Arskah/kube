@@ -15,7 +15,7 @@ spec:
     helm:
       releaseName: monitoring
       version: v3
-      skipCrds: false
+      skipCrds: true
   syncPolicy:
     automated:
       prune: true
