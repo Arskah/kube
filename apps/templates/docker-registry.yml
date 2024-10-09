@@ -9,7 +9,7 @@ spec:
   destination:
     namespace: docker-registry
     server: https://kubernetes.default.svc
-  project: default
+  project: infra
   sources:
     - repoURL: https://github.com/Arskah/kube.git
       path: docker-registry
