@@ -3,6 +3,7 @@
 ```sh
 kubectl apply namespace.yml
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl apply -f app-of-apps.yml
 ```
 
 ## Exclude Cilium resources
