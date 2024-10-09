@@ -18,6 +18,10 @@ spec:
   destinations:
     - namespace: "homepage"
       server: https://kubernetes.default.svc
+    - namespace: "caddy"
+      server: https://kubernetes.default.svc
+    - namespace: "icecast"
+      server: https://kubernetes.default.svc
 
   # Deny all cluster-scoped resources from being created, except for Namespace
   clusterResourceWhitelist:
