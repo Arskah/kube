@@ -1,4 +1,4 @@
-# https://github.com/rancher/local-path-provisioner/blob/v0.0.24/deploy/local-path-storage.yaml
+# https://github.com/rancher/local-path-provisioner/blob/v0.0.30/deploy/local-path-storage.yaml
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -118,6 +118,8 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: local-path
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
 provisioner: rancher.io/local-path
 volumeBindingMode: WaitForFirstConsumer
 reclaimPolicy: Delete
