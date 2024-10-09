@@ -9,7 +9,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: k8s/prod
+    path: k8s/staging
     repoURL: https://github.com/Arskah/homepage.git
     targetRevision: HEAD
   syncPolicy:
