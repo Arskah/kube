@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
-    targetRevision: 1.13.*
+    targetRevision: 65.0.*
     chart: prometheus-community/kube-prometheus-stack
     helm:
       releaseName: monitoring
