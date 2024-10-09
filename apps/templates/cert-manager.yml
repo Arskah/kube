@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  namespace: cert-manager
+spec:
+  destination:
+    namespace: cert-manager
+    server: https://kubernetes.default.svc
+  project: default
+  sources:
+    - repoURL: https://charts.jetstack.io
+      targetRevision: 1.13.*
+      chart: cert-manager
+      helm:
+        releaseName: cert-manager
+        version: v3
+        valueFiles:
+          - values.yaml
+        values: |
+          installCRDs: true
+          webhook:
+            securePort: 10260
+    - repoURL: https://github.com/Arskah/kube.git
+      path: cert-manager
+      targetRevision: HEAD
