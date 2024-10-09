@@ -9,7 +9,7 @@ spec:
   destination:
     namespace: homepage
     server: https://kubernetes.default.svc
-  project: default
+  project: applications
   source:
     path: k8s/prod
     repoURL: https://github.com/Arskah/homepage.git

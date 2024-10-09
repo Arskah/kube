@@ -9,7 +9,7 @@ spec:
   destination:
     namespace: kube-system
     server: https://kubernetes.default.svc
-  project: default
+  project: infra
   source:
     repoURL: https://helm.cilium.io
     targetRevision: 1.14.*
