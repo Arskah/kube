@@ -54,15 +54,7 @@ Install resources inside <./argocd>. See README in the directory.
 
 Let ArgoCD setup all applications.
 
-### Smaller tweaks
-
-Enable Hubble (try to make this declarative)
-
-```shell
-cilium hubble enable
-```
-
-#### Notes
+### Notes
 
 Cilium and cert-manager are by default multi-node => scale down deployments to 1.
 Ingress ports might need to be edited to service, seems like a bug.

@@ -23,6 +23,11 @@ spec:
         k8sServicePort: 6443
         operator:
           replicas: 1
+        hubble:
+          relay:
+            enabled: true
+          ui:
+            enabled: true
   syncPolicy:
     automated:
       prune: true
