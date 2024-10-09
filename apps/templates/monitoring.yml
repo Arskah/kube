@@ -15,8 +15,6 @@ spec:
     helm:
       releaseName: monitoring
       version: v3
-      valueFiles:
-        - values.yaml
   syncPolicy:
     automated:
       prune: true

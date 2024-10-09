@@ -15,8 +15,6 @@ spec:
     helm:
       releaseName: cilium
       version: v3
-      valueFiles:
-        - values.yaml
       valuesObject:
         kubeProxyReplacement: true
         k8sServiceHost: 192.168.86.22

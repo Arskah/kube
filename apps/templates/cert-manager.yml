@@ -15,8 +15,6 @@ spec:
       helm:
         releaseName: cert-manager
         version: v3
-        valueFiles:
-          - values.yaml
         valuesObject:
           installCRDs: true
           webhook:

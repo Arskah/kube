@@ -15,8 +15,6 @@ spec:
     helm:
       releaseName: ingress-nginx
       version: v3
-      valueFiles:
-        - values.yaml
       valuesObject:
         controller:
           service:
