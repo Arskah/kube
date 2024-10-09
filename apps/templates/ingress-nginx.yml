@@ -16,10 +16,9 @@ spec:
       releaseName: ingress-nginx
       version: v3
       parameters:
-        # - name: controller.service.clusterIP
-        #   value: 192.168.1.22
         - name: controller.service.externalIPs
-          value: { 192.168.1.22 }
+          value: |
+            [ 192.168.1.22 ]
         - name: controller.service.nodePorts.http
           value: "30080"
         - name: controller.service.nodePorts.https
