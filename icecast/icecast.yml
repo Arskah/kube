@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: icecast
+  namespace: icecast
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: icecast
+  template:
+    metadata:
+      labels:
+        app: icecast
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: icecast
+          image: moul/icecast
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: icecast-xml
+              mountPath: /etc/icecast2/icecast.xml
+            - name: logs
+              mountPath: /var/log/icecast2
+      securityContext: {}
+      volumes:
+        - name: logs
+          emptyDir: {}
+        - name: icecast-xml
+          hostPath:
+            path: /home/arska/icecast/icecast.xml

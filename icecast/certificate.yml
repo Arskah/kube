@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: tls-secret
+  namespace: icecast
+spec:
+  secretName: tls-secret
+  dnsNames:
+    - icecast.aarnihalinen.fi
+  issuerRef:
+    name: cert-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io

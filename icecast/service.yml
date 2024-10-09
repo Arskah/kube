@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: icecast-svc
+  namespace: icecast
+  labels:
+    app: icecast
+spec:
+  type: ClusterIP
+  selector:
+    app: icecast
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 8000
