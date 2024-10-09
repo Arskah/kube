@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ingress-nginx
+  namespace: argocd
+spec:
+  destination:
+    namespace: ingress-nginx
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    repoURL: https://kubernetes.github.io/ingress-nginx
+    targetRevision: 1.14.*
+    chart: ingress-nginx
+    helm:
+      releaseName: ingress-nginx
+      version: v3
+      valueFiles:
+        - values.yaml
+      valuesObject:
+        controller:
+          service:
+            type: NodePort
+            expernalIPs: { 192.168.1.22 }
+            httpPort:
+              nodePort: 30080
+            httpsPort:
+              nodePort: 30443
+            nodePorts:
+              http: 30080
+              https: 30443
+          publishService:
+            enabled: true
+        rbac:
+          create: true
