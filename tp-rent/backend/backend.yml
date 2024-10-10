@@ -16,7 +16,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: backend
-          image: registry.gitlab.com/arskah/toiletpaper.rent/backend:latest
+          image: registry.gitlab.com/arskah/toiletpaper.rent/backend:latest@sha256:dbebcc49919e963964f33e9b6cbfe0f296a241375b84002ab906ad86c382282a
           env:
             - name: DATABASE_DB
               valueFrom:
