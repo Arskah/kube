@@ -16,7 +16,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: frontend
-          image: registry.gitlab.com/arskah/toiletpaper.rent/frontend:latest
+          image: registry.gitlab.com/arskah/toiletpaper.rent/frontend:latest@sha256:13d9032188a7a856d7b003d1cc2521902f4d66164ebcc4293f7c6f5d2e68273f
           env:
             - name: REACT_APP_BACKEND_URL
               value: https://tp.aarnihalinen.fi/api
