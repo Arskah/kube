@@ -1,6 +1,15 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:best-practices"],
+  "extends": [
+    "config:best-practices",
+    "docker:enableMajor",
+    ":automergeRequireAllStatusChecks",
+    ":dependencyDashboard",
+    ":label(dependencies)",
+    ":maintainLockFilesWeekly",
+    "npm:unpublishSafe",
+    ":disableRateLimiting"
+  ],
   "timezone": "Europe/Helsinki",
   "argocd": {
     "fileMatch": ["\\.yaml$", "\\.yml$"]
