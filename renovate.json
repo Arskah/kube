@@ -1,7 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:best-practices"
-  ],
-  "timezone": "Europe/Helsinki"
+  "extends": ["config:best-practices"],
+  "timezone": "Europe/Helsinki",
+  "argocd": {
+    "fileMatch": ["\\.yaml$", "\\.yml$"]
+  }
 }
