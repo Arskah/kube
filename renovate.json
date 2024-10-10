@@ -4,5 +4,8 @@
   "timezone": "Europe/Helsinki",
   "argocd": {
     "fileMatch": ["\\.yaml$", "\\.yml$"]
+  },
+  "kubernetes": {
+    "fileMatch": ["\\.yaml$", "\\.yml$"]
   }
 }
