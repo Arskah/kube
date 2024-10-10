@@ -50,9 +50,40 @@ kubectl taint nodes --all node-role.kubernetes.io/control-plane-
 
 ## ArgoCD
 
-Install resources inside <./argocd>. See README in the directory.
+Install `argocd` CLI
 
-Let ArgoCD setup all applications.
+```sh
+brew install argocd
+```
+
+Install ArgoCD with Kustomize
+
+```sh
+kubectl kustomize argocd | kubectl apply -f -
+kubectl apply -f app-of-apps.yml
+```
+
+Port forward to the ArgoCD server
+
+```sh
+kubectl port-forward svc/argocd-server -n argocd 8080:443
+```
+
+Open ArgoCD UI with
+
+```sh
+argocd admin dashboard -n argocd
+```
+
+and login (set new password as well)
+
+```sh
+argocd admin initial-password -n argocd
+argocd login localhost:8080
+argocd account update-password
+```
+
+Argo should install all other apps (they are included in the app-of-apps).
 
 ### Notes
 

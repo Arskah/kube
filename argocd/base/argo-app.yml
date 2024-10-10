@@ -1,0 +1,19 @@
+# Self-managed application
+# https://www.frakkingsweet.com/letting-argo-cd-manage-itself/
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  project: argocd
+  source:
+    repoURL: https://github.com/Arskah/kube.git
+    path: argocd
+    targetRevision: HEAD
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
