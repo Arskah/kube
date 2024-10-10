@@ -50,15 +50,6 @@ kubectl taint nodes --all node-role.kubernetes.io/control-plane-
 
 ## ArgoCD
 
-```sh
-git clone https://github.com/bukurt/argocd.git
-cd argocd/argocd-install/
-helm install argocd ./argo-cd \
-    --namespace=argocd \
-    --create-namespace \
-    -f values-override.yaml
-```
-
 Install resources inside <./argocd>. See README in the directory.
 
 Let ArgoCD setup all applications.
