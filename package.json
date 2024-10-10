@@ -1,0 +1,20 @@
+{
+  "name": "kube",
+  "version": "0.1.0",
+  "description": "K8s setup with Kubeadm & ArgoCD",
+  "scripts": {
+    "prepare": "husky"
+  },
+  "author": "Aarni Halinen",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@commitlint/cli": "19.5.0",
+    "@commitlint/config-conventional": "19.5.0",
+    "husky": "9.1.6",
+    "lint-staged": "15.2.10",
+    "prettier": "3.3.3"
+  },
+  "lint-staged": {
+    "*": "prettier --write"
+  }
+}
