@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "5"
-    argocd-image-updater.argoproj.io/image-list: image=registry.aarnihalinen.fi/aarnihalinen.fi:latest
+    argocd-image-updater.argoproj.io/image-list: image=registry.aarnihalinen.fi/homepage:latest
     argocd-image-updater.argoproj.io/image.update-strategy: digest
     argocd-image-updater.argoproj.io/image.pull-secret: pullsecret:argocd/regcred-argocd
 spec:
