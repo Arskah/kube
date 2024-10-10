@@ -1,0 +1,12 @@
+name: PR check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  check-pr-title:
+    uses: ./.github/workflows/pr-title.yml
+
+  prettier:
+    uses: ./.github/workflows/prettier.yml

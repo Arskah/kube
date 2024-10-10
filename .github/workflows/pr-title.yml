@@ -1,0 +1,22 @@
+name: Check PR title
+
+on:
+  workflow_call:
+
+jobs:
+  check-pr-title:
+    name: Check PR title
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      - uses: actions/setup-node@0a44ba7841725637a19e28fa30b79a866c81b0a6 # v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - shell: bash
+        run: npm ci
+
+      - name: Check PR title
+        run: |
+          npx commitlint <<< '${{ github.event.pull_request.title }}'
