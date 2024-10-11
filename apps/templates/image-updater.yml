@@ -6,14 +6,14 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "2"
 spec:
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
   project: infra
   source:
     repoURL: https://github.com/argoproj-labs/argocd-image-updater
     targetRevision: stable
     path: manifests
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: argocd
   syncPolicy:
     automated:
       prune: true

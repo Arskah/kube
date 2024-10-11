@@ -5,14 +5,14 @@ metadata:
   name: argocd-projects
   namespace: argocd
 spec:
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
   project: argocd
   source:
     repoURL: https://github.com/Arskah/kube.git
     path: argocd-projects
     targetRevision: HEAD
-  destination:
-    namespace: argocd
-    server: https://kubernetes.default.svc
   syncPolicy:
     automated:
       prune: true
