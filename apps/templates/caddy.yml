@@ -12,8 +12,11 @@ spec:
   project: applications
   source:
     repoURL: https://github.com/Arskah/kube.git
-    targetRevision: HEAD
     path: caddy
+    targetRevision: HEAD
+    directory:
+      recurse: true
+      jsonnet: {}
   syncPolicy:
     automated:
       prune: true
