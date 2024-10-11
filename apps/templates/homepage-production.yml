@@ -8,6 +8,7 @@ metadata:
     argocd-image-updater.argoproj.io/image-list: image=registry.aarnihalinen.fi/homepage:latest
     argocd-image-updater.argoproj.io/image.update-strategy: digest
     argocd-image-updater.argoproj.io/image.pull-secret: pullsecret:argocd/regcred-argocd
+    argocd-image-updater.argoproj.io/image.kustomize.image-name: homepage # Needed for fixing the source type Directory issue?
 spec:
   destination:
     namespace: homepage
