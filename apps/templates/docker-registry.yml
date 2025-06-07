@@ -15,7 +15,7 @@ spec:
       path: docker-registry
       targetRevision: HEAD
     - repoURL: https://helm.twun.io
-      targetRevision: 2.2.*
+      targetRevision: 2.3.*
       chart: docker-registry
       helm:
         releaseName: docker-registry
