@@ -20,7 +20,7 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["^argocd/kustomization\\.yaml$"],
+      "managerFilePatterns": ["/^argocd/kustomization\\.yaml$/"],
       "matchStrings": [
         "https://raw\\.githubusercontent\\.com/argoproj/argo-cd/v(?<currentValue>\\S+)/manifests/install\\.yaml"
       ],
