@@ -12,15 +12,9 @@
   ],
   "timezone": "Europe/Helsinki",
   "argocd": {
-    "managerFilePatterns": [
-      "/\\.yaml$/",
-      "/\\.yml$/"
-    ]
+    "managerFilePatterns": ["/\\.yaml$/", "/\\.yml$/"]
   },
   "kubernetes": {
-    "managerFilePatterns": [
-      "/\\.yaml$/",
-      "/\\.yml$/"
-    ]
+    "managerFilePatterns": ["/\\.yaml$/", "/\\.yml$/"]
   }
 }
