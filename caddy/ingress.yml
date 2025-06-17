@@ -12,11 +12,9 @@ spec:
   tls:
     - hosts:
         - sik75.aarnihalinen.fi
-        - seitsemantahdenliike.fi
-        - www.seitsemantahdenliike.fi
       secretName: tls-secret
   rules:
-    - host: seitsemantahdenliike.fi
+    - host: sik75.aarnihalinen.fi
       http: &backend
         paths:
           - path: /
@@ -26,7 +24,3 @@ spec:
                 name: caddy-svc
                 port:
                   number: 80
-    - host: www.seitsemantahdenliike.fi
-      http: *backend
-    - host: sik75.aarnihalinen.fi
-      http: *backend

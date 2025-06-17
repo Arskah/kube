@@ -7,8 +7,6 @@ spec:
   secretName: tls-secret
   dnsNames:
     - sik75.aarnihalinen.fi
-    - seitsemantahdenliike.fi
-    - www.seitsemantahdenliike.fi
   issuerRef:
     name: cert-issuer
     kind: ClusterIssuer
