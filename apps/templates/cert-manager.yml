@@ -19,8 +19,8 @@ spec:
         version: v3
         valuesObject:
           installCRDs: true
-          # webhook:
-          #   securePort: 10260
+          webhook:
+            securePort: 10260
     - repoURL: https://github.com/Arskah/kube.git
       path: cert-manager
       targetRevision: HEAD
