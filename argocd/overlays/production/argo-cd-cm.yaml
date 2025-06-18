@@ -8,7 +8,7 @@ data:
       clusters:
       - "*"
   resource.customizations: |
-    Ingress:
+    networking.k8s.io/Ingress:
         health.lua: |
           hs = {}
           hs.status = "Healthy"
