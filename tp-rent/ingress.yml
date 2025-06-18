@@ -5,6 +5,7 @@ metadata:
   namespace: tp-rent
   annotations:
     cert-manager.io/cluster-issuer: cert-issuer
+    cert-manager.io/issue-temporary-certificate: "true"
     acme.cert-manager.io/http01-edit-in-place: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: "10m"
     nginx.org/client-max-body-size: "10m"
