@@ -17,9 +17,9 @@ spec:
     helm:
       releaseName: ingress-nginx
       version: v3
-      # parameters:
-      #   - name: controller.service.externalIPs[0]
-      #     value: 192.168.86.22
+      parameters:
+        - name: controller.service.externalIPs[0]
+          value: 192.168.86.22
       #   - name: controller.service.nodePorts.http
       #     value: "30080"
       #   - name: controller.service.nodePorts.https
