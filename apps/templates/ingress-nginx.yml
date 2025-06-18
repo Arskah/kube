@@ -20,12 +20,6 @@ spec:
       parameters:
         - name: controller.service.externalIPs[0]
           value: 192.168.86.22
-      #   - name: controller.service.nodePorts.http
-      #     value: "30080"
-      #   - name: controller.service.nodePorts.https
-      #     value: "30443"
-      #   - name: controller.service.type
-      #     value: NodePort
   syncPolicy:
     automated:
       prune: true
