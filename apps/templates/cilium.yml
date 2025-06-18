@@ -19,14 +19,16 @@ spec:
       releaseName: cilium
       version: v3
       valuesObject:
-        kubeProxyReplacement: true
+        k8sServiceHost: kube.aarnihalinen.fi
+        k8sServicePort: 6443
+        kubeProxyReplacement: strict
+        l2announcements:
+          enabled: true
         ipam:
           mode: cluster-pool
           operator:
             clusterPoolIPv4PodCIDRList: 10.8.0.0/16
         tunnel: vxlan
-        k8sServiceHost: kube.aarnihalinen.fi
-        k8sServicePort: 6443
         operator:
           replicas: 1
         hubble:

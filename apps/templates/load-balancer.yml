@@ -6,3 +6,17 @@ metadata:
 spec:
   blocks:
     - cidr: "192.168.68.22/32"
+---
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumL2AnnouncementPolicy
+metadata:
+  name: cilium-lb-all-services
+  namespace: kube-system
+spec:
+  # nodeSelector:
+  #   matchLabels:
+  #     homelab/role: worker
+  # serviceSelector:
+  #   matchLabels:
+  #     homelab/public-service: "true"
+  loadBalancerIPs: true
