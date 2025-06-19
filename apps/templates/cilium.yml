@@ -13,7 +13,7 @@ spec:
   project: infra
   source:
     repoURL: https://helm.cilium.io
-    targetRevision: 1.17.*
+    targetRevision: 1.17.4
     chart: cilium
     helm:
       releaseName: cilium

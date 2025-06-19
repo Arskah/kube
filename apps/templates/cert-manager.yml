@@ -12,7 +12,7 @@ spec:
   project: infra
   sources:
     - repoURL: https://charts.jetstack.io
-      targetRevision: 1.17.*
+      targetRevision: 1.17.3
       chart: cert-manager
       helm:
         releaseName: cert-manager
