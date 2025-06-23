@@ -30,7 +30,7 @@ spec:
             htpasswd: arskah:$2y$05$ZMDZy776w/RfPy3MmaHbWucMBNEUo/CgCzgKt2jeWTfQJGdcIc0dO
           ingress:
             enabled: true
-            className: nginx
+            className: cilium
             annotations:
               nginx.ingress.kubernetes.io/proxy-body-size: "0"
             path: /
