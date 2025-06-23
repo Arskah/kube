@@ -29,7 +29,7 @@ spec:
           enabled: true
           loadbalancerMode: shared
           service:
-            externalTrafficPolicy: null
+            externalTrafficPolicy: "~"
             type: ClusterIP
           hostNetwork:
             enabled: true
