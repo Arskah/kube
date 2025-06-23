@@ -3,8 +3,11 @@ kind: Service
 metadata:
   name: frontend-svc
   namespace: tp-rent
+  annotations:
+    "lbipam.cilium.io/sharing-key": "exposed-outside"
+    "lbipam.cilium.io/ips": "192.168.86.22"
 spec:
-  type: ClusterIP
+  type: loadBalancer
   selector:
     app: frontend
   ports:
