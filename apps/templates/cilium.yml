@@ -35,10 +35,6 @@ spec:
           default: true
           enabled: true
           loadbalancerMode: dedicated
-        ipam:
-          mode: cluster-pool
-          operator:
-            clusterPoolIPv4PodCIDRList: 10.8.0.0/16
         hubble:
           relay:
             enabled: true
