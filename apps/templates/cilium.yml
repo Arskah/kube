@@ -29,8 +29,8 @@ spec:
           enabled: true
           loadbalancerMode: shared
           service:
-            type: LoadBalancer
-            externalTrafficPolicy: "Local"
+            externalTrafficPolicy: null
+            type: ClusterIP
           hostNetwork:
             enabled: true
             sharedListenerPort: 9999
