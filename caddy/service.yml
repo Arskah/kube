@@ -6,7 +6,7 @@ metadata:
   labels:
     app: caddy
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: caddy
   ports:
