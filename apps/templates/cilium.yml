@@ -29,6 +29,7 @@ spec:
           enabled: true
           loadbalancerMode: shared
           service:
+            type: LoadBalancer
             externalTrafficPolicy: "~"
           hostNetwork:
             enabled: true
