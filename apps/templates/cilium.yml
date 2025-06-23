@@ -30,7 +30,7 @@ spec:
           loadbalancerMode: shared
           service:
             type: LoadBalancer
-            externalTrafficPolicy: "~"
+            externalTrafficPolicy: "Local"
           hostNetwork:
             enabled: true
             sharedListenerPort: 9999
