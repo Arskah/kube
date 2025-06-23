@@ -24,6 +24,8 @@ spec:
         kubeProxyReplacement: true
         l2announcements:
           enabled: true
+        externalIPs:
+          enabled: true
         ingressController:
           default: true
           enabled: true
