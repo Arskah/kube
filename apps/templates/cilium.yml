@@ -35,6 +35,9 @@ spec:
           default: true
           enabled: true
           loadbalancerMode: shared
+          hostNetwork:
+            enabled: true
+            sharedListenerPort: 8080
         hubble:
           relay:
             enabled: true
