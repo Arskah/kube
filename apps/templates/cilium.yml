@@ -34,7 +34,7 @@ spec:
         ingressController:
           default: true
           enabled: true
-          loadbalancerMode: dedicated
+          loadbalancerMode: shared
         hubble:
           relay:
             enabled: true
