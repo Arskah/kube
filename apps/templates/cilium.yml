@@ -24,6 +24,10 @@ spec:
         kubeProxyReplacement: true
         l2announcements:
           enabled: true
+        ingressController:
+          default: true
+          enabled: true
+          loadbalancerMode: dedicated
         ipam:
           mode: cluster-pool
           operator:
