@@ -19,6 +19,8 @@ spec:
       releaseName: cilium
       version: v3
       valuesObject:
+        operator:
+          replicas: 1
         k8sServiceHost: kube.aarnihalinen.fi
         k8sServicePort: 6443
         kubeProxyReplacement: true
@@ -26,6 +28,8 @@ spec:
           enabled: true
         externalIPs:
           enabled: true
+        externalTrafficPolicy: Cluster
+        internalTrafficPolicy: Cluster
         ingressController:
           default: true
           enabled: true
@@ -35,8 +39,7 @@ spec:
           operator:
             clusterPoolIPv4PodCIDRList: 10.8.0.0/16
         tunnel-protocol: vxlan
-        operator:
-          replicas: 1
+
         hubble:
           relay:
             enabled: true
