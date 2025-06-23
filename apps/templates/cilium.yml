@@ -28,6 +28,8 @@ spec:
           default: true
           enabled: true
           loadbalancerMode: shared
+          service:
+            externalTrafficPolicy: "~"
           hostNetwork:
             enabled: true
             sharedListenerPort: 9999
