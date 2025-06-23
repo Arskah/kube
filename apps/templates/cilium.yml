@@ -29,7 +29,7 @@ spec:
         devices: enp37s0
         externalIPs:
           enabled: true
-        externalTrafficPolicy: Cluster
+        # externalTrafficPolicy: Cluster
         internalTrafficPolicy: Cluster
         ingressController:
           default: true
