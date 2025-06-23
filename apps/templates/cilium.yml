@@ -26,6 +26,8 @@ spec:
         kubeProxyReplacement: true
         l2announcements:
           enabled: true
+        devices:
+          - enp37s0
         externalIPs:
           enabled: true
         externalTrafficPolicy: Cluster
