@@ -21,7 +21,7 @@ spec:
       valuesObject:
         k8sServiceHost: kube.aarnihalinen.fi
         k8sServicePort: 6443
-        kubeProxyReplacement: strict
+        kubeProxyReplacement: true
         l2announcements:
           enabled: true
         ipam:
