@@ -9,7 +9,7 @@ metadata:
     "lbipam.cilium.io/sharing-key": "exposed-outside"
     "lbipam.cilium.io/ips": "192.168.86.22"
 spec:
-  type: loadBalancer
+  type: LoadBalancer
   selector:
     app: caddy
   ports:
