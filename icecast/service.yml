@@ -6,7 +6,7 @@ metadata:
   labels:
     app: icecast
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   selector:
     app: icecast
   ports:

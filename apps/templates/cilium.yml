@@ -39,8 +39,6 @@ spec:
           mode: cluster-pool
           operator:
             clusterPoolIPv4PodCIDRList: 10.8.0.0/16
-        tunnel-protocol: vxlan
-
         hubble:
           relay:
             enabled: true
