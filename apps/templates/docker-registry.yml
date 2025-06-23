@@ -31,8 +31,6 @@ spec:
           ingress:
             enabled: true
             className: cilium
-            annotations:
-              nginx.ingress.kubernetes.io/proxy-body-size: "0"
             path: /
             hosts:
               - registry.aarnihalinen.fi
