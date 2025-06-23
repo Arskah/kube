@@ -24,17 +24,13 @@ spec:
         k8sServiceHost: kube.aarnihalinen.fi
         k8sServicePort: 6443
         kubeProxyReplacement: true
-        l2announcements:
-          enabled: true
-        devices: enp37s0
-        externalIPs:
-          enabled: true
-        externalTrafficPolicy: Cluster
-        internalTrafficPolicy: Cluster
         ingressController:
           default: true
           enabled: true
           loadbalancerMode: shared
+          hostNetwork:
+            enabled: true
+            sharedListenerPort: 9999
         hubble:
           relay:
             enabled: true
