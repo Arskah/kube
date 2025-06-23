@@ -32,7 +32,7 @@ spec:
           mode: cluster-pool
           operator:
             clusterPoolIPv4PodCIDRList: 10.8.0.0/16
-        tunnel: vxlan
+        tunnel-protocol: vxlan
         operator:
           replicas: 1
         hubble:
