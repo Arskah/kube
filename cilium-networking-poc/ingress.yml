@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  namespace: cilium-networking-poc
+  annotations:
+    cert-manager.io/cluster-issuer: cert-issuer
+spec:
+  ingressClassName: cilium
+  tls:
+    - hosts:
+        - nginx.aarnihalinen.fi
+      secretName: tls-secret
+  rules:
+    - host: nginx.aarnihalinen.fi
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx-svc
+                port:
+                  number: 80

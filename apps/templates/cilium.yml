@@ -29,6 +29,15 @@ spec:
             enabled: true
           ui:
             enabled: true
+        ingressController:
+          enabled: true
+        l2announcements:
+          enabled: true
+        devices: enp37s0
+        externalIPs:
+          enabled: true
+        externalTrafficPolicy: Cluster
+        internalTrafficPolicy: Cluster
   syncPolicy:
     automated:
       prune: true
