@@ -1,27 +1,27 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: caddy
-  namespace: argocd
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
-spec:
-  destination:
-    namespace: caddy
-    server: https://kubernetes.default.svc
-  project: applications
-  source:
-    repoURL: https://github.com/Arskah/kube.git
-    path: caddy
-    targetRevision: HEAD
-    directory:
-      recurse: true
-      jsonnet: {}
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-      - PrunePropagationPolicy=foreground
-      - PruneLast=true
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: caddy
+#   namespace: argocd
+#   annotations:
+#     argocd.argoproj.io/sync-wave: "5"
+# spec:
+#   destination:
+#     namespace: caddy
+#     server: https://kubernetes.default.svc
+#   project: applications
+#   source:
+#     repoURL: https://github.com/Arskah/kube.git
+#     path: caddy
+#     targetRevision: HEAD
+#     directory:
+#       recurse: true
+#       jsonnet: {}
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
+#     syncOptions:
+#       - CreateNamespace=true
+#       - PrunePropagationPolicy=foreground
+#       - PruneLast=true
