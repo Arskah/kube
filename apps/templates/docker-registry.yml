@@ -28,6 +28,10 @@ spec:
             existingClaim: docker-registry-pv-claim
           secrets:
             htpasswd: arskah:$2y$05$ZMDZy776w/RfPy3MmaHbWucMBNEUo/CgCzgKt2jeWTfQJGdcIc0dO
+          gatewayAPI:
+            enabled: true
+            hostNetwork:
+              enabled: true
           ingress:
             enabled: true
             path: /
