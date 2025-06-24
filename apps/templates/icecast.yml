@@ -1,24 +1,24 @@
-# apiVersion: argoproj.io/v1alpha1
-# kind: Application
-# metadata:
-#   name: icecast
-#   namespace: argocd
-#   annotations:
-#     argocd.argoproj.io/sync-wave: "5"
-# spec:
-#   destination:
-#     namespace: icecast
-#     server: https://kubernetes.default.svc
-#   project: applications
-#   source:
-#     repoURL: https://github.com/Arskah/kube.git
-#     targetRevision: HEAD
-#     path: icecast
-#   syncPolicy:
-#     automated:
-#       prune: true
-#       selfHeal: true
-#     syncOptions:
-#       - CreateNamespace=true
-#       - PrunePropagationPolicy=foreground
-#       - PruneLast=true
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: icecast
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  destination:
+    namespace: icecast
+    server: https://kubernetes.default.svc
+  project: applications
+  source:
+    repoURL: https://github.com/Arskah/kube.git
+    targetRevision: HEAD
+    path: icecast
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true

@@ -1,47 +1,47 @@
-# apiVersion: argoproj.io/v1alpha1
-# kind: Application
-# metadata:
-#   name: docker-registry
-#   namespace: argocd
-#   annotations:
-#     argocd.argoproj.io/sync-wave: "4"
-# spec:
-#   destination:
-#     namespace: docker-registry
-#     server: https://kubernetes.default.svc
-#   project: infra
-#   sources:
-#     - repoURL: https://github.com/Arskah/kube.git
-#       path: docker-registry
-#       targetRevision: HEAD
-#     - repoURL: https://helm.twun.io
-#       targetRevision: 2.3.0
-#       chart: docker-registry
-#       helm:
-#         releaseName: docker-registry
-#         version: v3
-#         valuesObject:
-#           persistence:
-#             enabled: true
-#             size: 10Gi
-#             deleteEnabled: true
-#             existingClaim: docker-registry-pv-claim
-#           secrets:
-#             htpasswd: arskah:$2y$05$ZMDZy776w/RfPy3MmaHbWucMBNEUo/CgCzgKt2jeWTfQJGdcIc0dO
-#           ingress:
-#             enabled: true
-#             path: /
-#             hosts:
-#               - registry.aarnihalinen.fi
-#             tls:
-#               - secretName: docker-registry-tls
-#                 hosts:
-#                   - registry.aarnihalinen.fi
-#   syncPolicy:
-#     automated:
-#       prune: true
-#       selfHeal: true
-#     syncOptions:
-#       - CreateNamespace=true
-#       - PrunePropagationPolicy=foreground
-#       - PruneLast=true
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: docker-registry
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  destination:
+    namespace: docker-registry
+    server: https://kubernetes.default.svc
+  project: infra
+  sources:
+    - repoURL: https://github.com/Arskah/kube.git
+      path: docker-registry
+      targetRevision: HEAD
+    - repoURL: https://helm.twun.io
+      targetRevision: 2.3.0
+      chart: docker-registry
+      helm:
+        releaseName: docker-registry
+        version: v3
+        valuesObject:
+          persistence:
+            enabled: true
+            size: 10Gi
+            deleteEnabled: true
+            existingClaim: docker-registry-pv-claim
+          secrets:
+            htpasswd: arskah:$2y$05$ZMDZy776w/RfPy3MmaHbWucMBNEUo/CgCzgKt2jeWTfQJGdcIc0dO
+          ingress:
+            enabled: true
+            path: /
+            hosts:
+              - registry.aarnihalinen.fi
+            tls:
+              - secretName: docker-registry-tls
+                hosts:
+                  - registry.aarnihalinen.fi
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
