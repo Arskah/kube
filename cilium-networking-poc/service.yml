@@ -5,12 +5,15 @@ metadata:
   namespace: cilium-networking-poc
   labels:
     app: nginx
+  annotations:
+    lbipam.cilium.io/sharing-cross-namespace: "*"
+    lbipam.cilium.io/sharing-key: "shared-ingress"
 spec:
   type: LoadBalancer
   selector:
     app: nginx
   ports:
     - name: http
-      port: 80
+      port: 6789
       protocol: TCP
-      targetPort: 80
+      targetPort: 6789
