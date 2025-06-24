@@ -7,7 +7,6 @@ metadata:
     cert-manager.io/cluster-issuer: cert-issuer
     acme.cert-manager.io/http01-edit-in-place: "true"
 spec:
-  ingressClassName: cilium
   tls:
     - hosts:
         - icecast.aarnihalinen.fi

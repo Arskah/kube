@@ -30,7 +30,6 @@ spec:
             htpasswd: arskah:$2y$05$ZMDZy776w/RfPy3MmaHbWucMBNEUo/CgCzgKt2jeWTfQJGdcIc0dO
           ingress:
             enabled: true
-            className: cilium
             path: /
             hosts:
               - registry.aarnihalinen.fi
