@@ -21,4 +21,4 @@ spec:
               service:
                 name: nginx-svc
                 port:
-                  number: 6789
+                  number: 80
