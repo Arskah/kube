@@ -28,12 +28,6 @@ spec:
           default: true
           enabled: true
           loadbalancerMode: shared
-          service:
-            externalTrafficPolicy: "~"
-            type: ClusterIP
-          hostNetwork:
-            enabled: true
-            sharedListenerPort: 9999
         hubble:
           relay:
             enabled: true
