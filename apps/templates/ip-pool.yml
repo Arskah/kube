@@ -8,7 +8,8 @@ metadata:
   name: "general-pool"
 spec:
   blocks:
-    - cidr: "192.168.86.22/32"
+    - start: "192.168.86.100"
+      stop: "192.168.86.255"
 ---
 # Define an L2 Announcement Policy named "policy1".
 # This policy enables L2 announcements for all interfaces matching the pattern 'eth[0-9]+'.
