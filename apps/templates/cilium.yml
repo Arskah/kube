@@ -13,21 +13,17 @@ spec:
   project: infra
   source:
     repoURL: https://helm.cilium.io
-    targetRevision: 1.17.4
+    targetRevision: 1.17.*
     chart: cilium
     helm:
       releaseName: cilium
       version: v3
       valuesObject:
+        kubeProxyReplacement: true
+        k8sServiceHost: 192.168.86.22
+        k8sServicePort: 6443
         operator:
           replicas: 1
-        k8sServiceHost: kube.aarnihalinen.fi
-        k8sServicePort: 6443
-        kubeProxyReplacement: true
-        ingressController:
-          default: true
-          enabled: true
-          loadbalancerMode: shared
         hubble:
           relay:
             enabled: true
@@ -41,56 +37,3 @@ spec:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
       - PruneLast=true
----
-apiVersion: "cilium.io/v2alpha1"
-kind: CiliumLoadBalancerIPPool
-metadata:
-  name: cilium-lb-ipam
-  namespace: kube-system
-spec:
-  blocks:
-    - start: "192.168.86.22"
-      stop: "192.168.86.22"
----
-apiVersion: "cilium.io/v2alpha1"
-kind: CiliumL2AnnouncementPolicy
-metadata:
-  name: cilium-lb-all-services
-  namespace: kube-system
-spec:
-  interfaces:
-    - enp37s0
-  externalIPs: true
-  loadBalancerIPs: true
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: Gateway
-metadata:
-  name: example-gateway
-spec:
-  addresses:
-    - type: IPAddress
-      value: 192.168.22.86
-  gatewayClassName: cilium
-  listeners:
-    - name: web-gw
-      protocol: HTTP
-      port: 80
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
-  name: example-httproute
-spec:
-  parentRefs:
-    - name: example-gateway
-  hostnames:
-    - "icecast.aarnihalinen.fi"
-  rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /
-      backendRefs:
-        - name: icecast-svc
-          port: 80

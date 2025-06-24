@@ -15,7 +15,7 @@ spec:
       path: docker-registry
       targetRevision: HEAD
     - repoURL: https://helm.twun.io
-      targetRevision: 2.3.0
+      targetRevision: 2.3.*
       chart: docker-registry
       helm:
         releaseName: docker-registry
@@ -28,12 +28,11 @@ spec:
             existingClaim: docker-registry-pv-claim
           secrets:
             htpasswd: arskah:$2y$05$ZMDZy776w/RfPy3MmaHbWucMBNEUo/CgCzgKt2jeWTfQJGdcIc0dO
-          gatewayAPI:
-            enabled: true
-            hostNetwork:
-              enabled: true
           ingress:
             enabled: true
+            className: nginx
+            annotations:
+              nginx.ingress.kubernetes.io/proxy-body-size: "0"
             path: /
             hosts:
               - registry.aarnihalinen.fi

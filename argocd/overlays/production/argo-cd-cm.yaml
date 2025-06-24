@@ -7,12 +7,6 @@ data:
       - CiliumIdentity
       clusters:
       - "*"
-  resource.customizations: |
-    networking.k8s.io/Ingress:
-        health.lua: |
-          hs = {}
-          hs.status = "Healthy"
-          return hs
 kind: ConfigMap
 metadata:
   name: argocd-cm
