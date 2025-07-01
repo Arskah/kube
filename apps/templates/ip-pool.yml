@@ -1,11 +1,8 @@
-# Define an IP pool named "general-pool" for Cilium to use for LoadBalancer IPs.
-# This pool includes the IP range from 192.168.100.120 to 192.168.100.240.
-# Choose your IP range wisely.
-# Create “ippool.yaml”:
+# Define an IP pool for Cilium to use for LoadBalancer IPs.
 apiVersion: "cilium.io/v2alpha1"
 kind: CiliumLoadBalancerIPPool
 metadata:
-  name: "general-pool"
+  name: general-pool
 spec:
   blocks:
     - start: "192.168.86.100"
@@ -15,7 +12,6 @@ spec:
 # This policy enables L2 announcements for all interfaces matching the pattern 'eth[0-9]+'.
 # It includes both externalIPs and loadBalancerIPs in the announcements
 # (important for discoverability in our home lab).
-# Create “l2policy.yaml”:
 apiVersion: "cilium.io/v2alpha1"
 kind: CiliumL2AnnouncementPolicy
 metadata:

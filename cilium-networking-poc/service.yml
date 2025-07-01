@@ -12,8 +12,11 @@ spec:
   type: LoadBalancer
   selector:
     app: nginx
+  loadBalancerIP: 192.168.86.200
+  externalIPs:
+    - 192.168.86.200
   ports:
     - name: http
-      port: 80
       protocol: TCP
+      port: 80
       targetPort: 80
