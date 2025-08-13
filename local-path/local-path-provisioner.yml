@@ -161,5 +161,5 @@ data:
           effect: NoSchedule
       containers:
       - name: helper-pod
-        image: busybox@sha256:768e5c6f5cb6db0794eec98dc7a967f40631746c32232b78a3105fb946f3ab83
+        image: busybox:1.37.0
         imagePullPolicy: IfNotPresent
