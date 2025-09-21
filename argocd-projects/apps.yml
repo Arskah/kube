@@ -13,6 +13,7 @@ spec:
   sourceRepos:
     - "https://github.com/Arskah/kube.git"
     - "https://github.com/Arskah/homepage.git"
+    - "https://charts.gitlab.io"
 
   # TODO: add stricter rules
   destinations:
@@ -25,6 +26,8 @@ spec:
     - namespace: "tp-rent"
       server: https://kubernetes.default.svc
     - namespace: "cilium-networking-poc"
+      server: https://kubernetes.default.svc
+    - namespace: "gitlab-runner"
       server: https://kubernetes.default.svc
 
   # Deny all cluster-scoped resources from being created, except for Namespace
