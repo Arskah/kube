@@ -19,6 +19,10 @@ spec:
       version: v3
       valuesObject:
         gitlabUrl: https://gitlab.com
+        runners:
+          privileged: false
+          namespace: gitlab-runner
+          secret: gitlab-runner
   syncPolicy:
     automated:
       prune: true
