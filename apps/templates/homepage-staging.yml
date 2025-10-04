@@ -5,11 +5,12 @@ metadata:
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "5"
+    argocd-image-updater.argoproj.io/write-back-method: argocd
     argocd-image-updater.argoproj.io/image-list: image=registry.aarnihalinen.fi/homepage:next
-    argocd-image-updater.argoproj.io/image.kustomize.image-name: homepage # Needed for fixing the source type Directory issue?
-    argocd-image-updater.argoproj.io/image.pull-secret: pullsecret:argocd/regcred-argocd
     argocd-image-updater.argoproj.io/image.update-strategy: digest
-    argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/homepage-git-creds
+    argocd-image-updater.argoproj.io/image.pull-secret: pullsecret:argocd/regcred-argocd
+    argocd-image-updater.argoproj.io/image.force-update: "true"
+    argocd-image-updater.argoproj.io/image.kustomize.image-name: homepage # Needed for fixing the source type Directory issue?
 spec:
   destination:
     namespace: homepage
