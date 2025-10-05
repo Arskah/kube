@@ -16,7 +16,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: db
-          image: postgres:17@sha256:4ec37d2a07a0067f176fdcc9d4bb633a5724d2cc4f892c7a2046d054bb6939e5
+          image: postgres:18@sha256:073e7c8b84e2197f94c8083634640ab37105effe1bc853ca4d5fbece3219b0e8
           env:
             - name: POSTGRES_DB
               valueFrom:
