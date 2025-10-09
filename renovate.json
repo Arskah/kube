@@ -7,20 +7,28 @@
     ":dependencyDashboard",
     ":label(dependencies)",
     ":maintainLockFilesWeekly",
-    "npm:unpublishSafe",
+    "security:minimumReleaseAgeNpm",
     ":disableRateLimiting"
   ],
   "timezone": "Europe/Helsinki",
   "argocd": {
-    "managerFilePatterns": ["/\\.yaml$/", "/\\.yml$/"]
+    "managerFilePatterns": [
+      "/\\.yaml$/",
+      "/\\.yml$/"
+    ]
   },
   "kubernetes": {
-    "managerFilePatterns": ["/\\.yaml$/", "/\\.yml$/"]
+    "managerFilePatterns": [
+      "/\\.yaml$/",
+      "/\\.yml$/"
+    ]
   },
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": ["/^argocd/kustomization\\.yaml$/"],
+      "managerFilePatterns": [
+        "/^argocd/kustomization\\.yaml$/"
+      ],
       "matchStrings": [
         "https://raw\\.githubusercontent\\.com/argoproj/argo-cd/v(?<currentValue>\\S+)/manifests/install\\.yaml"
       ],
