@@ -7,7 +7,7 @@
     ":dependencyDashboard",
     ":label(dependencies)",
     ":maintainLockFilesWeekly",
-    "npm:unpublishSafe",
+    "security:minimumReleaseAgeNpm",
     ":disableRateLimiting"
   ],
   "timezone": "Europe/Helsinki",
