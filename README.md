@@ -33,12 +33,14 @@ sudo vim /etc/containerd/config.toml
   - Install kubeadm, kubectl, kubelet
 - <https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/>
 
-UPDATE IP ADDRESS!!!
+TODO: UPDATE IP ADDRESS!!!
+
+Grep repo for IP, exists in couple of config files.
 
 ```shell
 sudo kubeadm init \
 --skip-phases=addon/kube-proxy \
---apiserver-advertise-address="192.168.86.22" \
+--apiserver-advertise-address="192.168.86.74" \
 --apiserver-cert-extra-sans="kube.aarnihalinen.fi,87.92.163.107"
 ```
 
@@ -47,6 +49,12 @@ We are running single-node cluster => need to untaint the control-plane
 ```shell
 kubectl taint nodes --all node-role.kubernetes.io/control-plane-
 ```
+
+## Talos
+
+TODO: New setup with proxmox with 2 nodes bootstrapped with talos <https://docs.siderolabs.com/talos/v1.11/platform-specific-installations/virtualized-platforms/proxmox>
+
+Update README, figure out a way to commit talos configuration to repo
 
 ## ArgoCD
 
@@ -60,6 +68,7 @@ Install ArgoCD with Kustomize
 
 ```sh
 kubectl kustomize argocd | kubectl apply -f -
+kubectl apply -f apps/templates/argo-projects.yml
 kubectl apply -f app-of-apps.yml
 ```
 
