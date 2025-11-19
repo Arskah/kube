@@ -40,7 +40,7 @@ Grep repo for IP, exists in couple of config files.
 ```shell
 sudo kubeadm init \
 --skip-phases=addon/kube-proxy \
---apiserver-advertise-address="192.168.86.74" \
+--apiserver-advertise-address="192.168.86.73" \
 --apiserver-cert-extra-sans="kube.aarnihalinen.fi,87.92.163.107"
 ```
 

@@ -19,7 +19,7 @@ spec:
       version: v3
       # parameters:
       #   - name: controller.service.externalIPs[0]
-      #     value: 192.168.86.74
+      #     value: 192.168.86.73
       #   - name: controller.service.nodePorts.http
       #     value: "30080"
       #   - name: controller.service.nodePorts.https
