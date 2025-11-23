@@ -11,6 +11,8 @@ spec:
     server: https://kubernetes.default.svc
   project: applications
   source:
+    directory:
+      recurse: true
     repoURL: https://github.com/Arskah/kube.git
     targetRevision: HEAD
     path: tp-rent
