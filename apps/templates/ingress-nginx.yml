@@ -17,15 +17,15 @@ spec:
     helm:
       releaseName: ingress-nginx
       version: v3
-      # parameters:
-      #   - name: controller.service.externalIPs[0]
-      #     value: 192.168.86.73
-      #   - name: controller.service.nodePorts.http
-      #     value: "30080"
-      #   - name: controller.service.nodePorts.https
-      #     value: "30443"
-      #   - name: controller.service.type
-      #     value: NodePort
+      parameters:
+        - name: controller.service.externalIPs[0]
+          value: 192.168.86.73
+        - name: controller.service.nodePorts.http
+          value: "30080"
+        - name: controller.service.nodePorts.https
+          value: "30443"
+        - name: controller.service.type
+          value: NodePort
   syncPolicy:
     automated:
       prune: true
