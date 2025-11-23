@@ -14,7 +14,7 @@ spec:
     - repoURL: https://github.com/Arskah/kube.git
       path: docker-registry
       targetRevision: HEAD
-    - repoURL: https://helm.twun.io
+    - repoURL: https://twuni.github.io/docker-registry.helm
       targetRevision: 3.0.0
       chart: docker-registry
       helm:
