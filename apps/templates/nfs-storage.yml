@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nfs-storage
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  destination:
+    namespace: kube-system
+    server: https://kubernetes.default.svc
+  project: infra
+  source:
+    repoURL: https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/charts
+    targetRevision: 4.12.0
+    chart: csi-driver-nfs
+    helm:
+      releaseName: csi-driver-nfs
+      version: v3
+      valuesObject:
+        externalSnapshotter:
+          enabled: true
+        controller:
+          runOnControlPlane: true
+          replicas: 1
+        storageClasses:
+          - name: nfs-retain
+            annotations:
+              storageclass.kubernetes.io/is-default-class: "true"
+            parameters:
+              server: 192.168.86.87
+              share: /k8s
+            reclaimPolicy: Retain
+            volumeBindingMode: Immediate
+            mountOptions:
+              - nfsvers=4.1
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
