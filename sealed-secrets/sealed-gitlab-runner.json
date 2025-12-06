@@ -1,0 +1,22 @@
+{
+  "kind": "SealedSecret",
+  "apiVersion": "bitnami.com/v1alpha1",
+  "metadata": {
+    "name": "gitlab-runner",
+    "namespace": "gitlab-runner",
+    "creationTimestamp": null
+  },
+  "spec": {
+    "template": {
+      "metadata": {
+        "name": "gitlab-runner",
+        "namespace": "gitlab-runner",
+        "creationTimestamp": null
+      }
+    },
+    "encryptedData": {
+      "runner-registration-token": "AgCAJvoLxiY2Ueqa0D04XTgSXl9raG9b2tKASST2RywYoratBNAw15i/zJ5FFn858PKgWGk0KI7RBCYev1HX+UP/DQ+cdKotbTU/m7Tq77u6zWMdU3uWR0fVIoNCRUFdXXBSyBaYzDz0nFbxtDGB2NLz+FDP2cJD4GihCQsDx3dgNqbo5aZpzU20frogns5rEr3CJSnlgJF/+q2YWIBa1GzxlLguo8dsK28FemKyBFqvNUzheOw8MfSME3DCMjfhtacVNYAJua8Ybr8pHNhS5onmtT3gsCLfpDlm8+Ms2FSo0Xp6OoYu9z7m45irsuMqssQnXq137QesHVu7m6hRiQIfHcVTO21uaNsIVHFv2SVx9Pz0IJofB5EBzT1XJ4LaehEWhdk/PKqml9t3vz12gvgzwtfYC/8WO55ivfP40mRCdMzBXFTZpObJXpXdbr554DNajyDw+yp6rV3BKTPIo0dizqvt3Vzw6/gEtK/28p7tRuSoK7gKHDZBjKlEL5dH1KsB4DSG/CSwJuvycppo+wH3f49WbEgPZpdJIWCmFNg0pgf2J5fBnfrzu/yD4dX7RjGv0NaFMqvB2NuPOE+6LJzjhbNVMf3GLs3iDXZrUIyLpsYKa88pXTjvW6F48sAY9UYjar3dSBz/3OwkXpSehie+sKTc17IzKVPzoxRgZx+9LSy4G3GikdEAcQ3sy4J9Tfg=",
+      "runner-token": "AgBaXdoMCIFJOuC9PmVm2RH3lXH2TSya5MQWQBpsrUwbW2ptp2OLa3JBdHb6M3iX4PTd3alSHh8WZeAkJeUS67wG1ibJh8ZdQQCHOHWchDgIWElFWiDl8CQVrli/SnfWtpTKGzKM02P0lD9sGYFaTm5gbs8ds4D4xxtm+DUlQXTPzCti7+2xI8jrmGlahKUsE8sPxWsrRr+bImy5uOMREqQRsMc45Ntc8et6IeDJomzxertqCRNgYyU2oSi9mcZiZyND5rffP4HNjX8nq37EXjPNQP2qGyhfPJbkM9rM2E3xUfiUhGPtSY4YBrJbS6LVTYOUNdud2TkODAVnlbNw3KKia4QKREVOmaRsLakz++YU42xAJWHqTwRJGDOSHNcuRvAVuMEKLSALdO09zXZfoIxK15XlP5DqIw3S3GyFV5RQ1iyokko+Npk26NT5UuCG8cCnFWkoddsjBazGe0+27oLIoGYSEEx1d691cai2Va5PMzDkS3ekia3OhsGfei3qHp3c6REiRM6js4NPszX/LOAnQFk1RmfBnzpLqtm/2KOTyN+5QvEUtyX92dlylfZejky2NvJ1K9etWImqRgbqnnfer5w0fYQt7h3ThX+kY0t9lnN1xeepRLDfFzNTp6PlSZZ4TCdzQ6P+UugtfOlMCdP805xHoN7MMOpRPoW6nVfPy+13B2u3drAso7NnkIgc2I1rJkPIgrstUJQyYk7yxCa2j5qGtrt36juDqwdfjdznDoTkNqlMQR6gSJChRsovm+c0Gl4Y80QFLw5x01NH6yDC7z7DmJB7DSU="
+    }
+  }
+}
