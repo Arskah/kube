@@ -1,0 +1,22 @@
+{
+  "kind": "SealedSecret",
+  "apiVersion": "bitnami.com/v1alpha1",
+  "metadata": {
+    "name": "regcred-argocd",
+    "namespace": "argocd",
+    "creationTimestamp": null
+  },
+  "spec": {
+    "template": {
+      "metadata": {
+        "name": "regcred-argocd",
+        "namespace": "argocd",
+        "creationTimestamp": null
+      },
+      "type": "kubernetes.io/dockerconfigjson"
+    },
+    "encryptedData": {
+      ".dockerconfigjson": "AgAjE/Gxhh1KkXyFLUaBEJ0PoJ7JX6/ze5MCTqXxLVvVeKIF3bG3/GBW/wI1lrOFuAmz6kPnG4mj9vbL+3Mvvby2F1MTJruUknM74bZ0PgSmJM9dYTzAXhHDlrD1yf2AdYYo4mIcnJ7FPRM6pQV4uK8Sv4e6rAn+Du4aX4ZaocxWHBqCtI62Qirc96noADx05ZxLvvJFtE0k89IKshKlRM3yQ1SeiFx1xbt4pM41zm+ligOsWRL6ZJCB2F8T+z/qK2jz3SFNF/qfcKt+R5a/BNr97arjrW8mt0JxwbE3gJPD3ctrJNA7N7p6C4PT/Yii/l2lR6lwAVGKtTTQs81IbQKAbTe29FPkYO2DCp+47aj74kJH8PqbrU7R05Ep/0685lUEtrd20agKtgD8lbIMq3HT8srJOuQMysdIdDJb0vJ2UJjYVPuqgX3YqIDk7P1DWaJ5WL5Wc+6w+mFMnKt11SDvmux8huyx6WrUmtUz/tAeEOOzL/RUkZkjpZQjKpsHUPVCqwHVoWjGH8Ys6cWvK8Sk45at9s6WAVpBFO3cj1v9swMoOr2AHnZ5fxKVzRzWxqBFpJ3PggFsjVvnMitLs8x55yyaHHMlNswYNp+tlGf0/Dm8kto6ckAfbpvJnaTqTMAgt4FZQcTYSBAmdZeeRa3ouQfki2F50dV9BHs90mFAeYajeQ4aANRRux60A9cRdYLfHfr0kIyyZ9MMNFBVaZegHy7xnppNs83oo86q1iqcjmKktuXz/NDQaG5J/CEYXtQJJnLkr0Rygbq2xAAswwbMjRWn/Zn3NSK85emhtq0QnEJEhMkkJYywJjOkP8Vk6CXV3N7bIoP7GBGzyHLnBtmL6YVHmf5rUNMDTMaSU8P/pgFMLKiHt+IetUi0guk3FAyTXGiNHAH79tFXMqNgXBYQpgw3L6iuTo/v7bTuoA=="
+    }
+  }
+}

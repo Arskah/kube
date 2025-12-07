@@ -1,0 +1,22 @@
+{
+  "kind": "SealedSecret",
+  "apiVersion": "bitnami.com/v1alpha1",
+  "metadata": {
+    "name": "regcred-homepage",
+    "namespace": "homepage",
+    "creationTimestamp": null
+  },
+  "spec": {
+    "template": {
+      "metadata": {
+        "name": "regcred-homepage",
+        "namespace": "homepage",
+        "creationTimestamp": null
+      },
+      "type": "kubernetes.io/dockerconfigjson"
+    },
+    "encryptedData": {
+      ".dockerconfigjson": "AgAypAv5jE4ZWh+laIS7Q7Dn5ubCqWJwAV5x4dU2rUnTEjeu++3nWKAExbo1OBD/kGk7BaTraGjE/bBvHqYPfY3ftcZNBhgr7f9l0a+zWB8NMIsLozh2ve0t1Fb5teBk906vxGHNqeCJMhVUkjzHkT66HJqDIKJ6P1XZh8K7t7aJN8CAq6n/ueN2EEwuyLz33fgKurGoya6mq1CB4KVDmWnk8yXhmcYYGLm6LpEqLKUwD009iWV0k7p0G3dK6iD7Jtm1K7z0dX4AkdInakagLLjv8E6OCvZ8sFrshcSTJM3hT2RkdFJg5diFE9Q/o/fXaIQd2pfzBBrhtETF9CEr9pBiAkuDWn191Y9WqRkoRt3/S17gaS/c2kWwMdRJTtAe/zaWr9JXp0ZotLiOdMsk2JcVLETUwL01wicN2UM0yXdjOCp7uTFRvelyGaxP7jeMCuyjvXm8i/HUVQsmS1UM86MTbMXSK+m45UqHywImAf7ggNqNax4vK8816YMmkV8CvwCg4OXV5PqZ/O8HoQeSaX9gFnWb+f/jfTE0ZbDmlzVsHxCKdBT7F1dCyiTtCx98uE0AEiukb7YH8ae+FgSgeKrJcYqNXCMQu6PnhkPF84YZPCeT8riEhFAFWo+J8gT4wcTsIBfDfYyeQr/k5tPpi5DfrrJUND7DbRxknfITD43Q+gekNTvv8/seGCaBMeizWdT6P1vQ4J5rVtOl9Jp25nyPD6R+UQtSyQn/fvVjOY4GjfRS4iMgn4yoT9XXcq3dJXR0kERUzIhcH+5HsNdbz7k8FaBgL/aFSZE4YS/oT0sIQTO1KiP704teQNZT20zHHhDxpP6m9GFi/nE5y6iGuDo0zoDkxordvn1ygPKk1fjpFtVRjYLHGbiPaoYMQsXxCTN7NOOEGfDHNKaU2hW+x3HFXlkFy5TKl4gHNDQR0w=="
+    }
+  }
+}
