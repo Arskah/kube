@@ -22,13 +22,17 @@ spec:
           volumeMounts:
             - name: host-www
               mountPath: /srv
-            - name: caddyfile
-              mountPath: /etc/caddy/Caddyfile
+            - name: caddy
+              mountPath: /etc/caddy
       securityContext: {}
       volumes:
         - name: host-www
-          hostPath:
-            path: /home/arska/www
-        - name: caddyfile
-          hostPath:
-            path: /home/arska/k8s-Caddyfile
+          nfs:
+            server: 192.168.86.87
+            path: /k8s/www
+            readOnly: true
+        - name: caddy
+          nfs:
+            server: 192.168.86.87
+            path: /k8s/caddy
+            readOnly: true

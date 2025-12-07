@@ -20,14 +20,12 @@ spec:
           ports:
             - containerPort: 8000
           volumeMounts:
-            - name: icecast-xml
-              mountPath: /etc/icecast2/icecast.xml
-            - name: logs
-              mountPath: /var/log/icecast2
+            - name: icecast
+              mountPath: /etc/icecast2
       securityContext: {}
       volumes:
-        - name: logs
-          emptyDir: {}
-        - name: icecast-xml
-          hostPath:
-            path: /home/arska/icecast/icecast.xml
+        - name: icecast
+          nfs:
+            server: 192.168.86.87
+            path: /k8s/icecast
+            readOnly: false
