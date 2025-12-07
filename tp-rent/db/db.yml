@@ -37,9 +37,8 @@ spec:
             - containerPort: 5432
           volumeMounts:
             - name: pvc
-              mountPath: /var/lib/postgresql/data
+              mountPath: /var/lib/postgresql
               subPath: db
-              readOnly: false
           # securityContext:
           #   allowPrivilegeEscalation: false
           #   readOnlyRootFilesystem: true
