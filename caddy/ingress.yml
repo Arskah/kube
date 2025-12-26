@@ -12,6 +12,7 @@ spec:
   tls:
     - hosts:
         - sik75.aarnihalinen.fi
+        - plex.aarnihalinen.fi
       secretName: tls-secret
   rules:
     - host: sik75.aarnihalinen.fi
@@ -24,3 +25,5 @@ spec:
                 name: caddy-svc
                 port:
                   number: 80
+    - host: plex.aarnihalinen.fi
+      http: *backend
