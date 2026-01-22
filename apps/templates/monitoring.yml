@@ -1,29 +1,29 @@
-# apiVersion: argoproj.io/v1alpha1
-# kind: Application
-# metadata:
-#   name: monitoring
-#   namespace: argocd
-#   annotations:
-#     argocd.argoproj.io/sync-wave: "3"
-# spec:
-#   destination:
-#     namespace: monitoring
-#     server: https://kubernetes.default.svc
-#   project: infra
-#   source:
-#     repoURL: https://prometheus-community.github.io/helm-charts
-#     targetRevision: 81.2.0
-#     chart: kube-prometheus-stack
-#     helm:
-#       releaseName: monitoring
-#       version: v3
-#       skipCrds: false
-#   syncPolicy:
-#     automated:
-#       prune: true
-#       selfHeal: true
-#     syncOptions:
-#       - CreateNamespace=true
-#       - PrunePropagationPolicy=foreground
-#       - PruneLast=true
-#       - Replace=true
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  destination:
+    namespace: monitoring
+    server: https://kubernetes.default.svc
+  project: infra
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 81.2.0
+    chart: kube-prometheus-stack
+    helm:
+      releaseName: monitoring
+      version: v3
+      skipCrds: false
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - Replace=true
