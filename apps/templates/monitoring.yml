@@ -18,12 +18,19 @@ spec:
       releaseName: monitoring
       version: v3
       skipCrds: false
+      valuesObject:
+        prometheusOperator:
+          admissionWebhooks:
+            certManager:
+              enabled: true
+            patch:
+              enabled: false
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      - PrunePropagationPolicy=foreground
+      - ServerSideApply=true
       - PruneLast=true
       - Replace=true
