@@ -5,6 +5,7 @@ namespace: argocd
 
 resources:
   - https://raw.githubusercontent.com/argoproj/argo-cd/v3.2.6/manifests/install.yaml
+  - https://raw.githubusercontent.com/argoproj-labs/argocd-image-updater/v1.0.2/config/install.yaml
   - base/namespace.yml
   - base/argo-project.yml
   - base/argo-app.yml

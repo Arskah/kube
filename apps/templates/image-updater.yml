@@ -1,24 +1,34 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
+apiVersion: argocd-image-updater.argoproj.io/v1alpha1
+kind: ImageUpdater
 metadata:
-  name: image-updater
+  name: production-updater
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
 spec:
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: argocd
-  project: infra
-  source:
-    repoURL: https://github.com/argoproj-labs/argocd-image-updater
-    targetRevision: stable
-    path: manifests
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-      - PrunePropagationPolicy=foreground
-      - PruneLast=true
+  namespace: argocd
+  commonUpdateSettings:
+    updateStrategy: "semver"
+    forceUpdate: false
+    allowTags: "regexp:^v[0-9]+\\.[0-9]+\\.[0-9]+$"
+    ignoreTags: ["latest", "dev", "test", "next"]
+    pullSecret: pullsecret:argocd/regcred-argocd
+  writeBackConfig:
+    method: "argocd"
+  applicationRefs:
+    - namePattern: "homepage-staging"
+      commonUpdateSettings:
+        updateStrategy: digest
+        forceUpdate: true
+        allowTags: "next"
+        ignoreTags: ["latest"]
+      images:
+        - alias: "image"
+          imageName: "registry.aarnihalinen.fi/homepage:next"
+    - namePattern: "homepage-production"
+      commonUpdateSettings:
+        updateStrategy: digest
+        forceUpdate: true
+        allowTags: "latest"
+        ignoreTags: ["next"]
+      images:
+        - alias: "production"
+          imageName: "registry.aarnihalinen.fi/homepage:latest"
