@@ -1,18 +1,17 @@
+# Create Application that handles "normal" Argo projects
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: homepage-staging
+  name: argocd-image-updater
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
 spec:
   destination:
-    namespace: homepage
+    namespace: argocd
     server: https://kubernetes.default.svc
-  project: applications
+  project: argocd
   source:
-    path: k8s/staging
-    repoURL: https://github.com/Arskah/homepage.git
+    repoURL: https://github.com/Arskah/kube.git
+    path: argocd-image-updater
     targetRevision: HEAD
   syncPolicy:
     automated:

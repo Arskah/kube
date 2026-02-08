@@ -1,0 +1,18 @@
+apiVersion: argocd-image-updater.argoproj.io/v1alpha1
+kind: ImageUpdater
+metadata:
+  name: homepage-staging-image-updater
+  namespace: argocd
+spec:
+  namespace: argocd
+  commonUpdateSettings:
+    pullSecret: "pullsecret:argocd/regcred-argocd"
+  writeBackConfig:
+    method: "argocd"
+  applicationRefs:
+    - namePattern: "homepage-staging"
+      images:
+        - alias: "staging"
+          imageName: "registry.aarnihalinen.fi/homepage:staging"
+          commonUpdateSettings:
+            updateStrategy: "newest-build"
