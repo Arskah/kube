@@ -8,6 +8,6 @@ spec:
   dnsNames:
     - icecast.aarnihalinen.fi
   issuerRef:
-    name: cert-issuer
+    name: letsencrypt-production
     kind: ClusterIssuer
     group: cert-manager.io

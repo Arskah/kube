@@ -4,7 +4,7 @@ metadata:
   name: ingress
   namespace: caddy
   annotations:
-    cert-manager.io/cluster-issuer: cert-issuer
+    cert-manager.io/cluster-issuer: letsencrypt-production
     nginx.ingress.kubernetes.io/proxy-body-size: "10m"
     nginx.org/client-max-body-size: "10m"
 spec:
