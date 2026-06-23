@@ -12,7 +12,7 @@ spec:
   project: applications
   source:
     repoURL: https://charts.gitlab.io
-    targetRevision: 0.89.1
+    targetRevision: 0.90.0
     chart: gitlab-runner
     helm:
       releaseName: gitlab-runner
