@@ -1,0 +1,25 @@
+# The shared Gateway that replaces ingress-nginx as the entry point for HTTP(S) traffic
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gateway
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  destination:
+    namespace: gateway
+    server: https://kubernetes.default.svc
+  project: infra
+  source:
+    repoURL: https://github.com/Arskah/kube.git
+    path: gateway
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
