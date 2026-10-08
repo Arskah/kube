@@ -3,6 +3,9 @@ kind: Application
 metadata:
   name: ingress-nginx
   namespace: argocd
+  # Delete the resources of the chart together with this Application when it is removed
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
   annotations:
     argocd.argoproj.io/sync-wave: "2"
 spec:
@@ -18,8 +21,6 @@ spec:
       releaseName: ingress-nginx
       version: v3
       parameters:
-        - name: controller.service.externalIPs[0]
-          value: 192.168.86.73
         - name: controller.service.nodePorts.http
           value: "30080"
         - name: controller.service.nodePorts.https
