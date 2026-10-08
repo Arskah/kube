@@ -1,0 +1,20 @@
+{
+  "kind": "SealedSecret",
+  "apiVersion": "bitnami.com/v1alpha1",
+  "metadata": {
+    "name": "web-login",
+    "namespace": "music-library"
+  },
+  "spec": {
+    "template": {
+      "metadata": {
+        "name": "web-login",
+        "namespace": "music-library"
+      },
+      "type": "Opaque"
+    },
+    "encryptedData": {
+      "login": "AgBFw3l30IsOOfMgri1V64yk5Uoa+14fIzeUilGtwPjN9v8CopLayVP42bLCBZP6jq+NcQf74h+KNF1WcMktQhO4wMEzU06YiEZ3fIhSKZ6IQuJloB0gXYiDyxjSgzK9NB9/jJ8FLjMGhKJXTUkJIadFfaj7BTIZCFI49OuRjm4ToiCBNvj9ahx5k5l9nIf0cmVTY121/FkwnIQqbARMTfeLaQSKwU3q8Uu3uobopiupBKg/iF4SCkdIGgHaRFkbgN2at1UwHY1pNJ3VUzTKdu8loGeW1pf8BA1QjFNYoU4G9OAfUJwA0bdvaPsPInyeWDi57m6M9oWg0sRQeL/1tLH2vjNTsjpqktuDkw/eq2qSvRmq5nvdyuL6I96us1Gfr6WqK1/pVcFCqYSFdxCyAyx/RhGoQF12LDGDsu75x3zqZSvnH75oGJPQcdnYkVPs57kZ5me36YGjqUTrfc61CWvwPVH2UW9LKBwCKBNYsLBZQBLM6dtkrNMUjDH/6SMt7tYzXAP0xyZ35Mzp1VS8ONTPR7yTKi433oTk0FdrAxAeYzuac+99icDoKrTJq/pvs/fy9XDq07fTfnvOA2alh1Si+6pNislIRbWolLNXJIJjANDFeiBbpIPeudaYEUrRtlwDkavxcZAnOcB+1uuGgKCv/QUdEP8fqVV9uJ1liDgsgmixnnnsVjNQhnLCWcfBqM7WvLXPrxZO26GxtJbI+bM1mn5eWoCuriXzUKTm5yMMgWGWCzGFVV0="
+    }
+  }
+}
