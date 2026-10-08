@@ -1,0 +1,13 @@
+machine:
+  install:
+    disk: /dev/sda
+    # Image Factory schematic with the qemu-guest-agent extension
+    image: factory.talos.dev/installer/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515:v1.11.5
+    extraKernelArgs:
+      # Keep the NIC named eth0, Cilium `devices` relies on it
+      - net.ifnames=0
+cluster:
+  network:
+    # Cilium is installed separately
+    cni:
+      name: none

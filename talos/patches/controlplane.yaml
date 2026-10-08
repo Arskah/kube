@@ -1,0 +1,13 @@
+machine:
+  network:
+    hostname: kube-control
+cluster:
+  apiServer:
+    # The control plane endpoint IP is added automatically
+    certSANs:
+      - 87.92.101.169
+      - kube.aarnihalinen.fi
+      - kube.halinen.dev
+  proxy:
+    # Cilium runs with kubeProxyReplacement
+    disabled: true

@@ -1,2 +1,11 @@
 node_modules/
 secrets/
+
+# Talos: generated machine configs and credentials, see README
+talos/secrets.yaml
+talos/controlplane.yaml
+talos/worker.yaml
+talos/talosconfig
+talos/kubeconfig
+old-config
+.DS_Store
