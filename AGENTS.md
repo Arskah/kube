@@ -37,7 +37,7 @@ kubectl apply -f app-of-apps.yml
 
 An Application in `apps/templates/` points at one of:
 
-- a directory in this repo with plain manifests (`caddy/`, `icecast/`, `tp-rent/`, `cilium-networking-poc/`),
+- a directory in this repo with plain manifests (`caddy/`, `icecast/`, `tp-rent/`),
 - an upstream Helm chart with values inlined under `helm.valuesObject` (cilium, ingress-nginx, monitoring, nfs-storage, gitlab-runner),
 - both at once via `sources:` — chart plus a repo directory of extra resources (cert-manager + its ClusterIssuers, sealed-secrets + the sealed secrets, docker-registry + its PVC/Certificate),
 - another repo (`homepage-*` → `Arskah/homepage`, `k8s/prod` and `k8s/staging`).
@@ -55,7 +55,7 @@ Startup order is expressed with `argocd.argoproj.io/sync-wave` annotations: 1 ci
 
 ### Cross-cutting conventions
 
-- **Ingress/TLS**: apps use `ingressClassName: nginx` with the `cert-manager.io/cluster-issuer: letsencrypt-production` annotation (HTTP-01 solver is bound to the nginx class). Cilium's own ingress controller is also enabled, but only `cilium-networking-poc` uses it.
+- **Ingress/TLS**: apps use `ingressClassName: nginx` with the `cert-manager.io/cluster-issuer: letsencrypt-production` annotation (HTTP-01 solver is bound to the nginx class). Cilium's own ingress controller is also enabled, but nothing uses it.
 - **Storage**: default StorageClass is `nfs-retain` (csi-driver-nfs, NAS at `192.168.86.87:/k8s`); some pods also mount NFS from that host directly.
 - **Secrets**: only Bitnami SealedSecrets are committed, as JSON in `sealed-secrets/`, each with its target namespace baked in. They are sealed against the in-cluster controller (`sealed-secrets-controller` in `kube-system`), so they cannot be created or edited without cluster access. `secrets/` (plaintext inputs) is gitignored.
 - **Versions**: Renovate owns chart `targetRevision`s, image tags (pinned as `tag@sha256:digest`), GitHub Action SHAs, and the ArgoCD version in `argocd/kustomization.yaml` (custom regex manager). Keep the pin formats intact so Renovate keeps matching them.
