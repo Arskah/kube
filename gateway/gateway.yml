@@ -79,3 +79,49 @@ spec:
           selector:
             matchLabels:
               kubernetes.io/metadata.name: docker-registry
+    # The homepage routes and ReferenceGrants are in github.com/Arskah/homepage, k8s/
+    - name: homepage
+      protocol: HTTPS
+      port: 443
+      hostname: aarnihalinen.fi
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: production-cert
+            namespace: homepage-production
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              kubernetes.io/metadata.name: homepage-production
+    - name: homepage-www
+      protocol: HTTPS
+      port: 443
+      hostname: www.aarnihalinen.fi
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: production-cert
+            namespace: homepage-production
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              kubernetes.io/metadata.name: homepage-production
+    - name: homepage-staging
+      protocol: HTTPS
+      port: 443
+      hostname: staging.aarnihalinen.fi
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: staging-cert
+            namespace: homepage-staging
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              kubernetes.io/metadata.name: homepage-staging
