@@ -125,3 +125,19 @@ spec:
           selector:
             matchLabels:
               kubernetes.io/metadata.name: homepage-staging
+    # music-library is deployed by hand, its route and ReferenceGrant are not in this repository
+    - name: music
+      protocol: HTTPS
+      port: 443
+      hostname: music.aarnihalinen.fi
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: tls-secret
+            namespace: music-library
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              kubernetes.io/metadata.name: music-library
