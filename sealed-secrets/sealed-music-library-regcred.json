@@ -1,0 +1,20 @@
+{
+  "kind": "SealedSecret",
+  "apiVersion": "bitnami.com/v1alpha1",
+  "metadata": {
+    "name": "regcred",
+    "namespace": "music-library"
+  },
+  "spec": {
+    "template": {
+      "metadata": {
+        "name": "regcred",
+        "namespace": "music-library"
+      },
+      "type": "kubernetes.io/dockerconfigjson"
+    },
+    "encryptedData": {
+      ".dockerconfigjson": "AgB5YnUrsSs/RbvYjV9jvi6UrdrmXZ756Q/4FuQupWD7A06EmZ8WzkCq/BaE3pj8/oYgVNrNSCpnnnYcvKDTzHLhO7V9r5U31zAaNQcQqcPtKxeVxhekP4ydfIq5bG7WeXC+e/znhOoIpmFNhxv711CGzA8d5Dy75wO5A8RD3m9sGiSp9aXeMSAWS47tQSI+txTQeclHFAC5HQDFMTK1SGAOW3d9/Qs3bdEu6cfvgAmFEn+xlji1bBIlrkr+3d7+OcwL5USj/6M1XcAKFwvtBPAjAH9R+IO8zO5IpJs9U3j3Iy6EHr0ahNEzz+CE3cTP2i8Zekr1F8noDiLtWZ9I+wqaYS3McABith2aXH/o5bwBobpVxDrcXoqYbGABg+5RZV8sycZ2CFSmTqyTl1ah39rP9jcAEURMUfHVIXKE8CmCrwiLw6phSWtBLduT0ALV4+awyqthL8Pd8bDitG0pC1NgLADNnt1PLe+e4rA8KLS76NfA0Z6bjiT1osT2TghWvXDePG9oM+b1/1vrJX6rwW/DSVtDQK7IrtU5pzIIo81MDgiDi2U2KwDh4O73Ow7r1VIbCG4Hwai4XfSP1DU0UiMl/PnSZuJqx1YOxne+TXWSSj38cWbBtTYUMH/0+iIhuNEC4wmp/cBwD7seG0ZCD6GBURo+MqOmqXtIg/482WlJtjOgp5vPW41NB2mwu/46ZApgjj7AO+DRkVpl49NgCA8DNZEZo5ma/TudP/oaV2iUTnqLHjEgPKuZgFsGKBGKlO5nPRi0W30nwae06YsEzrqq3kVzCHxgXuZgWegTezWe7AK0eb5Ch42DshicOAG/kTDPx1+zCtCD3Biq6UgzxOj+c2LmI3QZ4Bpk/l/tC+U3bHcVthWFuJCIrEgdapqB"
+    }
+  }
+}

@@ -35,17 +35,20 @@ Store these in the password manager. None of them is taken automatically.
 
 3. The plaintext values behind the sealed secrets, as a fallback for losing the keys:
 
-   | File in `sealed-secrets/`                 | Secret                                 | Keys                                                | Source of the values                     |
-   | ----------------------------------------- | -------------------------------------- | --------------------------------------------------- | ---------------------------------------- |
-   | `sealed-gitlab-runner.json`               | `gitlab-runner/gitlab-runner`          | `runner-registration-token`, `runner-token`         | GitLab runner settings                   |
-   | `sealed-regcred-argocd.json`              | `argocd/regcred-argocd`                | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`       |
-   | `sealed-regcred-homepage-production.json` | `homepage-production/regcred-homepage` | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`       |
-   | `sealed-regcred-homepage-staging.json`    | `homepage-staging/regcred-homepage`    | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`       |
-   | `sealed-registry-htpasswd.json`           | `docker-registry/registry-htpasswd`    | `htpasswd`                                          | bcrypt hash of the registry password     |
-   | `sealed-tp-rent-db.json`                  | `tp-rent/db-password`                  | `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` | has to match the existing database files |
+   | File in `sealed-secrets/`                 | Secret                                 | Keys                                                | Source of the values                      |
+   | ----------------------------------------- | -------------------------------------- | --------------------------------------------------- | ----------------------------------------- |
+   | `sealed-gitlab-runner.json`               | `gitlab-runner/gitlab-runner`          | `runner-registration-token`, `runner-token`         | GitLab runner settings                    |
+   | `sealed-music-library-hub.json`           | `music-library/hub`                    | `password`                                          | has to match the existing database files  |
+   | `sealed-music-library-regcred.json`       | `music-library/regcred`                | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`        |
+   | `sealed-music-library-web-login.json`     | `music-library/web-login`              | `login`                                             | shared login of the page, `user:password` |
+   | `sealed-regcred-argocd.json`              | `argocd/regcred-argocd`                | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`        |
+   | `sealed-regcred-homepage-production.json` | `homepage-production/regcred-homepage` | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`        |
+   | `sealed-regcred-homepage-staging.json`    | `homepage-staging/regcred-homepage`    | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`        |
+   | `sealed-registry-htpasswd.json`           | `docker-registry/registry-htpasswd`    | `htpasswd`                                          | bcrypt hash of the registry password      |
+   | `sealed-tp-rent-db.json`                  | `tp-rent/db-password`                  | `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` | has to match the existing database files  |
 
-   All four registry secrets come from the same user and password: `registry-htpasswd` is the bcrypt hash the registry
-   checks against, the three `regcred` secrets are what the cluster logs in with. They have to be sealed again together
+   All five registry secrets come from the same user and password: `registry-htpasswd` is the bcrypt hash the registry
+   checks against, the four `regcred` secrets are what the cluster logs in with. They have to be sealed again together
    when the password changes.
 
 4. A dump of the tp-rent database, taken regularly:
