@@ -1,7 +1,7 @@
 {
   "name": "kube",
   "version": "0.1.0",
-  "description": "K8s setup with Kubeadm & ArgoCD",
+  "description": "K8s setup with Talos & ArgoCD",
   "scripts": {
     "prepare": "husky"
   },

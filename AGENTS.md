@@ -63,8 +63,8 @@ Startup order is expressed with `argocd.argoproj.io/sync-wave` annotations: 1 ci
 
 ### Environment-specific values
 
-LAN addresses are hardcoded across manifests (`192.168.86.x`: node/externalIP in `ingress-nginx.yml`, LB pool and L2 announcement interface in `ip-pool.yml`, Cilium ingress LB IP, NFS server). When one changes, grep the repo for it.
+LAN addresses are hardcoded across manifests (`192.168.86.x`: control-plane node IP as externalIP in `ingress-nginx.yml`, LB pool and L2 announcement interface in `ip-pool.yml`, Cilium ingress LB IP, NFS server). When one changes, grep the repo for it.
 
-The cluster runs on Talos nodes in Proxmox (see `TALOS.md`); it replaced an earlier single-node kubeadm install. `apps/templates/cilium.yml` carries the Talos-specific values (KubePrism at `localhost:7445`, dropped `SYS_MODULE`, cgroup settings). The README's kubeadm section and Talos TODO describe the old setup and are out of date. A few values predate Talos and may be leftovers from the kubeadm node (`192.168.86.73` in `ingress-nginx.yml`, interface `enp37s0` in `ip-pool.yml` versus `devices: eth0` in `cilium.yml`); check them against the live cluster before relying on them.
+The cluster runs on Talos nodes in Proxmox (see the README); it replaced an earlier single-node kubeadm install. `apps/templates/cilium.yml` carries the Talos-specific values (KubePrism at `localhost:7445`, dropped `SYS_MODULE`, cgroup settings). Nodes are `kube-control` (`192.168.86.73`, control plane) and `kube-node1` (`192.168.86.76`); ingress-nginx is exposed as a NodePort service with the control-plane IP as its externalIP. The node NIC is `eth0`, which is what `devices` in `cilium.yml` is set to, but the `CiliumL2AnnouncementPolicy` in `ip-pool.yml` still names `enp37s0`, the NIC of the old kubeadm host.
 
 Untracked local files `talos/` (machine configs, `talosconfig`, `kubeconfig`) and `old-config` contain cluster credentials and are not gitignored; do not stage them. `cilium-values.yml` is an old `helm get values` dump kept for reference, not a source of truth.
