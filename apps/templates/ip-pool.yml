@@ -1,4 +1,5 @@
 # Define an IP pool for Cilium to use for LoadBalancer IPs.
+# The router hands out 192.168.86.20-192.168.86.99 over DHCP, so this range has to stay above that.
 apiVersion: "cilium.io/v2alpha1"
 kind: CiliumLoadBalancerIPPool
 metadata:
@@ -6,7 +7,7 @@ metadata:
 spec:
   blocks:
     - start: "192.168.86.100"
-      stop: "192.168.86.255"
+      stop: "192.168.86.254"
 ---
 # Define an L2 Announcement Policy named "policy1".
 # This policy enables L2 announcements on eth0, the NIC name on the Talos nodes (net.ifnames=0).

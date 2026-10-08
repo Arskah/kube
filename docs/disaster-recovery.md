@@ -25,8 +25,9 @@ Store these in the password manager. None of them is taken automatically.
 
 1. `talos/secrets.yaml`.
 
-2. The Sealed Secrets keys. The controller creates a new key every 30 days and keeps the old ones, and all of them are
-   needed, so take this backup again after sealing new secrets. The output is private key material.
+2. The Sealed Secrets keys. The controller creates a new key every 30 days and keeps the old ones. New secrets are
+   sealed with the newest key, so the backup is only out of date when something has been sealed with a key that is not
+   in it yet. Taking the backup again after every sealing covers that. The output is private key material.
 
    ```sh
    kubectl -n kube-system get secret -l sealedsecrets.bitnami.com/sealed-secrets-key -o yaml > sealed-secrets-keys.yaml
@@ -83,7 +84,8 @@ Checked from the outside, the router configuration itself has not been reviewed:
 - The node addresses come from DHCP and are hardcoded in this repo, so they need DHCP reservations: `192.168.86.73`
   (`kube-control`), `192.168.86.76` (`kube-node1`) and `192.168.86.87` (NAS). New VMs get new MAC addresses, so the
   reservations have to be made again.
-- `192.168.86.100`-`192.168.86.255` is handed out by Cilium to LoadBalancer services and must not be used by DHCP.
+- The DHCP pool of the router is `192.168.86.20`-`192.168.86.99`. `192.168.86.100`-`192.168.86.254` is handed out by
+  Cilium to LoadBalancer services (`apps/templates/ip-pool.yml`), so the DHCP pool must not grow into it.
 
 ### Virtual machines
 
