@@ -14,6 +14,12 @@ spec:
     - backendRefs:
         - name: caddy-svc
           port: 80
+      filters:
+        - type: ResponseHeaderModifier
+          responseHeaderModifier:
+            set:
+              - name: Strict-Transport-Security
+                value: max-age=31536000; includeSubDomains
 ---
 # Allow the shared Gateway to terminate TLS with the certificate of this namespace
 apiVersion: gateway.networking.k8s.io/v1beta1

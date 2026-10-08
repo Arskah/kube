@@ -22,6 +22,9 @@ spec:
           webhook:
             securePort: 10260
           config:
+            # Needed for the gatewayHTTPRoute HTTP-01 solver
+            gatewayAPI:
+              enabled: true
             featureGates:
               # Disable the use of Exact PathType in Ingress resources, to work around a bug in ingress-nginx
               # https://github.com/kubernetes/ingress-nginx/issues/11176

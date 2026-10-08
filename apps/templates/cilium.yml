@@ -65,6 +65,8 @@ spec:
             loadBalancerIP: 192.168.86.100
         gatewayAPI:
           enabled: true
+          # Offer HTTP/2 to clients
+          enableAlpn: true
           gatewayClass:
             create: "true"
           # Listen directly on the nodes instead of through a LoadBalancer Service. The router
