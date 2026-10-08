@@ -125,7 +125,7 @@ spec:
           selector:
             matchLabels:
               kubernetes.io/metadata.name: homepage-staging
-    # music-library is deployed by hand, its route and ReferenceGrant are not in this repository
+    # The music-library route and ReferenceGrant are in github.com/Arskah/music-library, k8s/
     - name: music
       protocol: HTTPS
       port: 443
