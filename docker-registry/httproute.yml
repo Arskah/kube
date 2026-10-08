@@ -1,0 +1,35 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: docker-registry
+  namespace: docker-registry
+spec:
+  parentRefs:
+    - name: public
+      namespace: gateway
+      sectionName: registry
+  hostnames:
+    - registry.aarnihalinen.fi
+  rules:
+    - backendRefs:
+        - name: docker-registry
+          port: 5000
+      # Pushing and pulling large layers takes longer than the default request timeout
+      timeouts:
+        request: 0s
+---
+# Allow the shared Gateway to terminate TLS with the certificate of this namespace
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: gateway-tls
+  namespace: docker-registry
+spec:
+  from:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      namespace: gateway
+  to:
+    - group: ""
+      kind: Secret
+      name: docker-registry-tls
