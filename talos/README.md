@@ -108,11 +108,13 @@ also has the recommended VM settings.
    ```
 
 6. Install Cilium. The default CNI (Flannel) and kube-proxy are disabled in the patches, so the nodes stay `NotReady`
-   until Cilium is running, and ArgoCD pods cannot be scheduled before that. Render the chart with the version and
-   values of the ArgoCD Application, so that ArgoCD takes over the same resources afterwards:
+   until Cilium is running, and ArgoCD pods cannot be scheduled before that. Cilium only starts its Gateway API support
+   when the Gateway API CRDs exist, so install them first. Use the versions and values of the ArgoCD Applications, so
+   that ArgoCD takes over the same resources afterwards:
 
    ```sh
    export KUBECONFIG=talos/kubeconfig
+   kubectl apply --server-side -f "https://github.com/kubernetes-sigs/gateway-api/releases/download/$(yq '.spec.source.targetRevision' apps/templates/gateway-api.yml)/standard-install.yaml"
    yq '.spec.source.helm.valuesObject' apps/templates/cilium.yml > /tmp/cilium-values.yaml
    helm template cilium cilium \
      --repo https://helm.cilium.io \
