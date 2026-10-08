@@ -1,0 +1,36 @@
+# Cilium runs Gateways in host network mode (see apps/templates/cilium.yml), so Envoy listens
+# on these ports directly on every node and the router forwards 80 and 443 to a node.
+#
+# Each hostname needs its own HTTPS listener, as a listener has exactly one certificate. The
+# certificates stay in the namespaces of the applications, which allow this Gateway to use them
+# with a ReferenceGrant. An application then attaches an HTTPRoute to its listener with
+# `sectionName`.
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: public
+  namespace: gateway
+spec:
+  gatewayClassName: cilium
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: sik75
+      protocol: HTTPS
+      port: 443
+      hostname: sik75.aarnihalinen.fi
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: tls-secret
+            namespace: caddy
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              kubernetes.io/metadata.name: caddy
