@@ -40,9 +40,12 @@ Store these in the password manager. None of them is taken automatically.
    | `sealed-regcred-argocd.json`              | `argocd/regcred-argocd`                | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`       |
    | `sealed-regcred-homepage-production.json` | `homepage-production/regcred-homepage` | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`       |
    | `sealed-regcred-homepage-staging.json`    | `homepage-staging/regcred-homepage`    | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`       |
+   | `sealed-registry-htpasswd.json`           | `docker-registry/registry-htpasswd`    | `htpasswd`                                          | bcrypt hash of the registry password     |
    | `sealed-tp-rent-db.json`                  | `tp-rent/db-password`                  | `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` | has to match the existing database files |
 
-   The registry password is also needed as such: only its bcrypt hash is in `apps/templates/docker-registry.yml`.
+   All four registry secrets come from the same user and password: `registry-htpasswd` is the bcrypt hash the registry
+   checks against, the three `regcred` secrets are what the cluster logs in with. They have to be sealed again together
+   when the password changes.
 
 4. A dump of the tp-rent database, taken regularly:
 

@@ -26,8 +26,23 @@ spec:
             size: 10Gi
             deleteEnabled: true
             existingClaim: docker-registry-pv-claim
-          secrets:
-            htpasswd: arskah:$2y$05$ZMDZy776w/RfPy3MmaHbWucMBNEUo/CgCzgKt2jeWTfQJGdcIc0dO
+          # htpasswd comes from the registry-htpasswd SealedSecret instead of the chart's own
+          # `secrets.htpasswd`, which would put the hash in git
+          extraVolumes:
+            - name: htpasswd
+              secret:
+                secretName: registry-htpasswd
+          extraVolumeMounts:
+            - name: htpasswd
+              mountPath: /auth
+              readOnly: true
+          extraEnvVars:
+            - name: REGISTRY_AUTH
+              value: htpasswd
+            - name: REGISTRY_AUTH_HTPASSWD_REALM
+              value: Registry Realm
+            - name: REGISTRY_AUTH_HTPASSWD_PATH
+              value: /auth/htpasswd
           ingress:
             enabled: true
             className: nginx
