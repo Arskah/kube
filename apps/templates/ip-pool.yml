@@ -1,6 +1,6 @@
 # Define an IP pool for Cilium to use for LoadBalancer IPs.
 # The router hands out 192.168.86.20-192.168.86.99 over DHCP, so this range has to stay above that.
-apiVersion: "cilium.io/v2alpha1"
+apiVersion: "cilium.io/v2"
 kind: CiliumLoadBalancerIPPool
 metadata:
   name: general-pool

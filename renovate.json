@@ -28,5 +28,13 @@
       "datasourceTemplate": "github-tags",
       "versioningTemplate": "semver"
     }
+  ],
+  "packageRules": [
+    {
+      "description": "The Gateway API CRD version has to be one that the installed Cilium supports, so only patch releases come in without asking",
+      "matchDepNames": ["https://github.com/kubernetes-sigs/gateway-api.git"],
+      "matchUpdateTypes": ["minor", "major"],
+      "dependencyDashboardApproval": true
+    }
   ]
 }
