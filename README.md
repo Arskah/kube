@@ -9,6 +9,11 @@ for the machine configuration and how to set up, change and upgrade the nodes.
 
 Node and LAN IP addresses are hardcoded in a couple of config files, grep the repo for them when they change.
 
+## Disaster recovery
+
+[docs/disaster-recovery.md](docs/disaster-recovery.md) has the procedure for rebuilding the whole cluster from scratch, and
+lists the secrets, data and network configuration that are not in this repository.
+
 ## ArgoCD
 
 Install `argocd` CLI
