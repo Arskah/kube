@@ -18,5 +18,6 @@ jobs:
         run: npm ci
 
       - name: Check PR title
-        run: |
-          npx commitlint <<< '${{ github.event.pull_request.title }}'
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: npx commitlint <<< "$PR_TITLE"
