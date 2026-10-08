@@ -34,3 +34,48 @@ spec:
           selector:
             matchLabels:
               kubernetes.io/metadata.name: caddy
+    - name: icecast
+      protocol: HTTPS
+      port: 443
+      hostname: icecast.aarnihalinen.fi
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: tls-secret
+            namespace: icecast
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              kubernetes.io/metadata.name: icecast
+    - name: tp
+      protocol: HTTPS
+      port: 443
+      hostname: tp.aarnihalinen.fi
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: tls-secret
+            namespace: tp-rent
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              kubernetes.io/metadata.name: tp-rent
+    - name: registry
+      protocol: HTTPS
+      port: 443
+      hostname: registry.aarnihalinen.fi
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: docker-registry-tls
+            namespace: docker-registry
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              kubernetes.io/metadata.name: docker-registry
