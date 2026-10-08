@@ -9,15 +9,16 @@ spec:
       stop: "192.168.86.255"
 ---
 # Define an L2 Announcement Policy named "policy1".
-# This policy enables L2 announcements for all interfaces matching the pattern 'eth[0-9]+'.
-# It includes both externalIPs and loadBalancerIPs in the announcements
-# (important for discoverability in our home lab).
+# This policy enables L2 announcements on eth0, the NIC name on the Talos nodes (net.ifnames=0).
+# Only loadBalancerIPs are announced. externalIPs are left out, because ingress-nginx uses
+# the control plane node IP as its externalIP and announcing it from another node would
+# make two hosts answer ARP for the same address.
 apiVersion: "cilium.io/v2alpha1"
 kind: CiliumL2AnnouncementPolicy
 metadata:
   name: policy1
 spec:
   interfaces:
-    - enp37s0
-  externalIPs: true
+    - eth0
+  externalIPs: false
   loadBalancerIPs: true
