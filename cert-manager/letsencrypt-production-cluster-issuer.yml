@@ -10,6 +10,11 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-production
     solvers:
+      # The challenge is served through the plain HTTP listener of the shared Gateway
       - http01:
-          ingress:
-            ingressClassName: nginx
+          gatewayHTTPRoute:
+            parentRefs:
+              - name: public
+                namespace: gateway
+                kind: Gateway
+                sectionName: http
