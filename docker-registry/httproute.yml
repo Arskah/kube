@@ -17,6 +17,12 @@ spec:
       # Pushing and pulling large layers takes longer than the default request timeout
       timeouts:
         request: 0s
+      filters:
+        - type: ResponseHeaderModifier
+          responseHeaderModifier:
+            set:
+              - name: Strict-Transport-Security
+                value: max-age=31536000; includeSubDomains
 ---
 # Allow the shared Gateway to terminate TLS with the certificate of this namespace
 apiVersion: gateway.networking.k8s.io/v1beta1
