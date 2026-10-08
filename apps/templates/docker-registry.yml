@@ -43,18 +43,6 @@ spec:
               value: Registry Realm
             - name: REGISTRY_AUTH_HTPASSWD_PATH
               value: /auth/htpasswd
-          ingress:
-            enabled: true
-            className: nginx
-            annotations:
-              nginx.ingress.kubernetes.io/proxy-body-size: "0"
-            path: /
-            hosts:
-              - registry.aarnihalinen.fi
-            tls:
-              - secretName: docker-registry-tls
-                hosts:
-                  - registry.aarnihalinen.fi
   syncPolicy:
     automated:
       prune: true

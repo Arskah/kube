@@ -82,8 +82,8 @@ Checked from the outside, the router configuration itself has not been reviewed:
   with the public address of the home connection. The address has changed before. When it changes, the A records have to
   follow.
 - Ports 80, 443 and 6443 are open on the public address. Google Wifi can only forward ports to devices it knows from
-  DHCP, so the forwards have to point at the control plane node: 80 to `192.168.86.73:30080`, 443 to
-  `192.168.86.73:30443` and 6443 to `192.168.86.73:6443`.
+  DHCP, so the forwards have to point at the control plane node: 80 to `192.168.86.73:80` and 443 to
+  `192.168.86.73:443`, where the Gateway listens, and 6443 to `192.168.86.73:6443`.
 - The node addresses come from DHCP and are hardcoded in this repo, so they need DHCP reservations: `192.168.86.73`
   (`kube-control`), `192.168.86.76` (`kube-node1`) and `192.168.86.87` (NAS). New VMs get new MAC addresses, so the
   reservations have to be made again.
