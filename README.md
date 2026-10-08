@@ -51,8 +51,3 @@ argocd account update-password
 ```
 
 Argo should install all other apps (they are included in the app-of-apps).
-
-### Notes
-
-Cilium and cert-manager are by default multi-node => scale down deployments to 1.
-Ingress ports might need to be edited to service, seems like a bug.
