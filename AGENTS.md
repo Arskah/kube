@@ -38,7 +38,7 @@ kubectl apply -f app-of-apps.yml
 An Application in `apps/templates/` points at one of:
 
 - a directory in this repo with plain manifests (`caddy/`, `icecast/`, `tp-rent/`),
-- an upstream Helm chart with values inlined under `helm.valuesObject` (cilium, ingress-nginx, monitoring, nfs-storage, gitlab-runner),
+- an upstream Helm chart with values inlined under `helm.valuesObject` (cilium, monitoring, nfs-storage, gitlab-runner),
 - both at once via `sources:` — chart plus a repo directory of extra resources (cert-manager + its ClusterIssuers, sealed-secrets + the sealed secrets, docker-registry + its PVC/Certificate),
 - another repo (`homepage-*` → `Arskah/homepage`, `k8s/prod` and `k8s/staging`).
 
@@ -51,12 +51,11 @@ Three AppProjects: `argocd` (`argocd/base/`), and `infra` and `applications` (`a
 - `infra` is unrestricted.
 - `applications` whitelists source repos and destination namespaces explicitly. **Adding a new app under this project means also adding its namespace (and repo/chart URL if new) to `argocd-projects/apps.yml`**, otherwise the sync is rejected.
 
-Startup order is expressed with `argocd.argoproj.io/sync-wave` annotations: 1 cilium, nfs-storage → 2 ingress-nginx, sealed-secrets → 3 cert-manager, monitoring → 4 docker-registry → 5 user-facing apps. Give new Applications a wave consistent with what they depend on.
+Startup order is expressed with `argocd.argoproj.io/sync-wave` annotations: 0 gateway-api (CRDs) → 1 cilium, nfs-storage → 2 sealed-secrets → 3 cert-manager, monitoring, gateway → 4 docker-registry → 5 user-facing apps. Give new Applications a wave consistent with what they depend on.
 
 ### Cross-cutting conventions
 
-- **Ingress/TLS**: apps use `ingressClassName: nginx` with the `cert-manager.io/cluster-issuer: letsencrypt-production` annotation (HTTP-01 solver is bound to the nginx class). Cilium's own ingress controller is also enabled, but nothing uses it.
-- **Gateway API (migration from ingress-nginx in progress)**: ingress-nginx is retired upstream and is being replaced by Cilium's Gateway API implementation. `gateway/` has the shared `Gateway` `public`, which runs in host network mode (Envoy listens on 80/443 on the nodes, see the comment in `apps/templates/cilium.yml`). Each hostname has its own HTTPS listener there; the application keeps its `Certificate` in its own namespace, allows the Gateway to use the secret with a `ReferenceGrant`, and attaches an `HTTPRoute` to its listener with `sectionName` (`caddy/httproute.yml` is the template). Public traffic still enters through ingress-nginx until the router is repointed, so keep the `Ingress` of an application until then.
+- **Ingress/TLS**: HTTP(S) traffic enters through Cilium's Gateway API implementation; there is no Ingress controller (ingress-nginx is retired upstream and was removed). `gateway/` has the shared `Gateway` `public`, which runs in host network mode: Envoy listens on 80/443 on the nodes (see the comment in `apps/templates/cilium.yml`). Port 80 only redirects to HTTPS. Each hostname has its own HTTPS listener in `gateway/gateway.yml`, because a listener has exactly one certificate. To expose an application: add a listener there, and next to the application a `Certificate` (ClusterIssuer `letsencrypt-production`), a `ReferenceGrant` that lets the Gateway use the certificate secret, and an `HTTPRoute` attached to the listener with `sectionName` (`caddy/httproute.yml` is the template, including the HSTS header that every route sets). The ACME HTTP-01 solver is a `gatewayHTTPRoute` on the `http` listener.
 - **Storage**: default StorageClass is `nfs-retain` (csi-driver-nfs, NAS at `192.168.86.87:/k8s`); some pods also mount NFS from that host directly.
 - **Secrets**: only Bitnami SealedSecrets are committed, as JSON in `sealed-secrets/`, each with its target namespace baked in. They are sealed against the in-cluster controller (`sealed-secrets-controller` in `kube-system`), so they cannot be created or edited without cluster access. `secrets/` (plaintext inputs) is gitignored.
 - **Versions**: Renovate owns chart `targetRevision`s, image tags (pinned as `tag@sha256:digest`), GitHub Action SHAs, and the ArgoCD version in `argocd/kustomization.yaml` (custom regex manager). Keep the pin formats intact so Renovate keeps matching them.
@@ -64,9 +63,9 @@ Startup order is expressed with `argocd.argoproj.io/sync-wave` annotations: 1 ci
 
 ### Environment-specific values
 
-LAN addresses are hardcoded across manifests (`192.168.86.x`: control-plane node IP as externalIP in `ingress-nginx.yml`, LB pool and L2 announcement interface in `ip-pool.yml`, Cilium ingress LB IP, NFS server). When one changes, grep the repo for it.
+LAN addresses are hardcoded across manifests and docs (`192.168.86.x`: LB pool in `ip-pool.yml`, NFS server, node addresses in `talos/` and `docs/`). When one changes, grep the repo for it.
 
-The cluster runs on Talos nodes in Proxmox (see `talos/README.md`); it replaced an earlier single-node kubeadm install. `apps/templates/cilium.yml` carries the Talos-specific values (KubePrism at `localhost:7445`, dropped `SYS_MODULE`, cgroup settings). Nodes are `kube-control` (`192.168.86.73`, control plane) and `kube-node1` (`192.168.86.76`); ingress-nginx is exposed as a NodePort service with the control-plane IP as its externalIP. That is deliberate: the router is a Google Wifi, which can only port-forward to devices it knows from DHCP, so public traffic has to enter through a node IP and NodePorts (`30080`/`30443`) rather than a Cilium LoadBalancer IP. LoadBalancer IPs are only usable from inside the LAN. The node NIC is `eth0` (Talos is installed with `net.ifnames=0`); both `devices` in `cilium.yml` and the `CiliumL2AnnouncementPolicy` in `ip-pool.yml` depend on that name.
+The cluster runs on Talos nodes in Proxmox (see `talos/README.md`); it replaced an earlier single-node kubeadm install. `apps/templates/cilium.yml` carries the Talos-specific values (KubePrism at `localhost:7445`, dropped `SYS_MODULE`, cgroup settings). Nodes are `kube-control` (`192.168.86.73`, control plane) and `kube-node1` (`192.168.86.76`); The router is a Google Wifi, which can only port-forward to a port on a device it knows from DHCP, so public traffic has to enter through a node IP: it forwards 80 and 443 to `kube-control`, where the Gateway listens in host network mode. That is why the Gateway does not use a Cilium LoadBalancer IP; those are only usable from inside the LAN, and nothing uses one at the moment. The node NIC is `eth0` (Talos is installed with `net.ifnames=0`); both `devices` in `cilium.yml` and the `CiliumL2AnnouncementPolicy` in `ip-pool.yml` depend on that name.
 
 `docs/disaster-recovery.md` is the rebuild runbook and the inventory of state that lives outside git (Sealed Secrets keys, NFS volume directories, router and DNS setup). Keep its tables current when adding a SealedSecret or a PersistentVolumeClaim.
 
