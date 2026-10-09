@@ -154,6 +154,4 @@ talosctl upgrade-k8s --nodes 192.168.86.73 --to <version>
 - The worker patch sets the hostname of the only worker. For more workers, generate with a different hostname per node.
 - The current cluster was not set up exactly like above. It was bootstrapped with the Talos defaults (Flannel and
   kube-proxy), ArgoCD installed Cilium on top of that, and the defaults were disabled in the machine config afterwards.
-  Leftovers from that are still in the cluster: `kube-flannel-cfg` ConfigMap, `flannel` and `kube-proxy`
-  ServiceAccounts with their ClusterRoles and ClusterRoleBindings, and `flannel.alpha.coreos.com/*` node annotations.
-- `87.92.101.169` in the API server cert SANs is an old public address and can be dropped.
+  What they left behind in the cluster has been removed.

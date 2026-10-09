@@ -25,6 +25,8 @@ spec:
               enabled: true
             patch:
               enabled: false
+        kubeProxy:
+          enabled: false
   syncPolicy:
     automated:
       prune: true
@@ -33,4 +35,9 @@ spec:
       - CreateNamespace=false
       - ServerSideApply=true
       - PruneLast=true
-      - Replace=true
+    retry:
+      limit: 10
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m

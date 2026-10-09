@@ -11,9 +11,12 @@ spec:
     server: https://kubernetes.default.svc
   project: infra
   source:
-    repoURL: https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/charts
-    targetRevision: 4.13.4
-    chart: csi-driver-nfs
+    # The chart is taken from the git tag instead of the upstream Helm repository, which is an index file on the
+    # master branch pointing at tarballs on the master branch. At a release tag, charts/latest is the chart of that
+    # release.
+    repoURL: https://github.com/kubernetes-csi/csi-driver-nfs.git
+    targetRevision: v4.13.4
+    path: charts/latest/csi-driver-nfs
     helm:
       releaseName: csi-driver-nfs
       version: v3
@@ -42,3 +45,9 @@ spec:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
       - PruneLast=true
+    retry:
+      limit: 10
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
