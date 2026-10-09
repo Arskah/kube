@@ -27,6 +27,11 @@ spec:
               enabled: false
         kubeProxy:
           enabled: false
+        grafana:
+          # Without a password of its own the chart generates a new one on every render, because ArgoCD renders
+          # with `helm template`, which cannot look up the existing one. Every sync then restarted Grafana.
+          admin:
+            existingSecret: grafana-admin
   syncPolicy:
     automated:
       prune: true

@@ -38,6 +38,7 @@ Store these in the password manager. None of them is taken automatically.
    | File in `sealed-secrets/`                 | Secret                                 | Keys                                                | Source of the values                      |
    | ----------------------------------------- | -------------------------------------- | --------------------------------------------------- | ----------------------------------------- |
    | `sealed-gitlab-runner.json`               | `gitlab-runner/gitlab-runner`          | `runner-registration-token`, `runner-token`         | GitLab runner settings                    |
+   | `sealed-grafana-admin.json`               | `monitoring/grafana-admin`             | `admin-user`, `admin-password`                      | any, it is the login of Grafana           |
    | `sealed-music-library-hub.json`           | `music-library/hub`                    | `password`                                          | has to match the existing database files  |
    | `sealed-music-library-regcred.json`       | `music-library/regcred`                | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`        |
    | `sealed-music-library-web-login.json`     | `music-library/web-login`              | `login`                                             | shared login of the page, `user:password` |

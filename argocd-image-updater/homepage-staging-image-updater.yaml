@@ -14,5 +14,7 @@ spec:
       images:
         - alias: "staging"
           imageName: "registry.aarnihalinen.fi/homepage:staging"
+          # CI moves the `staging` tag on every build. Following its digest takes one request, where
+          # newest-build read the metadata of every tag in the registry.
           commonUpdateSettings:
-            updateStrategy: "newest-build"
+            updateStrategy: "digest"
