@@ -20,8 +20,11 @@ spec:
           ports:
             - containerPort: 8000
           volumeMounts:
+            # Only the config file. Mounting the whole directory hides /etc/icecast2/web and
+            # /etc/icecast2/admin of the image, which the status pages are symlinked to.
             - name: icecast
-              mountPath: /etc/icecast2
+              mountPath: /etc/icecast2/icecast.xml
+              subPath: icecast.xml
       securityContext: {}
       volumes:
         - name: icecast
