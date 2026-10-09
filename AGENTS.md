@@ -33,12 +33,12 @@ kubectl apply -f app-of-apps.yml
 
 ### App-of-apps
 
-`app-of-apps.yml` defines the root `apps` Application, which syncs `apps/` as a plain recursive directory. Despite the `apps/Chart.yml` + `templates/` layout, nothing in `apps/templates/` is Helm-templated; the files are applied as-is. Each file there is normally one ArgoCD `Application`, but the directory also holds raw cluster resources (`namespaces.yml`, `ip-pool.yml`).
+`app-of-apps.yml` defines the root `apps` Application, which syncs `apps/` as a plain recursive directory. Despite the `templates/` directory name, `apps/` is not a Helm chart and nothing in `apps/templates/` is templated; the files are applied as-is. Each file there is normally one ArgoCD `Application`, but the directory also holds raw cluster resources (`namespaces.yml`, `ip-pool.yml`).
 
 An Application in `apps/templates/` points at one of:
 
 - a directory in this repo with plain manifests (`caddy/`, `icecast/`, `tp-rent/`),
-- an upstream Helm chart with values inlined under `helm.valuesObject` (cilium, monitoring, nfs-storage, gitlab-runner),
+- an upstream Helm chart with values inlined under `helm.valuesObject` (cilium, monitoring, gitlab-runner; nfs-storage takes its chart from the upstream git tag),
 - both at once via `sources:` — chart plus a repo directory of extra resources (cert-manager + its ClusterIssuers, sealed-secrets + the sealed secrets, docker-registry + its PVC/Certificate),
 - another repo (`homepage-*` → `Arskah/homepage`, `k8s/prod` and `k8s/staging`).
 
@@ -51,7 +51,7 @@ Three AppProjects: `argocd` (`argocd/base/`), and `infra` and `applications` (`a
 - `infra` is unrestricted.
 - `applications` whitelists source repos and destination namespaces explicitly. **Adding a new app under this project means also adding its namespace (and repo/chart URL if new) to `argocd-projects/apps.yml`**, otherwise the sync is rejected.
 
-Startup order is expressed with `argocd.argoproj.io/sync-wave` annotations: 0 gateway-api (CRDs) → 1 cilium, nfs-storage → 2 sealed-secrets → 3 cert-manager, monitoring, gateway → 4 docker-registry → 5 user-facing apps. Give new Applications a wave consistent with what they depend on.
+Startup order is expressed with `argocd.argoproj.io/sync-wave` annotations: 0 gateway-api (CRDs) → 1 cilium, nfs-storage → 2 sealed-secrets → 3 cert-manager, monitoring, gateway → 4 docker-registry → 5 user-facing apps. Give new Applications a wave consistent with what they depend on. The waves only order when the Applications are created: ArgoCD has no health check for `Application` resources here, so the root app does not wait for one wave to be up before creating the next. What makes a fresh cluster converge is the `retry` block that every Application carries (a sync that fails because a namespace or CRD of another Application is not there yet is tried again, which automated sync does not do by itself for the same commit). Copy it to new Applications.
 
 ### Cross-cutting conventions
 
