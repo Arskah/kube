@@ -12,22 +12,36 @@ spec:
     namespace: system-upgrade
     server: https://kubernetes.default.svc
   project: infra
-  source:
-    repoURL: ghcr.io/home-operations/charts
-    targetRevision: 0.5.7
-    chart: tuppr
-    helm:
-      releaseName: tuppr
-      valuesObject:
-        monitoring:
-          serviceMonitor:
-            enabled: true
-            labels:
-              release: monitoring
-          prometheusRule:
-            enabled: true
-            labels:
-              release: monitoring
+  sources:
+    - repoURL: ghcr.io/home-operations/charts
+      targetRevision: 0.5.7
+      chart: tuppr
+      helm:
+        releaseName: tuppr
+        valuesObject:
+          # tuppr upgrades the node of its own pod first. Keep it off the only control plane node when it can be,
+          # so that the worker goes first and shows whether the new version works.
+          affinity:
+            nodeAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  preference:
+                    matchExpressions:
+                      - key: node-role.kubernetes.io/control-plane
+                        operator: DoesNotExist
+          monitoring:
+            serviceMonitor:
+              enabled: true
+              labels:
+                release: monitoring
+            prometheusRule:
+              enabled: true
+              labels:
+                release: monitoring
+    # The versions to upgrade to
+    - repoURL: https://github.com/Arskah/kube.git
+      path: tuppr
+      targetRevision: HEAD
   # The chart creates the webhook certificate Secret empty and the webhook without a CA. The controller fills in
   # both when it starts, and would be undone by every sync.
   ignoreDifferences:
