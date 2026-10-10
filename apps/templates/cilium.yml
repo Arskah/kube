@@ -53,6 +53,11 @@ spec:
         operator:
           replicas: 1
           rollOutPods: true
+          prometheus:
+            serviceMonitor:
+              enabled: true
+              labels:
+                release: monitoring
         hubble:
           relay:
             enabled: true
@@ -72,6 +77,11 @@ spec:
         envoy:
           # Restart when the configuration changes
           rollOutPods: true
+          prometheus:
+            serviceMonitor:
+              enabled: true
+              labels:
+                release: monitoring
           securityContext:
             capabilities:
               # Needed for the host network Gateway listeners on ports 80 and 443
@@ -80,6 +90,15 @@ spec:
                 - NET_ADMIN
                 - SYS_ADMIN
                 - NET_BIND_SERVICE
+        # Metrics of the agents, the operator and Envoy for the Prometheus of the monitoring application, which only
+        # picks up monitors with the release label. The chart refuses to render a ServiceMonitor when the CRD is
+        # missing, so the manual install in talos/README.md switches the three monitors off.
+        prometheus:
+          enabled: true
+          serviceMonitor:
+            enabled: true
+            labels:
+              release: monitoring
         # Restart the agents and the operator when the configuration changes. Without this a
         # changed value only takes effect after restarting the pods by hand.
         rollOutCiliumPods: true

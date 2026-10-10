@@ -120,9 +120,15 @@ also has the recommended VM settings.
      --repo https://helm.cilium.io \
      --version "$(yq '.spec.source.targetRevision' apps/templates/cilium.yml)" \
      --namespace kube-system \
-     --values /tmp/cilium-values.yaml |
+     --values /tmp/cilium-values.yaml \
+     --set prometheus.serviceMonitor.enabled=false \
+     --set operator.prometheus.serviceMonitor.enabled=false \
+     --set envoy.prometheus.serviceMonitor.enabled=false |
      kubectl apply -f -
    ```
+
+   The ServiceMonitors are left out because their CRD only arrives with the monitoring application. For the same
+   reason ArgoCD cannot render the `cilium` application until `monitoring` has synced once; it retries on its own.
 
    The values are the Talos-specific ones from <https://docs.siderolabs.com/kubernetes-guides/cni/deploying-cilium>.
 
