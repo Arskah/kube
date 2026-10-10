@@ -26,7 +26,7 @@ spec:
             # No official image has both a shell with curl and the DigitalOcean CLI. The CLI is one static binary,
             # so it is copied out of its own image, whose base is too old to run the script in.
             - name: doctl
-              image: digitalocean/doctl:1.181.0@sha256:7f6c2a507c5e3bc5dac85ef47b4fa97f0d77af220761b978741116ac7fa566b9
+              image: digitalocean/doctl:2.59.3@sha256:9a8b379020e5877664f351ab970a33f5f90419c7902477f173e8f01a94a97286
               command: ["cp", "/app/doctl", "/tools/doctl"]
               securityContext:
                 allowPrivilegeEscalation: false
