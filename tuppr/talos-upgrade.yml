@@ -1,0 +1,16 @@
+# tuppr upgrades the nodes to exactly this version as soon as it changes, one node at a time: first the node its
+# own pod runs on, then the others by name. It does not check that the step is a supported one: Talos has to go
+# through the latest patch of every minor version in between.
+apiVersion: tuppr.home-operations.com/v1alpha1
+kind: TalosUpgrade
+metadata:
+  name: cluster
+spec:
+  talos:
+    # renovate: datasource=docker depName=ghcr.io/siderolabs/talos
+    version: v1.14.2
+  healthChecks:
+    - apiVersion: v1
+      kind: Node
+      expr: status.conditions.filter(c, c.type == "Ready").all(c, c.status == "True")
+      timeout: 10m

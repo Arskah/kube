@@ -1,0 +1,26 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: gateway
+  namespace: gateway
+  labels:
+    release: monitoring
+spec:
+  groups:
+    - name: gateway
+      rules:
+        # cilium-operator looks for the Gateway API CRDs once, when it starts. After a reboot of the control plane
+        # node it has repeatedly started before the API server answered for them, and then ran without its Gateway
+        # API controller: Envoy keeps serving what it has, but changes to routes are not applied and cert-manager
+        # cannot renew certificates through HTTP-01.
+        - alert: CiliumGatewayControllerNotRunning
+          expr: max(cilium_operator_feature_adv_connect_and_lb_gateway_api_enabled) == 0
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            summary: cilium-operator runs without its Gateway API controller
+            description: >-
+              HTTPRoute changes and certificate renewals are stalled. Restart it with
+              `kubectl -n kube-system rollout restart deploy/cilium-operator` and check that its log no longer
+              has "Required GatewayAPI resources are not found".

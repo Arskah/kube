@@ -137,18 +137,37 @@ also has the recommended VM settings.
 
 ## Upgrades
 
-Talos is upgraded one node at a time with the installer image of the new version. Update the image tag in
-`patches/all.yaml` and `--talos-version` in the command above to match.
+[tuppr](https://tuppr.home-operations.com/) upgrades Talos and Kubernetes. The versions are in
+[`tuppr/`](../tuppr) in the repo root; Renovate opens a PR when there is a new one and bumps the image tag in
+`patches/all.yaml` and the versions in this file with it. **Merging the PR starts the upgrade**, there is no
+maintenance window: a Talos upgrade reboots one node after the other, and while `kube-control` reboots the API and
+the public sites are down.
+
+- Patch releases come as PRs. Minor releases wait in the Dependency Dashboard until they are ticked there.
+- tuppr does not check that a step is supported. Talos has to go through the latest patch of every minor version,
+  and the release notes of a new minor are worth reading first (1.14 changed the machine config format). Kubernetes
+  can only go as far as Talos, Cilium, ArgoCD and cert-manager support.
+- `--talos-version` above also selects the format of the generated machine config. After a Talos minor, generate
+  the configs again and compare them with the nodes before applying anything.
+- After the control plane node has rebooted, cilium-operator has repeatedly come up without its Gateway API
+  controller. The alert `CiliumGatewayControllerNotRunning` fires then; restart it with
+  `kubectl -n kube-system rollout restart deploy/cilium-operator`.
+
+```sh
+kubectl get talosupgrade,kubernetesupgrade
+kubectl describe talosupgrade cluster
+kubectl -n system-upgrade logs deploy/tuppr
+```
+
+By hand it is `talosctl upgrade` per node with the installer image of the new version, and `talosctl upgrade-k8s`
+for the whole cluster through the control plane node. Suspend tuppr first
+(`kubectl annotate talosupgrade cluster tuppr.home-operations.com/suspend=true`, same for `kubernetesupgrade
+kubernetes`), so that it does not act on the nodes at the same time, and bring the versions in `tuppr/` in line
+afterwards.
 
 ```sh
 talosctl upgrade --nodes 192.168.86.73 \
   --image factory.talos.dev/installer/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515:<version>
-```
-
-Kubernetes is upgraded for the whole cluster through the control plane node. Update `--kubernetes-version` in the
-command above to match.
-
-```sh
 talosctl upgrade-k8s --nodes 192.168.86.73 --to <version>
 ```
 

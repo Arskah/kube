@@ -27,12 +27,63 @@
       "depNameTemplate": "argoproj/argo-cd",
       "datasourceTemplate": "github-tags",
       "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "description": "The Talos and Kubernetes versions that tuppr upgrades the cluster to",
+      "managerFilePatterns": ["/^tuppr/.+\\.yml$/"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\n\\s*version: (?<currentValue>\\S+)"
+      ]
+    },
+    {
+      "customType": "regex",
+      "description": "The copies of the Talos version in the machine config patch and the Talos README, so that they move in the same PR",
+      "managerFilePatterns": [
+        "/^talos/patches/all\\.yaml$/",
+        "/^talos/README\\.md$/"
+      ],
+      "matchStrings": [
+        "factory\\.talos\\.dev/installer/[0-9a-f]+:(?<currentValue>v[0-9.]+)",
+        "factory\\.talos\\.dev/image/[0-9a-f]+/(?<currentValue>v[0-9.]+)/",
+        "--talos-version (?<currentValue>v[0-9.]+)"
+      ],
+      "depNameTemplate": "ghcr.io/siderolabs/talos",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "description": "The copy of the Kubernetes version in the Talos README",
+      "managerFilePatterns": ["/^talos/README\\.md$/"],
+      "matchStrings": ["--kubernetes-version (?<currentValue>[0-9.]+)"],
+      "depNameTemplate": "ghcr.io/siderolabs/kubelet",
+      "datasourceTemplate": "docker",
+      "extractVersionTemplate": "^v(?<version>.+)$"
     }
   ],
   "packageRules": [
     {
       "description": "The Gateway API CRD version has to be one that the installed Cilium supports, so only patch releases come in without asking",
       "matchDepNames": ["https://github.com/kubernetes-sigs/gateway-api.git"],
+      "matchUpdateTypes": ["minor", "major"],
+      "dependencyDashboardApproval": true
+    },
+    {
+      "description": "tuppr upgrades the cluster to these versions as soon as the PR is merged and does not check that the step is supported. Talos has to go through every minor version, so each one gets its own PR",
+      "matchDepNames": [
+        "ghcr.io/siderolabs/talos",
+        "ghcr.io/siderolabs/kubelet"
+      ],
+      "separateMinorPatch": true,
+      "separateMultipleMinor": true,
+      "pinDigests": false
+    },
+    {
+      "description": "A new Talos minor needs its release notes read, and a new Kubernetes minor has to be supported by Talos, Cilium, ArgoCD and cert-manager first, so only patch releases come in without asking",
+      "matchDepNames": [
+        "ghcr.io/siderolabs/talos",
+        "ghcr.io/siderolabs/kubelet"
+      ],
       "matchUpdateTypes": ["minor", "major"],
       "dependencyDashboardApproval": true
     }

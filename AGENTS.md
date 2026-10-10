@@ -71,4 +71,6 @@ Alerts from the monitoring stack are mailed by Alertmanager (configured in `apps
 
 `docs/disaster-recovery.md` is the rebuild runbook and the inventory of state that lives outside git (Sealed Secrets keys, NFS volume directories, router and DNS setup). Keep its tables current when adding a SealedSecret or a PersistentVolumeClaim.
 
+Talos and Kubernetes are upgraded by tuppr (`apps/templates/tuppr.yml`, namespace `system-upgrade`) to the versions in `tuppr/`. **Merging a change to those versions upgrades the cluster right away**, with a reboot of every node for Talos; `talos/README.md` has the rules for which steps are safe. Renovate bumps them together with the copies in `talos/patches/all.yaml` and `talos/README.md`.
+
 Talos machine configs are generated, not committed: `talos/patches/` holds the only tracked Talos configuration, and `talos/secrets.yaml`, the generated `controlplane.yaml`/`worker.yaml`, `talosconfig` and `kubeconfig` are gitignored because they contain cluster credentials (`talos/README.md` has the `talosctl gen config` command and the full setup procedure). Do not read them into context or stage them. `cilium-values.yml` is an old `helm get values` dump kept for reference, not a source of truth.
