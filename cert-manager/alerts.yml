@@ -9,6 +9,8 @@ spec:
   groups:
     - name: cert-manager
       rules:
+        # Same alerts as the community mixin the cert-manager documentation links to
+        # (https://github.com/imusmanmalik/cert-manager-mixin), which is jsonnet and would need a build step.
         # cert-manager renews a 90 day certificate when it has 30 days left, so these only fire after
         # renewal has been failing for a while.
         - alert: CertificateExpiresSoon
@@ -41,6 +43,14 @@ spec:
             description: >-
               Issuing or renewing is stuck. The HTTP-01 challenge needs the Gateway to serve a temporary route on
               port 80, so also check that the Cilium operator still reconciles HTTPRoutes.
+        - alert: CertManagerHitsRateLimit
+          expr: sum by (host) (rate(certmanager_http_acme_client_request_count{status="429"}[5m])) > 0
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "{{ $labels.host }} is rate limiting cert-manager"
+            description: Depending on the limit, no certificate can be issued or renewed for up to a week.
         # Without this the alerts above go quiet when the metrics disappear
         - alert: CertManagerMetricsMissing
           expr: absent(certmanager_certificate_expiration_timestamp_seconds)
