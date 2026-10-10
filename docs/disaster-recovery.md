@@ -35,18 +35,19 @@ Store these in the password manager. None of them is taken automatically.
 
 3. The plaintext values behind the sealed secrets, as a fallback for losing the keys:
 
-   | File in `sealed-secrets/`                 | Secret                                 | Keys                                                | Source of the values                      |
-   | ----------------------------------------- | -------------------------------------- | --------------------------------------------------- | ----------------------------------------- |
-   | `sealed-gitlab-runner.json`               | `gitlab-runner/gitlab-runner`          | `runner-registration-token`, `runner-token`         | GitLab runner settings                    |
-   | `sealed-grafana-admin.json`               | `monitoring/grafana-admin`             | `admin-user`, `admin-password`                      | any, it is the login of Grafana           |
-   | `sealed-music-library-hub.json`           | `music-library/hub`                    | `password`                                          | has to match the existing database files  |
-   | `sealed-music-library-regcred.json`       | `music-library/regcred`                | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`        |
-   | `sealed-music-library-web-login.json`     | `music-library/web-login`              | `login`                                             | shared login of the page, `user:password` |
-   | `sealed-regcred-argocd.json`              | `argocd/regcred-argocd`                | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`        |
-   | `sealed-regcred-homepage-production.json` | `homepage-production/regcred-homepage` | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`        |
-   | `sealed-regcred-homepage-staging.json`    | `homepage-staging/regcred-homepage`    | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`        |
-   | `sealed-registry-htpasswd.json`           | `docker-registry/registry-htpasswd`    | `htpasswd`                                          | bcrypt hash of the registry password      |
-   | `sealed-tp-rent-db.json`                  | `tp-rent/db-password`                  | `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` | has to match the existing database files  |
+   | File in `sealed-secrets/`                 | Secret                                 | Keys                                                | Source of the values                                             |
+   | ----------------------------------------- | -------------------------------------- | --------------------------------------------------- | ---------------------------------------------------------------- |
+   | `sealed-ddns-digitalocean-token.json`     | `ddns/digitalocean-token`              | `token`                                             | DigitalOcean API token, scopes `domain:read` and `domain:update` |
+   | `sealed-gitlab-runner.json`               | `gitlab-runner/gitlab-runner`          | `runner-registration-token`, `runner-token`         | GitLab runner settings                                           |
+   | `sealed-grafana-admin.json`               | `monitoring/grafana-admin`             | `admin-user`, `admin-password`                      | any, it is the login of Grafana                                  |
+   | `sealed-music-library-hub.json`           | `music-library/hub`                    | `password`                                          | has to match the existing database files                         |
+   | `sealed-music-library-regcred.json`       | `music-library/regcred`                | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`                               |
+   | `sealed-music-library-web-login.json`     | `music-library/web-login`              | `login`                                             | shared login of the page, `user:password`                        |
+   | `sealed-regcred-argocd.json`              | `argocd/regcred-argocd`                | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`                               |
+   | `sealed-regcred-homepage-production.json` | `homepage-production/regcred-homepage` | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`                               |
+   | `sealed-regcred-homepage-staging.json`    | `homepage-staging/regcred-homepage`    | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`                               |
+   | `sealed-registry-htpasswd.json`           | `docker-registry/registry-htpasswd`    | `htpasswd`                                          | bcrypt hash of the registry password                             |
+   | `sealed-tp-rent-db.json`                  | `tp-rent/db-password`                  | `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` | has to match the existing database files                         |
 
    All five registry secrets come from the same user and password: `registry-htpasswd` is the bcrypt hash the registry
    checks against, the four `regcred` secrets are what the cluster logs in with. They have to be sealed again together
@@ -80,8 +81,9 @@ kubectl get pv -o custom-columns=CLAIM_NS:.spec.claimRef.namespace,CLAIM:.spec.c
 Checked from the outside, the router configuration itself has not been reviewed:
 
 - All public hostnames are CNAMEs to `aarnihalinen.fi` (or `halinen.dev` for `kube.halinen.dev`), which have an A record
-  with the public address of the home connection. The address has changed before. When it changes, the A records have to
-  follow.
+  with the public address of the home connection. The address is dynamic. The `ddns` CronJob compares the two A records
+  with the current public address every five minutes and updates them through the DigitalOcean API, so they follow on
+  their own as long as the cluster runs. While rebuilding, set them by hand.
 - Ports 80, 443 and 6443 are open on the public address. Google Wifi can only forward ports to devices it knows from
   DHCP, so the forwards have to point at the control plane node: 80 to `192.168.86.73:80` and 443 to
   `192.168.86.73:443`, where the Gateway listens, and 6443 to `192.168.86.73:6443`.

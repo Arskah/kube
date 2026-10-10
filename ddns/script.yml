@@ -1,0 +1,93 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ddns-script
+  namespace: ddns
+data:
+  ddns.sh: |
+    #!/bin/sh
+    # Keep the apex A records of DOMAINS pointing at the public address of the home connection.
+    #
+    # Everything public is a CNAME to one of those records. The address is dynamic and nothing else
+    # follows it: the router has no dynamic DNS client.
+    set -eu
+
+    DOCTL=/tools/doctl
+    TTL=300
+    # Independent services that answer with the caller's address as plain text. The first two that
+    # answer have to agree, so that one of them being wrong cannot repoint the records.
+    IP_SOURCES="https://api.ipify.org https://checkip.amazonaws.com https://ipv4.icanhazip.com"
+
+    # Succeeds when $1 is an IPv4 address that is routed on the internet.
+    is_public_ipv4() {
+      echo "$1" | grep -Eq '^([0-9]{1,3}\.){3}[0-9]{1,3}$' || return 1
+      old_ifs=$IFS
+      IFS=.
+      # shellcheck disable=SC2086
+      set -- $1
+      IFS=$old_ifs
+      for octet in "$@"; do
+        [ "$octet" -le 255 ] || return 1
+      done
+      [ "$1" -eq 0 ] || [ "$1" -eq 10 ] || [ "$1" -eq 127 ] || [ "$1" -ge 224 ] && return 1
+      [ "$1" -eq 100 ] && [ "$2" -ge 64 ] && [ "$2" -le 127 ] && return 1
+      [ "$1" -eq 169 ] && [ "$2" -eq 254 ] && return 1
+      [ "$1" -eq 172 ] && [ "$2" -ge 16 ] && [ "$2" -le 31 ] && return 1
+      [ "$1" -eq 192 ] && [ "$2" -eq 168 ] && return 1
+      return 0
+    }
+
+    public_ip() {
+      first=""
+      for url in $IP_SOURCES; do
+        # A source being down is expected now and then
+        answer=$(curl -fsS4 --max-time 15 "$url" | tr -d '[:space:]') || true
+        if ! is_public_ipv4 "$answer"; then
+          echo "$url: no public address in the answer" >&2
+          continue
+        fi
+        if [ -z "$first" ]; then
+          first=$answer
+          continue
+        fi
+        if [ "$answer" != "$first" ]; then
+          echo "sources disagree: $first and $answer" >&2
+          return 1
+        fi
+        echo "$answer"
+        return 0
+      done
+      echo "fewer than two sources answered with a public address" >&2
+      return 1
+    }
+
+    update() {
+      domain=$1
+      address=$2
+      list=$("$DOCTL" compute domain records list "$domain" --format ID,Type,Name,Data,TTL --no-header) || return 1
+      records=$(echo "$list" | awk '$2 == "A" && $3 == "@"')
+      count=$(echo "$records" | grep -c . || true)
+      if [ "$count" -ne 1 ]; then
+        echo "$domain: expected one apex A record, found $count" >&2
+        return 1
+      fi
+      # shellcheck disable=SC2086
+      set -- $records
+      id=$1
+      current=$4
+      ttl=$5
+      if [ "$current" = "$address" ] && [ "$ttl" = "$TTL" ]; then
+        echo "$domain: $address, up to date"
+        return 0
+      fi
+      "$DOCTL" compute domain records update "$domain" --record-id "$id" --record-type A --record-name @ \
+        --record-data "$address" --record-ttl "$TTL" >/dev/null || return 1
+      echo "$domain: $current (ttl $ttl) -> $address (ttl $TTL)"
+    }
+
+    address=$(public_ip)
+    failed=0
+    for domain in $(echo "$DOMAINS" | tr ',' ' '); do
+      update "$domain" "$address" || failed=1
+    done
+    exit "$failed"

@@ -1,0 +1,81 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ddns
+  namespace: ddns
+spec:
+  schedule: "*/5 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      activeDeadlineSeconds: 120
+      template:
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            seccompProfile:
+              type: RuntimeDefault
+          initContainers:
+            # No official image has both a shell with curl and the DigitalOcean CLI. The CLI is one static binary,
+            # so it is copied out of its own image, whose base is too old to run the script in.
+            - name: doctl
+              image: digitalocean/doctl:1.181.0@sha256:7f6c2a507c5e3bc5dac85ef47b4fa97f0d77af220761b978741116ac7fa566b9
+              command: ["cp", "/app/doctl", "/tools/doctl"]
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: [ALL]
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 16Mi
+                limits:
+                  memory: 64Mi
+              volumeMounts:
+                - name: tools
+                  mountPath: /tools
+          containers:
+            - name: ddns
+              image: curlimages/curl:8.22.0@sha256:58adaa4e8dca9c988bae2aba4ab3434a0bb2da16bbe3f92dec39ec7785166777
+              command: ["/bin/sh", "/app/ddns.sh"]
+              env:
+                - name: DOMAINS
+                  value: aarnihalinen.fi,halinen.dev
+                - name: DIGITALOCEAN_ACCESS_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: digitalocean-token
+                      key: token
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: [ALL]
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 32Mi
+                limits:
+                  memory: 128Mi
+              volumeMounts:
+                - name: script
+                  mountPath: /app
+                  readOnly: true
+                - name: tools
+                  mountPath: /tools
+                  readOnly: true
+          volumes:
+            - name: script
+              configMap:
+                name: ddns-script
+            - name: tools
+              emptyDir:
+                sizeLimit: 100Mi
