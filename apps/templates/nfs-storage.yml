@@ -15,7 +15,7 @@ spec:
     # master branch pointing at tarballs on the master branch. At a release tag, charts/latest is the chart of that
     # release.
     repoURL: https://github.com/kubernetes-csi/csi-driver-nfs.git
-    targetRevision: v4.13.4
+    targetRevision: v4.13.5
     path: charts/latest/csi-driver-nfs
     helm:
       releaseName: csi-driver-nfs
