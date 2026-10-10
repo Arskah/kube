@@ -25,6 +25,13 @@ spec:
             # Needed for the gatewayHTTPRoute HTTP-01 solver
             gatewayAPI:
               enabled: true
+          # The chart can have itself scraped but ships no alerts, those are in cert-manager/alerts.yml.
+          # Prometheus only picks up monitors and rules that carry the release label.
+          prometheus:
+            servicemonitor:
+              enabled: true
+              labels:
+                release: monitoring
     - repoURL: https://github.com/Arskah/kube.git
       path: cert-manager
       targetRevision: HEAD

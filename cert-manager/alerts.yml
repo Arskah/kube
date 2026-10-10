@@ -1,0 +1,52 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: cert-manager
+  namespace: cert-manager
+  labels:
+    release: monitoring
+spec:
+  groups:
+    - name: cert-manager
+      rules:
+        # cert-manager renews a 90 day certificate when it has 30 days left, so these only fire after
+        # renewal has been failing for a while.
+        - alert: CertificateExpiresSoon
+          expr: certmanager_certificate_expiration_timestamp_seconds - time() < 14 * 24 * 3600
+          for: 1h
+          labels:
+            severity: warning
+          annotations:
+            summary: Certificate {{ $labels.exported_namespace }}/{{ $labels.name }} expires in less than 14 days
+            description: >-
+              Renewal should have happened two weeks ago. Look at the Certificate, its CertificateRequest, Order
+              and Challenge in namespace {{ $labels.exported_namespace }}.
+        - alert: CertificateExpiresVerySoon
+          expr: certmanager_certificate_expiration_timestamp_seconds - time() < 3 * 24 * 3600
+          for: 1h
+          labels:
+            severity: critical
+          annotations:
+            summary: Certificate {{ $labels.exported_namespace }}/{{ $labels.name }} expires in less than 3 days
+            description: >-
+              Browsers start rejecting the site when it expires. Look at the Certificate, its CertificateRequest,
+              Order and Challenge in namespace {{ $labels.exported_namespace }}.
+        - alert: CertificateNotReady
+          expr: certmanager_certificate_ready_status{condition!="True"} == 1
+          for: 1h
+          labels:
+            severity: warning
+          annotations:
+            summary: Certificate {{ $labels.exported_namespace }}/{{ $labels.name }} has not been ready for an hour
+            description: >-
+              Issuing or renewing is stuck. The HTTP-01 challenge needs the Gateway to serve a temporary route on
+              port 80, so also check that the Cilium operator still reconciles HTTPRoutes.
+        # Without this the alerts above go quiet when the metrics disappear
+        - alert: CertManagerMetricsMissing
+          expr: absent(certmanager_certificate_expiration_timestamp_seconds)
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            summary: cert-manager reports no certificate metrics
+            description: Either cert-manager is down or Prometheus no longer scrapes it, so certificate expiry is not watched.
