@@ -27,6 +27,36 @@ spec:
               enabled: false
         kubeProxy:
           enabled: false
+        # Talos binds the controller manager and the scheduler to localhost, so they cannot be scraped and their
+        # targets only produced alerts that were always firing.
+        kubeControllerManager:
+          enabled: false
+        kubeScheduler:
+          enabled: false
+        alertmanager:
+          alertmanagerSpec:
+            # Mounted at /etc/alertmanager/secrets/alertmanager-smtp
+            secrets:
+              - alertmanager-smtp
+          config:
+            global:
+              smtp_smarthost: smtp.protonmail.ch:587
+              smtp_from: kube@aarnihalinen.fi
+              smtp_auth_username: kube@aarnihalinen.fi
+              smtp_auth_password_file: /etc/alertmanager/secrets/alertmanager-smtp/password
+            route:
+              receiver: email
+              routes:
+                # Always firing by design, it only shows that the alerting pipeline is alive
+                - receiver: "null"
+                  matchers:
+                    - alertname = "Watchdog"
+            receivers:
+              - name: "null"
+              - name: email
+                email_configs:
+                  - to: kube@aarnihalinen.fi
+                    send_resolved: true
         grafana:
           # Without a password of its own the chart generates a new one on every render, because ArgoCD renders
           # with `helm template`, which cannot look up the existing one. Every sync then restarted Grafana.
