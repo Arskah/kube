@@ -18,8 +18,8 @@ configs are generated from them together with a local secrets bundle.
 
 | File                        | Committed | Content                                                             |
 | --------------------------- | --------- | ------------------------------------------------------------------- |
-| `patches/all.yaml`          | yes       | install disk and image, `eth0` NIC naming, no default CNI           |
-| `patches/controlplane.yaml` | yes       | hostname, API server cert SANs, kube-proxy disabled                 |
+| `patches/all.yaml`          | yes       | install disk and image, `eth0` NIC naming, no workload isolation    |
+| `patches/controlplane.yaml` | yes       | hostname, API server cert SANs, no default CNI, kube-proxy disabled |
 | `patches/worker.yaml`       | yes       | hostname                                                            |
 | `secrets.yaml`              | no        | cluster CAs, keys and tokens. Keep a backup outside of this machine |
 | `controlplane.yaml`         | no        | generated                                                           |
@@ -157,6 +157,10 @@ talosctl upgrade-k8s --nodes 192.168.86.73 --to <version>
 - The install image ID is the Image Factory schematic, which only adds the `qemu-guest-agent` extension.
 - `net.ifnames=0` keeps the NIC named `eth0`, which the Cilium configuration relies on (`devices` in
   `apps/templates/cilium.yml`, the L2 announcement policy in `apps/templates/ip-pool.yml`).
+- The patches are written for the configuration documents of Talos 1.14, which `talosctl gen config` generates next to
+  a small `v1alpha1` document when `--talos-version` is 1.14 or later. Two things differ from what it generates by
+  default: the installer is still configured in `machine.install`, because the `UnattendedInstallConfig` document has no
+  field for kernel arguments, and workload isolation (`SecurityProfileConfig`) is left out.
 - The worker patch sets the hostname of the only worker. For more workers, generate with a different hostname per node.
 - The current cluster was not set up exactly like above. It was bootstrapped with the Talos defaults (Flannel and
   kube-proxy), ArgoCD installed Cilium on top of that, and the defaults were disabled in the machine config afterwards.
