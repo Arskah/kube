@@ -1,0 +1,57 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tuppr
+  namespace: argocd
+  annotations:
+    # After monitoring, for the ServiceMonitor and PrometheusRule CRDs
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  destination:
+    # The namespace that `talos/patches/controlplane.yaml` lets use the Talos API
+    namespace: system-upgrade
+    server: https://kubernetes.default.svc
+  project: infra
+  source:
+    repoURL: ghcr.io/home-operations/charts
+    targetRevision: 0.5.7
+    chart: tuppr
+    helm:
+      releaseName: tuppr
+      valuesObject:
+        monitoring:
+          serviceMonitor:
+            enabled: true
+            labels:
+              release: monitoring
+          prometheusRule:
+            enabled: true
+            labels:
+              release: monitoring
+  # The chart creates the webhook certificate Secret empty and the webhook without a CA. The controller fills in
+  # both when it starts, and would be undone by every sync.
+  ignoreDifferences:
+    - kind: Secret
+      name: tuppr-webhook-server-cert
+      jsonPointers:
+        - /data
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
+      name: tuppr-validating-webhook
+      jqPathExpressions:
+        - .webhooks[]?.clientConfig.caBundle
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - RespectIgnoreDifferences=true
+    retry:
+      limit: 10
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
