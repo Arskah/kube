@@ -1,0 +1,57 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ddns
+  namespace: ddns
+spec:
+  schedule: "*/5 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      activeDeadlineSeconds: 120
+      template:
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: ddns
+              image: python:3.14-alpine@sha256:f6a589d43c42b9e7f7dc67a12d37132491f362859a5d750607710cc56da3bc72
+              command: ["python", "-B", "/app/ddns.py"]
+              env:
+                - name: DOMAINS
+                  value: aarnihalinen.fi,halinen.dev
+                - name: PYTHONUNBUFFERED
+                  value: "1"
+                - name: DIGITALOCEAN_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: digitalocean-token
+                      key: token
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: [ALL]
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 32Mi
+                limits:
+                  memory: 64Mi
+              volumeMounts:
+                - name: script
+                  mountPath: /app
+                  readOnly: true
+          volumes:
+            - name: script
+              configMap:
+                name: ddns-script

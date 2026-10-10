@@ -1,0 +1,93 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ddns-script
+  namespace: ddns
+data:
+  ddns.py: |
+    """Keep the apex A records of DOMAINS pointing at the public address of the home connection.
+
+    Everything public is a CNAME to one of those records. The address is dynamic and nothing else
+    follows it: the router has no dynamic DNS client.
+    """
+
+    import ipaddress
+    import json
+    import os
+    import sys
+    import urllib.request
+
+    API = "https://api.digitalocean.com/v2"
+    # Independent services that answer with the caller's address as plain text. The first two that
+    # answer have to agree, so that one of them being wrong cannot repoint the records.
+    IP_SOURCES = [
+        "https://api.ipify.org",
+        "https://checkip.amazonaws.com",
+        "https://ipv4.icanhazip.com",
+    ]
+    TTL = 300
+    TIMEOUT = 15
+
+
+    def fetch(url, method="GET", body=None, token=None):
+        headers = {"User-Agent": "kube-ddns"}
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
+        if body is not None:
+            headers["Content-Type"] = "application/json"
+            body = json.dumps(body).encode()
+        request = urllib.request.Request(url, data=body, method=method, headers=headers)
+        with urllib.request.urlopen(request, timeout=TIMEOUT) as response:
+            return response.read().decode()
+
+
+    def public_ip():
+        answers = []
+        for url in IP_SOURCES:
+            try:
+                address = ipaddress.IPv4Address(fetch(url).strip())
+            except Exception as error:  # a source being down is expected now and then
+                print(f"{url}: {error}")
+                continue
+            if not address.is_global:
+                print(f"{url}: {address} is not a public address")
+                continue
+            answers.append(str(address))
+            if len(answers) == 2:
+                break
+        if len(answers) < 2:
+            raise RuntimeError("fewer than two sources answered with a public address")
+        if answers[0] != answers[1]:
+            raise RuntimeError(f"sources disagree: {answers[0]} and {answers[1]}")
+        return answers[0]
+
+
+    def update(domain, address, token):
+        url = f"{API}/domains/{domain}/records"
+        records = json.loads(fetch(f"{url}?type=A&name={domain}", token=token))["domain_records"]
+        if len(records) != 1:
+            raise RuntimeError(f"{domain}: expected one apex A record, found {len(records)}")
+        record = records[0]
+        if record["data"] == address and record["ttl"] == TTL:
+            print(f"{domain}: {address}, up to date")
+            return
+        fetch(f"{url}/{record['id']}", "PATCH", {"data": address, "ttl": TTL}, token)
+        print(f"{domain}: {record['data']} (ttl {record['ttl']}) -> {address} (ttl {TTL})")
+
+
+    def main():
+        token = os.environ["DIGITALOCEAN_TOKEN"]
+        domains = os.environ["DOMAINS"].split(",")
+        address = public_ip()
+        failed = False
+        for domain in domains:
+            try:
+                update(domain, address, token)
+            except Exception as error:
+                print(f"{domain}: {error}")
+                failed = True
+        return 1 if failed else 0
+
+
+    if __name__ == "__main__":
+        sys.exit(main())
