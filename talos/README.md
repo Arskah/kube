@@ -16,16 +16,16 @@ The Talos API (port 50000) is only reachable from the LAN, so `talosctl` only wo
 Machine configs contain the cluster secrets, so they are not committed. The repo only has the patches, and the full
 configs are generated from them together with a local secrets bundle.
 
-| File                        | Committed | Content                                                             |
-| --------------------------- | --------- | ------------------------------------------------------------------- |
-| `patches/all.yaml`          | yes       | install disk and image, `eth0` NIC naming                           |
-| `patches/controlplane.yaml` | yes       | hostname, API server cert SANs, no default CNI, kube-proxy disabled |
-| `patches/worker.yaml`       | yes       | hostname                                                            |
-| `secrets.yaml`              | no        | cluster CAs, keys and tokens. Keep a backup outside of this machine |
-| `controlplane.yaml`         | no        | generated                                                           |
-| `worker.yaml`               | no        | generated                                                           |
-| `talosconfig`               | no        | generated, `talosctl` client config                                 |
-| `kubeconfig`                | no        | from `talosctl kubeconfig`                                          |
+| File                        | Committed | Content                                                                                         |
+| --------------------------- | --------- | ----------------------------------------------------------------------------------------------- |
+| `patches/all.yaml`          | yes       | install disk and image, `eth0` NIC naming                                                       |
+| `patches/controlplane.yaml` | yes       | hostname, API server cert SANs, no default CNI, kube-proxy disabled, Talos API access for tuppr |
+| `patches/worker.yaml`       | yes       | hostname                                                                                        |
+| `secrets.yaml`              | no        | cluster CAs, keys and tokens. Keep a backup outside of this machine                             |
+| `controlplane.yaml`         | no        | generated                                                                                       |
+| `worker.yaml`               | no        | generated                                                                                       |
+| `talosconfig`               | no        | generated, `talosctl` client config                                                             |
+| `kubeconfig`                | no        | from `talosctl kubeconfig`                                                                      |
 
 All commands below are run from the repo root.
 

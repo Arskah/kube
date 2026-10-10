@@ -19,3 +19,13 @@ $patch: delete
 apiVersion: v1alpha1
 kind: KubeProxyConfig
 enabled: false
+---
+# Lets pods in the namespace of tuppr use the Talos API as os:admin, which is what it upgrades the nodes with.
+# Anything that can create a talos.dev ServiceAccount in that namespace gets full control of the nodes.
+# The document is only allowed on control plane machines.
+apiVersion: v1alpha1
+kind: KubeTalosAPIAccessConfig
+allowedRoles:
+  - os:admin
+allowedKubernetesNamespaces:
+  - system-upgrade
