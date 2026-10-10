@@ -37,6 +37,7 @@ Store these in the password manager. None of them is taken automatically.
 
    | File in `sealed-secrets/`                 | Secret                                 | Keys                                                | Source of the values                                             |
    | ----------------------------------------- | -------------------------------------- | --------------------------------------------------- | ---------------------------------------------------------------- |
+   | `sealed-alertmanager-smtp.json`           | `monitoring/alertmanager-smtp`         | `password`                                          | SMTP password of the address Alertmanager sends from             |
    | `sealed-ddns-digitalocean-token.json`     | `ddns/digitalocean-token`              | `token`                                             | DigitalOcean API token, scopes `domain:read` and `domain:update` |
    | `sealed-gitlab-runner.json`               | `gitlab-runner/gitlab-runner`          | `runner-registration-token`, `runner-token`         | GitLab runner settings                                           |
    | `sealed-grafana-admin.json`               | `monitoring/grafana-admin`             | `admin-user`, `admin-password`                      | any, it is the login of Grafana                                  |
@@ -48,6 +49,9 @@ Store these in the password manager. None of them is taken automatically.
    | `sealed-regcred-homepage-staging.json`    | `homepage-staging/regcred-homepage`    | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`                               |
    | `sealed-registry-htpasswd.json`           | `docker-registry/registry-htpasswd`    | `htpasswd`                                          | bcrypt hash of the registry password                             |
    | `sealed-tp-rent-db.json`                  | `tp-rent/db-password`                  | `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` | has to match the existing database files                         |
+
+   `scripts/` has a script for each secret that gets rotated: it asks for or generates the value, seals it and checks
+   the result. The others are sealed with the commands under [Sealing the secrets again](#sealing-the-secrets-again).
 
    All five registry secrets come from the same user and password: `registry-htpasswd` is the bcrypt hash the registry
    checks against, the four `regcred` secrets are what the cluster logs in with. They have to be sealed again together

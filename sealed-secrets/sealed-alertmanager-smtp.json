@@ -1,0 +1,19 @@
+{
+  "kind": "SealedSecret",
+  "apiVersion": "bitnami.com/v1alpha1",
+  "metadata": {
+    "name": "alertmanager-smtp",
+    "namespace": "monitoring"
+  },
+  "spec": {
+    "template": {
+      "metadata": {
+        "name": "alertmanager-smtp",
+        "namespace": "monitoring"
+      }
+    },
+    "encryptedData": {
+      "password": "AgAXppflVraUEbFPycOj0VyePKQggm/A5jhmJ2Je72sA7wairek3oSxZdzOUdmom5YM3mls8ykj70G5Ygut7txLkgDdXfaTeaPIJ4F2ke72iM3jovwHCHJwCvvJ8zkrb/kqw5Z6fZYDUt+Y75G/K5oPmFR5Go2NnV+fz/+ptcmkOubdezPzRvsOFhTZf7TpjomerOHyl26O0mcaX7C3DlLF7JfST+ukyPP4zox2XgVQSYSmDXwH0DNAF1i7FCj4m0j4tZbBNfRz0kN9Ha1jFQqnJwOKh1FolHa/G02hzmn5yQB4z1oIhMoEiJ3zHnxCThtRrF3JnSpRbyrikxxLCECg24ahtV3NE7YUDlV+5IYEXL9Vu1u4jlT/tyYG8tR4EyD4Kt2tVTirhQlv94SIEuvGGGwSDQUU9RO2/N/Fu4X+THEywplgANTnem7A6ogqB/X9sej3ALQ/8+7q7TmisEpJ07wofIgjmHOE6SvcBex/5h6RvfMCeXiz0YueGln43dmTlc8KfeVGOx95nSpMoJNGRxHRbHJZIXZ49f0AJ/597h9vzCY9loEL+XUxKa4AhpzxK2kavcpQlKARHy8THjKemffg0Z112voJfs+VN0wPvg6CZCZMWIM8f4eETaLYwHcrd5Ept574vEbPUyQF5M68HeWNlgtgQLfaf0VazrQLKoWLVdZKC27NBLiDnQ4dfYYA3Zd72D+MMvZ/IkLUVA7HG"
+    }
+  }
+}
