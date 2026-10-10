@@ -90,7 +90,8 @@ Checked from the outside, the router configuration itself has not been reviewed:
   their own as long as the cluster runs. While rebuilding, set them by hand.
 - Ports 80, 443 and 6443 are open on the public address. Google Wifi can only forward ports to devices it knows from
   DHCP, so the forwards have to point at the control plane node: 80 to `192.168.86.73:80` and 443 to
-  `192.168.86.73:443`, where the Gateway listens, and 6443 to `192.168.86.73:6443`.
+  `192.168.86.73:443`, where the Gateway listens, and 6443 to `192.168.86.73:6443`. The API server answers
+  `/livez`, `/readyz` and `/healthz` without credentials (the default of Talos 1.14) and nothing else.
 - The node addresses come from DHCP and are hardcoded in this repo, so they need DHCP reservations: `192.168.86.73`
   (`kube-control`), `192.168.86.76` (`kube-node1`) and `192.168.86.87` (NAS). New VMs get new MAC addresses, so the
   reservations have to be made again.
@@ -137,6 +138,12 @@ LAN, the Talos API is not reachable from anywhere else.
    installs the applications in the order of their sync waves. The first sync takes a while and some applications fail
    until the ones they depend on are up, which ArgoCD retries on its own.
 
+   One of the applications is tuppr, which upgrades the nodes to the Talos and Kubernetes versions in `tuppr/` as soon
+   as it runs, with a reboot of each node for Talos. Nodes installed as described in `talos/README.md` are on those
+   versions already. If they are not, tuppr starts upgrading while the rest of the rebuild is still going on; to hold
+   it back, `kubectl annotate talosupgrade cluster tuppr.home-operations.com/suspend=true` (and the same for
+   `kubernetesupgrade kubernetes`) and remove the annotation when the rebuild is done.
+
    ```sh
    kubectl -n argocd get applications
    ```
@@ -170,6 +177,7 @@ LAN, the Talos API is not reachable from anywhere else.
    kubectl -n argocd get applications
    kubectl get certificates -A
    kubectl get sealedsecrets -A
+   kubectl get talosupgrade,kubernetesupgrade
    curl -I https://aarnihalinen.fi
    ```
 
