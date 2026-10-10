@@ -1,3 +1,5 @@
+# The installer is still configured through the v1alpha1 `machine.install`: the UnattendedInstallConfig document
+# that replaces it has no field for kernel arguments.
 machine:
   install:
     disk: /dev/sda
@@ -6,8 +8,13 @@ machine:
     extraKernelArgs:
       # Keep the NIC named eth0, Cilium `devices` relies on it
       - net.ifnames=0
-cluster:
-  network:
-    # Cilium is installed separately
-    cni:
-      name: none
+---
+apiVersion: v1alpha1
+kind: UnattendedInstallConfig
+$patch: delete
+---
+# `talosctl gen config` turns workload isolation on for new clusters. The nodes were upgraded from 1.11 and run
+# without it, and it has not been tried here with Cilium, csi-driver-nfs and the in-tree NFS volumes.
+apiVersion: v1alpha1
+kind: SecurityProfileConfig
+$patch: delete

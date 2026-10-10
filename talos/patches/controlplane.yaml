@@ -1,12 +1,21 @@
-machine:
-  network:
-    hostname: kube-control
-cluster:
-  apiServer:
-    # The control plane endpoint IP is added automatically
-    certSANs:
-      - kube.aarnihalinen.fi
-      - kube.halinen.dev
-  proxy:
-    # Cilium runs with kubeProxyReplacement
-    disabled: true
+apiVersion: v1alpha1
+kind: HostnameConfig
+auto: "off"
+hostname: kube-control
+---
+apiVersion: v1alpha1
+kind: KubeAPIServerConfig
+# The control plane endpoint IP is added automatically
+certExtraSANs:
+  - kube.aarnihalinen.fi
+  - kube.halinen.dev
+---
+# Cilium is installed separately
+apiVersion: v1alpha1
+kind: KubeFlannelCNIConfig
+$patch: delete
+---
+# Cilium runs with kubeProxyReplacement
+apiVersion: v1alpha1
+kind: KubeProxyConfig
+enabled: false
