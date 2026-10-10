@@ -86,6 +86,12 @@
       ],
       "matchUpdateTypes": ["minor", "major"],
       "dependencyDashboardApproval": true
+    },
+    {
+      "description": "The Talos patches have `apiVersion` and `kind`, so the kubernetes manager takes the installer image for a container image and fails to look it up. The custom manager above handles its tag",
+      "matchManagers": ["kubernetes"],
+      "matchFileNames": ["talos/**"],
+      "enabled": false
     }
   ]
 }
