@@ -47,6 +47,19 @@ spec:
             # it logged an error every few seconds.
             - name: OTEL_TRACES_EXPORTER
               value: none
+  # The chart generates a random `haSharedSecret` on every render and puts a checksum of the Secret on the pod
+  # template, so every time ArgoCD rendered the chart again (cache expiry, repo-server restart) the registry was
+  # rolled. Setting `secrets.haSharedSecret` would put the value in git; keep whatever is live instead.
+  ignoreDifferences:
+    - kind: Secret
+      name: docker-registry-secret
+      jsonPointers:
+        - /data/haSharedSecret
+    - group: apps
+      kind: Deployment
+      name: docker-registry
+      jsonPointers:
+        - /spec/template/metadata/annotations/checksum~1secret
   syncPolicy:
     automated:
       prune: true
@@ -55,6 +68,8 @@ spec:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
       - PruneLast=true
+      # Without this a sync would still apply the freshly rendered values of the ignored fields
+      - RespectIgnoreDifferences=true
     retry:
       limit: 10
       backoff:

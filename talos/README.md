@@ -34,8 +34,8 @@ All commands below are run from the repo root.
 ```sh
 talosctl gen config talos https://192.168.86.73:6443 \
   --with-secrets talos/secrets.yaml \
-  --talos-version v1.11.5 \
-  --kubernetes-version 1.34.1 \
+  --talos-version v1.14.2 \
+  --kubernetes-version 1.36.5 \
   --config-patch @talos/patches/all.yaml \
   --config-patch-control-plane @talos/patches/controlplane.yaml \
   --config-patch-worker @talos/patches/worker.yaml \
@@ -68,14 +68,14 @@ talosctl --nodes 192.168.86.73 get machineconfig -o yaml
 
 ## Setting up a new cluster
 
-Follows <https://docs.siderolabs.com/talos/v1.11/platform-specific-installations/virtualized-platforms/proxmox>, which
+Follows <https://docs.siderolabs.com/talos/v1.14/platform-specific-installations/virtualized-platforms/proxmox>, which
 also has the recommended VM settings.
 
 1. Create the VMs in Proxmox and boot them from the Talos ISO. The image comes from
    [Image Factory](https://factory.talos.dev/) with the `siderolabs/qemu-guest-agent` extension, so enable the QEMU
    guest agent in the VM options.
 
-   <https://factory.talos.dev/image/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515/v1.11.5/metal-amd64.iso>
+   <https://factory.talos.dev/image/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515/v1.14.2/metal-amd64.iso>
 
 2. Create new cluster secrets. Skip this to rebuild the existing cluster with its current secrets.
 
