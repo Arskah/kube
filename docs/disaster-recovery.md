@@ -100,7 +100,7 @@ Checked from the outside, the router configuration itself has not been reviewed:
 ### Virtual machines
 
 Sizes of the current nodes as Kubernetes sees them. The other VM settings are in the
-[Talos guide for Proxmox](https://docs.siderolabs.com/talos/v1.11/platform-specific-installations/virtualized-platforms/proxmox).
+[Talos guide for Proxmox](https://docs.siderolabs.com/talos/v1.14/platform-specific-installations/virtualized-platforms/proxmox).
 
 | Node           | CPU | Memory | Disk                                |
 | -------------- | --- | ------ | ----------------------------------- |
