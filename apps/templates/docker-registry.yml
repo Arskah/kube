@@ -43,6 +43,10 @@ spec:
               value: Registry Realm
             - name: REGISTRY_AUTH_HTPASSWD_PATH
               value: /auth/htpasswd
+            # Registry 3 exports OpenTelemetry traces to localhost:4318 by default. Nothing listens there, so
+            # it logged an error every few seconds.
+            - name: OTEL_TRACES_EXPORTER
+              value: none
   syncPolicy:
     automated:
       prune: true
