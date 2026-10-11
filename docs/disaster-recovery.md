@@ -35,20 +35,21 @@ Store these in the password manager. None of them is taken automatically.
 
 3. The plaintext values behind the sealed secrets, as a fallback for losing the keys:
 
-   | File in `sealed-secrets/`                 | Secret                                 | Keys                                                | Source of the values                                             |
-   | ----------------------------------------- | -------------------------------------- | --------------------------------------------------- | ---------------------------------------------------------------- |
-   | `sealed-alertmanager-smtp.json`           | `monitoring/alertmanager-smtp`         | `password`                                          | SMTP password of the address Alertmanager sends from             |
-   | `sealed-ddns-digitalocean-token.json`     | `ddns/digitalocean-token`              | `token`                                             | DigitalOcean API token, scopes `domain:read` and `domain:update` |
-   | `sealed-gitlab-runner.json`               | `gitlab-runner/gitlab-runner`          | `runner-registration-token`, `runner-token`         | GitLab runner settings                                           |
-   | `sealed-grafana-admin.json`               | `monitoring/grafana-admin`             | `admin-user`, `admin-password`                      | any, it is the login of Grafana                                  |
-   | `sealed-music-library-hub.json`           | `music-library/hub`                    | `password`                                          | has to match the existing database files                         |
-   | `sealed-music-library-regcred.json`       | `music-library/regcred`                | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`                               |
-   | `sealed-music-library-web-login.json`     | `music-library/web-login`              | `login`                                             | shared login of the page, `user:password`                        |
-   | `sealed-regcred-argocd.json`              | `argocd/regcred-argocd`                | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`                               |
-   | `sealed-regcred-homepage-production.json` | `homepage-production/regcred-homepage` | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`                               |
-   | `sealed-regcred-homepage-staging.json`    | `homepage-staging/regcred-homepage`    | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`                               |
-   | `sealed-registry-htpasswd.json`           | `docker-registry/registry-htpasswd`    | `htpasswd`                                          | bcrypt hash of the registry password                             |
-   | `sealed-tp-rent-db.json`                  | `tp-rent/db-password`                  | `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` | has to match the existing database files                         |
+   | File in `sealed-secrets/`                  | Secret                                 | Keys                                                | Source of the values                                             |
+   | ------------------------------------------ | -------------------------------------- | --------------------------------------------------- | ---------------------------------------------------------------- |
+   | `sealed-alertmanager-smtp.json`            | `monitoring/alertmanager-smtp`         | `password`                                          | SMTP password of the address Alertmanager sends from             |
+   | `sealed-ddns-digitalocean-token.json`      | `ddns/digitalocean-token`              | `token`                                             | DigitalOcean API token, scopes `domain:read` and `domain:update` |
+   | `sealed-gitlab-runner.json`                | `gitlab-runner/gitlab-runner`          | `runner-registration-token`, `runner-token`         | GitLab runner settings                                           |
+   | `sealed-grafana-admin.json`                | `monitoring/grafana-admin`             | `admin-user`, `admin-password`                      | any, it is the login of Grafana                                  |
+   | `sealed-music-library-admin-password.json` | `music-library/admin-password`         | `password`                                          | has to match the existing database files                         |
+   | `sealed-music-library-regcred.json`        | `music-library/regcred`                | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`                               |
+   | `sealed-music-library-web-db.json`         | `music-library/web-db`                 | `password`                                          | any value: the page sets it in the database on start             |
+   | `sealed-music-library-web-login.json`      | `music-library/web-login`              | `login`                                             | shared login of the page, `user:password`                        |
+   | `sealed-regcred-argocd.json`               | `argocd/regcred-argocd`                | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`                               |
+   | `sealed-regcred-homepage-production.json`  | `homepage-production/regcred-homepage` | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`                               |
+   | `sealed-regcred-homepage-staging.json`     | `homepage-staging/regcred-homepage`    | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`                               |
+   | `sealed-registry-htpasswd.json`            | `docker-registry/registry-htpasswd`    | `htpasswd`                                          | bcrypt hash of the registry password                             |
+   | `sealed-tp-rent-db.json`                   | `tp-rent/db-password`                  | `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` | has to match the existing database files                         |
 
    `scripts/` has a script for each secret that gets rotated: it asks for or generates the value, seals it and checks
    the result. The others are sealed with the commands under [Sealing the secrets again](#sealing-the-secrets-again).
