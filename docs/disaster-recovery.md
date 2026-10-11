@@ -45,6 +45,7 @@ Store these in the password manager. None of them is taken automatically.
    | `sealed-music-library-regcred.json`        | `music-library/regcred`                | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`                               |
    | `sealed-music-library-web-db.json`         | `music-library/web-db`                 | `password`                                          | any value: the page sets it in the database on start             |
    | `sealed-music-library-web-login.json`      | `music-library/web-login`              | `login`                                             | shared login of the page, `user:password`                        |
+   | `sealed-music-library-web-webhook.json`    | `music-library/web-webhook`            | `secret`                                            | shared secret of the webhook of the page                         |
    | `sealed-regcred-argocd.json`               | `argocd/regcred-argocd`                | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`                               |
    | `sealed-regcred-homepage-production.json`  | `homepage-production/regcred-homepage` | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`                               |
    | `sealed-regcred-homepage-staging.json`     | `homepage-staging/regcred-homepage`    | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`                               |
