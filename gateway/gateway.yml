@@ -34,6 +34,17 @@ spec:
           selector:
             matchLabels:
               kubernetes.io/metadata.name: caddy
+    - name: jellyfin
+      protocol: HTTPS
+      port: 443
+      hostname: jellyfin.aarnihalinen.fi
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: jellyfin-tls-secret
+      allowedRoutes:
+        namespaces:
+          from: Same
     - name: icecast
       protocol: HTTPS
       port: 443
