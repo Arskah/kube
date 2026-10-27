@@ -36,12 +36,13 @@ spec:
               path:
                 type: PathPrefix
                 value: /
+          # version mismatch, if this is available, delete forgejo/sshroute.yml
           # tcpRoute:
           #   enabled: true
           #   parentRefs:
           #     - name: public
           #       namespace: gateway
-          #       sectionName: ssh-listener
+          #       sectionName: forge-ssh
           persistence:
             enabled: true
             storageClass: "nfs-retain"
@@ -51,6 +52,8 @@ spec:
               username: arska
               passwordMode: initialOnlyNoReset
             config:
+              actions:
+                ENABLED: true
               service:
                 DISABLE_REGISTRATION: true
                 REQUIRE_SIGNIN_VIEW: true
@@ -60,16 +63,35 @@ spec:
                 NAME: forgejo
                 USER: forgejo
               server:
+                DISABLE_SSH: true
+                SSH_PORT: 2222
                 DOMAIN: forge.aarnihalinen.fi
                 ROOT_URL: https://forge.aarnihalinen.fi/
                 SSH_DOMAIN: forge.aarnihalinen.fi
-                DISABLE_SSH: true
+              mailer:
+                ENABLED: true
+                PROTOCOL: smtp+starttls
+                SMTP_ADDR: smtp.protonmail.ch
+                SMTP_PORT: 587
+                FROM: kube@aarnihalinen.fi
+                USER: kube@aarnihalinen.fi
             additionalConfigFromEnvs:
               - name: FORGEJO__database__PASSWD
                 valueFrom:
                   secretKeyRef:
                     name: forgejo-postgres-secret
                     key: postgres-password
+              - name: FORGEJO__mailer__PASSWD
+                valueFrom:
+                  secretKeyRef:
+                    name: forgejo-smtp
+                    key: password
+            metrics:
+              enabled: true
+              serviceMonitor:
+                enabled: true
+                additionalLabels:
+                  release: monitoring
   syncPolicy:
     automated:
       prune: true

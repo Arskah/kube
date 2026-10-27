@@ -1,0 +1,119 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: forgejo-runner-data
+  namespace: forgejo-runner
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: forgejo-runner-config
+  namespace: forgejo-runner
+data:
+  config-template.yml: |
+    log:
+      level: info
+    runner:
+      file: /data/.runner
+      capacity: 1
+    container:
+      options: "--add-host=forge.aarnihalinen.fi:192.168.86.73"
+      labels:
+        - "ubuntu-latest:docker://node:22-bookworm"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: forgejo-runner
+  namespace: forgejo-runner
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: forgejo-runner
+  template:
+    metadata:
+      labels:
+        app: forgejo-runner
+    spec:
+      securityContext:
+        fsGroup: 1001
+      initContainers:
+        - name: build-config
+          image: busybox:1.36
+          securityContext:
+            runAsUser: 1001
+            runAsGroup: 1001
+          command: ["sh", "-c"]
+          args:
+            - |
+              echo "Constructing final config.yml from secrets..."
+
+              # Write the required server block with secrets first
+              cat <<EOF > /data/config.yml
+              server:
+                connections:
+                  forgejo:
+                    url: "http://forgejo-http.forge:3000"
+                    uuid: "${SECRET_UUID}"
+                    token: "${SECRET_TOKEN}"
+              EOF
+
+              # Append the static template parameters
+              cat /template/config-template.yml >> /data/config.yml
+              echo "Configuration assembly complete."
+          env:
+            - name: SECRET_UUID
+              valueFrom:
+                secretKeyRef:
+                  name: forgejo-runner-token
+                  key: uuid
+            - name: SECRET_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: forgejo-runner-token
+                  key: token
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: config-template
+              mountPath: /template
+      containers:
+        - name: runner
+          image: data.forgejo.org/forgejo/runner:13
+          securityContext:
+            runAsUser: 1001
+            runAsGroup: 1001
+          workingDir: /data
+          command: ["forgejo-runner", "daemon", "--config", "/data/config.yml"]
+          env:
+            - name: DOCKER_HOST
+              value: tcp://127.0.0.1:2375
+          volumeMounts:
+            - name: data
+              mountPath: /data
+        - name: dind
+          image: docker:dind
+          securityContext:
+            privileged: true
+          command: ["dockerd", "-H", "tcp://127.0.0.1:2375", "--tls=false"]
+          volumeMounts:
+            - name: docker-graph
+              mountPath: /var/lib/docker
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: forgejo-runner-data
+        - name: config-template
+          configMap:
+            name: forgejo-runner-config
+        - name: docker-graph
+          emptyDir: {}
