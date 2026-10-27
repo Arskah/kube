@@ -13,7 +13,7 @@ turn from "restore" into "recreate by hand".
 | Talos secrets bundle           | `talos/secrets.yaml` on the admin machine           | regenerating machine configs, adding nodes           | new cluster identity, see [talos/README.md](../talos/README.md) |
 | Sealed Secrets private keys    | Secrets in `kube-system`                            | decrypting everything in `sealed-secrets/`           | every secret has to be recreated and sealed again               |
 | Plaintext of the sealed values | nowhere in the repo                                 | sealing the secrets again                            | new credentials have to be issued                               |
-| Persistent volumes             | NAS `192.168.86.87`, NFS export `/k8s`              | tp-rent database, registry images                    | data is gone                                                    |
+| Persistent volumes             | NAS `192.168.86.87`, NFS export `/k8s`              | tp-rent database, registry images, Forgejo           | data is gone                                                    |
 | Static files                   | NAS `/k8s/www`, `/k8s/caddy`, `/k8s/icecast`        | caddy and icecast pods mount these directly          | sites serve nothing                                             |
 | Router configuration           | Google Wifi                                         | public traffic reaching the cluster, stable node IPs | nothing is reachable from outside                               |
 | DNS records                    | DigitalOcean DNS (`aarnihalinen.fi`, `halinen.dev`) | every public hostname, certificate issuance          | nothing is reachable from outside                               |
@@ -39,6 +39,9 @@ Store these in the password manager. None of them is taken automatically.
    | ------------------------------------------ | -------------------------------------- | --------------------------------------------------- | ---------------------------------------------------------------- |
    | `sealed-alertmanager-smtp.json`            | `monitoring/alertmanager-smtp`         | `password`                                          | SMTP password of the address Alertmanager sends from             |
    | `sealed-ddns-digitalocean-token.json`      | `ddns/digitalocean-token`              | `token`                                             | DigitalOcean API token, scopes `domain:read` and `domain:update` |
+   | `sealed-forgejo-postgres.json`             | `forge/forgejo-postgres-secret`        | `postgres-password`                                 | has to match the existing database files                         |
+   | `sealed-forgejo-runner-token.json`         | `forgejo-runner/forgejo-runner-token`  | `uuid`, `token`                                     | runner registered in Forgejo (Site Administration -> Actions)    |
+   | `sealed-forgejo-smtp.json`                 | `forge/forgejo-smtp`                   | `password`                                          | SMTP password of the address Forgejo sends from                  |
    | `sealed-gitlab-runner.json`                | `gitlab-runner/gitlab-runner`          | `runner-registration-token`, `runner-token`         | GitLab runner settings                                           |
    | `sealed-grafana-admin.json`                | `monitoring/grafana-admin`             | `admin-user`, `admin-password`                      | any, it is the login of Grafana                                  |
    | `sealed-music-library-admin-password.json` | `music-library/admin-password`         | `password`                                          | has to match the existing database files                         |
@@ -65,6 +68,9 @@ Store these in the password manager. None of them is taken automatically.
    kubectl -n tp-rent exec deploy/db -- sh -c 'pg_dump -U "$POSTGRES_USER" "$POSTGRES_DB"' > tp-rent.sql
    ```
 
+   The Forgejo database is dumped every night by the `forge/forgejo-db-backup` CronJob into its own volume (see
+   [Persistent volumes](#persistent-volumes)), which keeps 14 days. The NAS backup of that directory is the backup.
+
 ### Persistent volumes
 
 Volumes are directories on the NAS, created by the NFS CSI driver and named after the PersistentVolume. The reclaim
@@ -75,6 +81,11 @@ names. Without this table there is no way to tell which old directory belonged t
 | ------------------------------------------ | ----------------------------------------------- |
 | `tp-rent/db-pvc`                           | `/k8s/pvc-a17cd4de-4761-4060-9967-be89708a50a5` |
 | `docker-registry/docker-registry-pv-claim` | `/k8s/pvc-aa6d6c15-3c85-4950-92ed-eaf6ab74c855` |
+| `forge/gitea-shared-storage`               | `/k8s/pvc-aea39d3d-af29-4ba4-bf64-e8167a31d202` |
+| `forge/data-forgejo-db-0`                  | `/k8s/pvc-f212e744-2350-4ba5-b9dc-b06e9341d201` |
+| `forge/forgejo-db-backup`                  | `/k8s/pvc-a5d97835-7905-41c4-9a20-cd6fccdefbaa` |
+| `forgejo-runner/forgejo-runner-data`       | `/k8s/pvc-c65ac5f8-649e-44ed-954a-31e1ff1d15ec` |
+| `music-library/data-postgres-0`            | `/k8s/pvc-0ff2de14-ff60-410a-8385-dadfe31886e0` |
 
 Update the table when claims are added:
 
@@ -90,9 +101,9 @@ Checked from the outside, the router configuration itself has not been reviewed:
   with the public address of the home connection. The address is dynamic. The `ddns` CronJob compares the two A records
   with the current public address every five minutes and updates them through the DigitalOcean API, so they follow on
   their own as long as the cluster runs. While rebuilding, set them by hand.
-- Ports 80, 443 and 6443 are open on the public address. Google Wifi can only forward ports to devices it knows from
+- Ports 80, 443, 2222 and 6443 are open on the public address. Google Wifi can only forward ports to devices it knows from
   DHCP, so the forwards have to point at the control plane node: 80 to `192.168.86.73:80` and 443 to
-  `192.168.86.73:443`, where the Gateway listens, and 6443 to `192.168.86.73:6443`. The API server answers
+  `192.168.86.73:443`, where the Gateway listens, 2222 to `192.168.86.73:32222` (Forgejo SSH, a NodePort), and 6443 to `192.168.86.73:6443`. The API server answers
   `/livez`, `/readyz` and `/healthz` without credentials (the default of Talos 1.14) and nothing else.
 - The node addresses come from DHCP and are hardcoded in this repo, so they need DHCP reservations: `192.168.86.73`
   (`kube-control`), `192.168.86.76` (`kube-node1`) and `192.168.86.87` (NAS). New VMs get new MAC addresses, so the
@@ -170,6 +181,18 @@ LAN, the Talos API is not reachable from anywhere else.
 
    ```sh
    kubectl -n tp-rent exec -i deploy/db -- sh -c 'psql -U "$POSTGRES_USER" "$POSTGRES_DB"' < tp-rent.sql
+   ```
+
+   Forgejo: the database files on the NAS are copied while Postgres runs, so they may not start. Restore the
+   repositories (`forge/gitea-shared-storage`) and the dump volume (`forge/forgejo-db-backup`) as above, then load the
+   newest dump into the empty database and let Forgejo check the result against the repositories:
+
+   ```sh
+   kubectl -n forge scale deploy/forgejo --replicas=0
+   kubectl -n forge exec -i forgejo-db-0 -- pg_restore -U forgejo -d forgejo --clean --if-exists --no-owner \
+     < forgejo-YYYY-MM-DD.dump
+   kubectl -n forge scale deploy/forgejo --replicas=1
+   kubectl -n forge exec deploy/forgejo -- forgejo doctor check --all
    ```
 
 6. **Check.**

@@ -1,0 +1,56 @@
+# Nightly dump of the Forgejo database. The NAS backs up the volumes, but a copy of
+# the live Postgres files is not guaranteed to be consistent; a dump always is.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: forgejo-db-backup
+  namespace: forge
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: forgejo-db-backup
+  namespace: forge
+spec:
+  schedule: "0 3 * * *"
+  timeZone: Europe/Helsinki
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: pg-dump
+              image: postgres:17@sha256:31ba9c94a03ada9988f2bb493a22a75eef3a185884533e5cdbcd498ea835b08f
+              command: ["bash", "-c"]
+              args:
+                - |
+                  set -euo pipefail
+                  file="/backup/forgejo-$(date +%Y-%m-%d).dump"
+                  pg_dump -h forgejo-db -U forgejo -d forgejo -Fc -f "$file.tmp"
+                  mv "$file.tmp" "$file"
+                  find /backup -name 'forgejo-*.dump' -mtime +14 -delete
+                  ls -lh /backup
+              env:
+                - name: PGPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: forgejo-postgres-secret
+                      key: postgres-password
+              volumeMounts:
+                - name: backup
+                  mountPath: /backup
+          volumes:
+            - name: backup
+              persistentVolumeClaim:
+                claimName: forgejo-db-backup
