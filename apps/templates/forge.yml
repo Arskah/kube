@@ -64,12 +64,24 @@ spec:
                 ROOT_URL: https://forge.aarnihalinen.fi/
                 SSH_DOMAIN: forge.aarnihalinen.fi
                 DISABLE_SSH: true
+              mailer:
+                ENABLED: true
+                PROTOCOL: smtp+starttls
+                SMTP_ADDR: smtp.protonmail.ch
+                SMTP_PORT: 587
+                FROM: kube@aarnihalinen.fi
+                USER: kube@aarnihalinen.fi
             additionalConfigFromEnvs:
               - name: FORGEJO__database__PASSWD
                 valueFrom:
                   secretKeyRef:
                     name: forgejo-postgres-secret
                     key: postgres-password
+              - name: FORGEJO__mailer__PASSWD
+                valueFrom:
+                  secretKeyRef:
+                    name: forgejo-smtp
+                    key: password
   syncPolicy:
     automated:
       prune: true

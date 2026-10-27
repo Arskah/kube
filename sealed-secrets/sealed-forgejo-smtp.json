@@ -1,0 +1,19 @@
+{
+  "kind": "SealedSecret",
+  "apiVersion": "bitnami.com/v1alpha1",
+  "metadata": {
+    "name": "forgejo-smtp",
+    "namespace": "forge"
+  },
+  "spec": {
+    "template": {
+      "metadata": {
+        "name": "forgejo-smtp",
+        "namespace": "forge"
+      }
+    },
+    "encryptedData": {
+      "password": "AgBy3i331O9c2q2Dyr1/+H5ORuqpCcffwPAY0ZXP1BQLvZyEHOZ+nKm0qQoxzWNkJXFn4SNaxCMfG3f6VI/GzTc8u2D11QPPV1CSwbbqoHx12X1h9dE8efaB0w3eNIOQMbTppL3snJVNoZPviRiRaZJifFIONrTA+FS/WsJijCdBnGbng2fbnC/wdVPMsIMhBKWfGtW676KDe5Kr3st+o8H1KVMcq1rzsm33N6a0kWWnCdwSr3Ft57+gig/FlqmoRrUFsKW28KDkolRvvmQNZyfErS9M4udKMZsp2fS3dwwnkAU8+NJGMXjtTPEQQfUw06eXZw9LyLQfvdsGeaiQqXNCS/FZBgJ03p14bqM2ah70pU+o2fZ3tIUFnX1df0Ja3NPkbIP+A0tSch+NgJUOeAR+n76M8thPdf1qtE48nfoxDgKIFn748e4wuVXyKP1LUfMjczjfvbbfmDob7DzpvCGLoyFhi6j0qNHnB5SvnsP6kwuxmp68K7kFpxF//z371K/IFtXZWEoRbXSm44RN/rVPBY/S0QgZTUTeBZxvP8uDyfy2DqtGwO0vuXo9A0+/s58bDJqAjbqtVm7IwKEj5YvVuxmOjmJwayrHRNLMRWg59cZ1Avl1LdPdgpyexZjxBa9R0MCLqjUfIeqkDKrr7w9QscN2doeE4WvuNWw3e0gTY2wyTxNik2Fv2GaiNHAFm1Shx6+VWOD42AkX6Ry2DjVU"
+    }
+  }
+}

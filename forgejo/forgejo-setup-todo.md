@@ -15,7 +15,7 @@ Status when written (2026-10-28): the instance is up over HTTPS and `ROOT_URL` i
 
 - [ ] **Backups.** Repos live on the chart's 50Gi volume (`gitea-shared-storage`), the database on `data-forgejo-db-0`, both on NFS (`nfs-retain`). Decide how to get a consistent copy: a CronJob with `pg_dump` plus NAS snapshots, or `forgejo dump`. A Postgres volume restored alone may not match the repo files.
 - [ ] **Update `docs/disaster-recovery.md`.** Add `sealed-forgejo-postgres.json` (`forge/forgejo-postgres-secret`, key `postgres-password`) to the secrets table, and the NAS directories of the two volumes to the PVC table.
-- [ ] **Email** (password resets, notifications). Add a `gitea.config.mailer` block. The Alertmanager SMTP account could be reused, with its own sealed secret.
+- [x] **Email** (password resets, notifications). Add a `gitea.config.mailer` block. The Alertmanager SMTP account could be reused, with its own sealed secret.
 - [ ] **Import repos.** New migration -> GitHub for `homepage` and `music-library`. Migrating `kube` is optional, since ArgoCD still reads it from GitHub.
 
 ## Later / optional
