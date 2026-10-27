@@ -75,6 +75,18 @@ spec:
           selector:
             matchLabels:
               kubernetes.io/metadata.name: forge
+    - name: forge-ssh
+      protocol: TCP
+      port: 2222
+      allowedRoutes:
+        kinds:
+          - group: gateway.networking.k8s.io
+            kind: TCPRoute
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              kubernetes.io/metadata.name: forge
     - name: tp
       protocol: HTTPS
       port: 443

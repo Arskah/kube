@@ -36,10 +36,13 @@ spec:
               path:
                 type: PathPrefix
                 value: /
-          service:
-            ssh:
-              type: NodePort
-              nodePort: 30022
+          # version mismatch, if this is available, delete forgejo/sshroute.yml
+          # tcpRoute:
+          #   enabled: true
+          #   parentRefs:
+          #     - name: public
+          #       namespace: gateway
+          #       sectionName: forge-ssh
           persistence:
             enabled: true
             storageClass: "nfs-retain"
