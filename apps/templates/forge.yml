@@ -1,0 +1,86 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: forge
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: forge
+    server: https://kubernetes.default.svc
+  project: applications
+  sources:
+    - repoURL: https://github.com/Arskah/kube.git
+      targetRevision: HEAD
+      path: forgejo
+    - repoURL: data.forgejo.org/forgejo-helm
+      targetRevision: 17.1.5
+      chart: forgejo
+      helm:
+        releaseName: forgejo
+        valuesObject:
+          ingress:
+            enabled: false
+          httpRoute:
+            enabled: true
+            hostnames:
+              - "forge.aarnihalinen.fi"
+            parentRefs:
+              - name: public
+                namespace: gateway
+                sectionName: forge
+            matches:
+              path:
+                type: PathPrefix
+                value: /
+          # tcpRoute:
+          #   enabled: true
+          #   parentRefs:
+          #     - name: public
+          #       namespace: gateway
+          #       sectionName: ssh-listener
+          persistence:
+            enabled: true
+            storageClass: "nfs-retain"
+            size: 50Gi
+          gitea:
+            admin:
+              username: arska
+              passwordMode: initialOnlyNoReset
+            config:
+              service:
+                DISABLE_REGISTRATION: true
+                REQUIRE_SIGNIN_VIEW: true
+              database:
+                DB_TYPE: postgres
+                HOST: forgejo-db.forge.svc.cluster.local:5432
+                NAME: forgejo
+                USER: forgejo
+              server:
+                DOMAIN: forge.aarnihalinen.fi
+                ROOT_URL: https://forge.aarnihalinen.fi/
+                SSH_DOMAIN: forge.aarnihalinen.fi
+                DISABLE_SSH: true
+            additionalConfigFromEnvs:
+              - name: FORGEJO__database__PASSWD
+                valueFrom:
+                  secretKeyRef:
+                    name: forgejo-postgres-secret
+                    key: postgres-password
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 10
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m

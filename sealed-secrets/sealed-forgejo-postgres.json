@@ -1,0 +1,19 @@
+{
+  "kind": "SealedSecret",
+  "apiVersion": "bitnami.com/v1alpha1",
+  "metadata": {
+    "name": "forgejo-postgres-secret",
+    "namespace": "forge"
+  },
+  "spec": {
+    "template": {
+      "metadata": {
+        "name": "forgejo-postgres-secret",
+        "namespace": "forge"
+      }
+    },
+    "encryptedData": {
+      "postgres-password": "AgAL7yjyAgzVLMI18h4W5rPMK3BC6lEGR+OYupzYUN/qE8jJX8moa9jZoxGLBYzL3dsEpDuUF4z8wUAzos2Bpl6/9K6mKBdLfNvLM/dW0bPqUCT4iWv6TGRk3aXxmM5oxVvTbxzNKGZ1gw8LYlyDJosqra5NYHOp5bHqVDqQlnUx3KKJT3zX1tiytJhS4KYIYWrGn5J0ufMdZrjK4+GbYz7NOlJQPO5SDWmKkDFUPy67TYMb3cVbrIEX23Fk9wRdW/JM2NfHBDIBRAWlYfW25bYCxKk6XDj9WC+ogm45MylfvTL60dgLBOmazb4kwx8CXhIOk19Hs3fb/zuFLj5CCugksFpTL3RQ+7u6Q19VHHWkdki+fmAz1MCLTR0t0PxluXXlJqEPItt9QP2FNqShPbiOvPkSW1vd/HVtzr+t+y6+tquim7S+HQXwev10GROHaK+EEAZqiAuE5jY7YEjOxrUSmXQPlXJUW1WDovriOcp3++xlyJpvOGjVjOKjcPtkUddAGZBZ2cqKn+husRLjZBgtHQ+S16538rlXmt8MGWSN2DZVdu0M81+oXRitbksq8pc16kTAmyBAo7idLx7MquVjVVNPRVqBGAhVvJs/gOg8Iu80qJpFVWc58J3PV1TrGEL/3MwMqwah4waimTOqu6RFcZfYQO0W1hLzt26lKtUwxyYWsdYXKhkypfgyFmkcVWEwIPt8ApQwlYiQ5gejsFYaKZqcjcFMgb29juAW/sOzBg=="
+    }
+  }
+}

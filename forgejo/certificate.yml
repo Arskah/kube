@@ -1,0 +1,28 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: forge-tls
+  namespace: forge
+spec:
+  secretName: forge-tls
+  dnsNames:
+    - forge.aarnihalinen.fi
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+    group: cert-manager.io
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: gateway-tls
+  namespace: forge
+spec:
+  from:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      namespace: gateway
+  to:
+    - group: ""
+      kind: Secret
+      name: forge-tls

@@ -60,6 +60,21 @@ spec:
           selector:
             matchLabels:
               kubernetes.io/metadata.name: icecast
+    - name: forge
+      protocol: HTTPS
+      port: 443
+      hostname: forge.aarnihalinen.fi
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: forge-tls
+            namespace: forge
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              kubernetes.io/metadata.name: forge
     - name: tp
       protocol: HTTPS
       port: 443
