@@ -36,12 +36,10 @@ spec:
               path:
                 type: PathPrefix
                 value: /
-          # tcpRoute:
-          #   enabled: true
-          #   parentRefs:
-          #     - name: public
-          #       namespace: gateway
-          #       sectionName: ssh-listener
+          service:
+            ssh:
+              type: NodePort
+              nodePort: 30022
           persistence:
             enabled: true
             storageClass: "nfs-retain"
@@ -60,10 +58,10 @@ spec:
                 NAME: forgejo
                 USER: forgejo
               server:
+                SSH_PORT: 2222
                 DOMAIN: forge.aarnihalinen.fi
                 ROOT_URL: https://forge.aarnihalinen.fi/
                 SSH_DOMAIN: forge.aarnihalinen.fi
-                DISABLE_SSH: true
               mailer:
                 ENABLED: true
                 PROTOCOL: smtp+starttls
