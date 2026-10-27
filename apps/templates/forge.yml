@@ -82,6 +82,12 @@ spec:
                   secretKeyRef:
                     name: forgejo-smtp
                     key: password
+            metrics:
+              enabled: true
+              serviceMonitor:
+                enabled: true
+                additionalLabels:
+                  release: monitoring
   syncPolicy:
     automated:
       prune: true

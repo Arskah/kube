@@ -23,7 +23,7 @@ Status when written (2026-10-28): the instance is up over HTTPS and `ROOT_URL` i
 - [ ] **CI.** Forgejo Actions needs a separate runner. Only worth it to move off GitHub Actions or the GitLab runners.
 - [ ] **SSH access.** Currently off (`DISABLE_SSH: true`). Needs a TCP route in the Gateway (the chart has none), a router port forward, and removing `DISABLE_SSH`. HTTPS with access tokens works until then.
 - [ ] **Container and package registry.** Forgejo has one built in; could replace the separate `docker-registry`, but it is a bigger change.
-- [ ] **Metrics.** Enable `gitea.config.metrics` and add a ServiceMonitor with the `release: monitoring` label, like Cilium.
+- [x] **Metrics.** Enable `gitea.config.metrics` and add a ServiceMonitor with the `release: monitoring` label, like Cilium.
 
 ## Things to watch
 
