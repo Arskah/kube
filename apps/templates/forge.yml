@@ -52,6 +52,8 @@ spec:
               username: arska
               passwordMode: initialOnlyNoReset
             config:
+              actions:
+                ENABLED: true
               service:
                 DISABLE_REGISTRATION: true
                 REQUIRE_SIGNIN_VIEW: true

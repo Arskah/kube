@@ -1,0 +1,19 @@
+{
+  "kind": "SealedSecret",
+  "apiVersion": "bitnami.com/v1alpha1",
+  "metadata": {
+    "name": "forgejo-runner-token",
+    "namespace": "forgejo-runner"
+  },
+  "spec": {
+    "template": {
+      "metadata": {
+        "name": "forgejo-runner-token",
+        "namespace": "forgejo-runner"
+      }
+    },
+    "encryptedData": {
+      "token": "AgAlVNhZpHINlS6I3FXXZOUwHir0btbT3M17ERE4ooPbuDq+1C7dfV75CHBgqq3d4mWN69+rRCf9MRe3IkiEUXDQxmi9crfvFFTocbvCWjPrnED9bZPszpqltYA0ZtHmCQ2qaHRaBi7nUBpdlihIV03danpm4ZDg8kn5DSdZXsyGBgS1CB6Jih7xYTdyZR2iH08mcyshvziq6pyGxTPJPeW3fMDnZn3KZBlXtrp+9eJtze9bww6ML5pYvqwWejxT3UtBBIrlBAnIqFF5HfbH4CXlw3CDtlbY4yKagNUOCP5qIeZF2BbeiM1j1W4aLXEjJFqBhRlgP1sGBQrZ4jLKZavBG/oo9Ge63FugIiYRUJH1mUWC8nD1SaoG0JlRhdciotC0vUrssCsrusE14b2fbYaUG83yIQmG3r1g65LUuNah5/94Nhg8WDSA3LlrGbHUrrlI2eZUmjbFxzo1amcTXx1vIZwgoj68rwurhEBxZ9Go7NtNE2aTtrzHzAU+oAoAaAMFliv8X3D7IU4k2YwzfJsqPiJe+dXEZ86fpvOhD/XFC+j8aO4tIvTGrowyRqja4P0Gcif8qqLdraqgkWvxHkWNfw6xWNnamDXYbRDFJmS3oqFSmwKXGXRldwPKvqsowvZVwOLQmOMTEDpNyzsVuZ43V4W7FubkbUV7NYAhy+dXibHHsz1O6P7qGGjqyNbNeteDeaP7rsZjtynLpP9uDZweuGxVQ09OY6q+a9RG7CoVhedZKCJnwKFz"
+    }
+  }
+}
