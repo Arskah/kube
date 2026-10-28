@@ -5,15 +5,16 @@ metadata:
   namespace: argocd
 spec:
   namespace: argocd
-  commonUpdateSettings:
-    pullSecret: "pullsecret:argocd/regcred-argocd"
   writeBackConfig:
     method: "argocd"
   applicationRefs:
     - namePattern: "homepage-staging"
       images:
         - alias: "staging"
-          imageName: "registry.aarnihalinen.fi/homepage:staging"
+          imageName: "forge.aarnihalinen.fi/arska/homepage:staging"
+          manifestTargets:
+            kustomize:
+              name: homepage-image
           # CI moves the `staging` tag on every build. Following its digest takes one request, where
           # newest-build read the metadata of every tag in the registry.
           commonUpdateSettings:

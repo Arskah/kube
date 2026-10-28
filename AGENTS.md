@@ -42,7 +42,7 @@ An Application in `apps/templates/` points at one of:
 - both at once via `sources:` — chart plus a repo directory of extra resources (cert-manager + its ClusterIssuers, sealed-secrets + the sealed secrets, docker-registry + its PVC/Certificate),
 - another repo (`homepage-*` → `Arskah/homepage`, `k8s/prod` and `k8s/staging`).
 
-ArgoCD manages itself: `argocd/` is a Kustomization that pulls the upstream `install.yaml` by version URL, adds the `argocd` namespace/AppProject/self-managing Application, and patches `argocd-cm`. `argocd-image-updater/` is a similar Kustomization, and holds the `ImageUpdater` resources that track `registry.aarnihalinen.fi/homepage` for the homepage apps.
+ArgoCD manages itself: `argocd/` is a Kustomization that pulls the upstream `install.yaml` by version URL, adds the `argocd` namespace/AppProject/self-managing Application, and patches `argocd-cm`. `argocd-image-updater/` is a similar Kustomization, and holds the `ImageUpdater` resources that track `forge.aarnihalinen.fi/arska/homepage` (the Forgejo registry, pulled without a login) for the homepage apps.
 
 ### Projects and ordering
 
