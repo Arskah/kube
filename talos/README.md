@@ -18,7 +18,7 @@ configs are generated from them together with a local secrets bundle.
 
 | File                        | Committed | Content                                                                                         |
 | --------------------------- | --------- | ----------------------------------------------------------------------------------------------- |
-| `patches/all.yaml`          | yes       | install disk and image, `eth0` NIC naming                                                       |
+| `patches/all.yaml`          | yes       | install disk and image, `eth0` NIC naming, user namespaces for rootless Docker                  |
 | `patches/controlplane.yaml` | yes       | hostname, API server cert SANs, no default CNI, kube-proxy disabled, Talos API access for tuppr |
 | `patches/worker.yaml`       | yes       | hostname                                                                                        |
 | `secrets.yaml`              | no        | cluster CAs, keys and tokens. Keep a backup outside of this machine                             |
