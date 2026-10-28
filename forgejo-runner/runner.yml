@@ -37,7 +37,7 @@ data:
           # fully qualified
           url: http://forgejo-http.forge.svc.cluster.local:3000
           # Written by scripts/seal-forgejo-runner-token.sh together with the sealed token
-          uuid: REPLACE-WITH-RUNNER-UUID
+          uuid: 906acf47-fddd-4111-b0a3-9015e8f4a902
           token_url: file:$CREDENTIALS_DIRECTORY/token
   # Read by the rootless daemon from ~/.config/docker
   daemon.json: |
