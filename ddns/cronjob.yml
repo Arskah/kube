@@ -10,7 +10,9 @@ spec:
   failedJobsHistoryLimit: 3
   jobTemplate:
     spec:
-      backoffLimit: 0
+      # Outbound connections fail now and then for a few seconds; a retry a little later gets through
+      # and keeps a failed Job, which KubeJobFailed alerts on until it is pruned, from being left behind
+      backoffLimit: 2
       activeDeadlineSeconds: 120
       template:
         spec:
