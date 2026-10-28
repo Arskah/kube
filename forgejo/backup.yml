@@ -47,6 +47,12 @@ spec:
                     secretKeyRef:
                       name: forgejo-postgres-secret
                       key: postgres-password
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 64Mi
+                limits:
+                  memory: 512Mi
               volumeMounts:
                 - name: backup
                   mountPath: /backup

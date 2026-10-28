@@ -1,0 +1,40 @@
+# The resource rule of AGENTS.md: every container has CPU and memory requests and a memory limit.
+# CPU limits are left to judgement, so no check for them. The pods of the Helm charts are checked
+# after scripts/render-charts.sh has rendered them into .rendered/; kube-linter renders the
+# Kustomize directories itself. Pods that operators create (Prometheus, Alertmanager) are not
+# covered.
+checks:
+  doNotAutoAddDefaults: true
+  include:
+    - cpu-request
+    - memory-request
+    - memory-limit
+  # Not done yet: remove a path once its pods have requests and memory limits
+  ignorePaths:
+    # The upstream install of ArgoCD, pulled by the Kustomization
+    - "**/argocd/**"
+    - "**/.rendered/cert-manager.yml"
+    - "**/.rendered/cilium.yml"
+    - "**/.rendered/forge.yml"
+    - "**/.rendered/monitoring.yml"
+    - "**/.rendered/sealed-secrets.yml"
+    - "**/.rendered/tuppr.yml"
+customChecks:
+  - name: cpu-request
+    template: cpu-requirements
+    params:
+      requirementsType: request
+      upperBoundMillis: 0
+    remediation: Set resources.requests.cpu.
+  - name: memory-request
+    template: memory-requirements
+    params:
+      requirementsType: request
+      upperBoundMB: 0
+    remediation: Set resources.requests.memory.
+  - name: memory-limit
+    template: memory-requirements
+    params:
+      requirementsType: limit
+      upperBoundMB: 0
+    remediation: Set resources.limits.memory.

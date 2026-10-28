@@ -10,3 +10,6 @@ jobs:
 
   prettier:
     uses: ./.github/workflows/prettier.yml
+
+  kube-linter:
+    uses: ./.github/workflows/kube-linter.yml

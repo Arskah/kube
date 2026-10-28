@@ -19,6 +19,12 @@ spec:
           image: moul/icecast@sha256:b35cd6367327335b51b989c277e6feaff7cd61d65846ec7fee361c6eb1cea620
           ports:
             - containerPort: 8000
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 256Mi
           volumeMounts:
             # Only the config file. Mounting the whole directory hides /etc/icecast2/web and
             # /etc/icecast2/admin of the image, which the status pages are symlinked to.

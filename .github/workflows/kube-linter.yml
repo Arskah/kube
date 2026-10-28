@@ -1,0 +1,23 @@
+name: kube-linter
+
+on:
+  workflow_call:
+
+jobs:
+  kube-linter:
+    name: kube-linter
+    runs-on: ubuntu-26.04
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # helm and yq come with the runner image
+      - name: Render the Helm charts of the Applications
+        run: scripts/render-charts.sh
+
+      - uses: stackrox/kube-linter-action@87802a2f4e01abebb3ee3c67a3002fea71f6eae5 # v1.0.7
+        with:
+          directory: .
+          config: .kube-linter.yml
+          # renovate: datasource=github-releases depName=stackrox/kube-linter
+          version: v0.8.3
