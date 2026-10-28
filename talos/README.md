@@ -60,6 +60,9 @@ talosctl apply-config --nodes 192.168.86.73 --file talos/controlplane.yaml
 talosctl apply-config --nodes 192.168.86.76 --file talos/worker.yaml
 ```
 
+Generating with `--force` also replaces `talos/talosconfig` with one that has no endpoints, and `talosctl` then fails
+with `failed to determine endpoints`. Set it again with `talosctl config endpoint 192.168.86.73`.
+
 The generated configs also carry the Kubernetes version (the images of the kubelet and the control plane components),
 which [tuppr](#upgrades) changes on the nodes when it upgrades. So before applying: pull `main`, check that no upgrade
 is running (`kubectl get talosupgrade,kubernetesupgrade`), generate, and run `apply-config` with `--dry-run` first. The
