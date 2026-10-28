@@ -13,7 +13,7 @@ turn from "restore" into "recreate by hand".
 | Talos secrets bundle           | `talos/secrets.yaml` on the admin machine           | regenerating machine configs, adding nodes           | new cluster identity, see [talos/README.md](../talos/README.md) |
 | Sealed Secrets private keys    | Secrets in `kube-system`                            | decrypting everything in `sealed-secrets/`           | every secret has to be recreated and sealed again               |
 | Plaintext of the sealed values | nowhere in the repo                                 | sealing the secrets again                            | new credentials have to be issued                               |
-| Persistent volumes             | NAS `192.168.86.87`, NFS export `/k8s`              | tp-rent database, registry images, Forgejo           | data is gone                                                    |
+| Persistent volumes             | NAS `192.168.86.87`, NFS export `/k8s`              | tp-rent database, Forgejo                            | data is gone                                                    |
 | Static files                   | NAS `/k8s/www`, `/k8s/caddy`, `/k8s/icecast`        | caddy and icecast pods mount these directly          | sites serve nothing                                             |
 | Router configuration           | Google Wifi                                         | public traffic reaching the cluster, stable node IPs | nothing is reachable from outside                               |
 | DNS records                    | DigitalOcean DNS (`aarnihalinen.fi`, `halinen.dev`) | every public hostname, certificate issuance          | nothing is reachable from outside                               |
@@ -35,32 +35,23 @@ Store these in the password manager. None of them is taken automatically.
 
 3. The plaintext values behind the sealed secrets, as a fallback for losing the keys:
 
-   | File in `sealed-secrets/`                  | Secret                                 | Keys                                                | Source of the values                                             |
-   | ------------------------------------------ | -------------------------------------- | --------------------------------------------------- | ---------------------------------------------------------------- |
-   | `sealed-alertmanager-smtp.json`            | `monitoring/alertmanager-smtp`         | `password`                                          | SMTP password of the address Alertmanager sends from             |
-   | `sealed-ddns-digitalocean-token.json`      | `ddns/digitalocean-token`              | `token`                                             | DigitalOcean API token, scopes `domain:read` and `domain:update` |
-   | `sealed-forgejo-postgres.json`             | `forge/forgejo-postgres-secret`        | `postgres-password`                                 | has to match the existing database files                         |
-   | `sealed-forgejo-runner-token.json`         | `forgejo-runner/forgejo-runner-token`  | `uuid`, `token`                                     | runner registered in Forgejo (Site Administration -> Actions)    |
-   | `sealed-forgejo-smtp.json`                 | `forge/forgejo-smtp`                   | `password`                                          | SMTP password of the address Forgejo sends from                  |
-   | `sealed-grafana-admin.json`                | `monitoring/grafana-admin`             | `admin-user`, `admin-password`                      | any, it is the login of Grafana                                  |
-   | `sealed-music-library-admin-password.json` | `music-library/admin-password`         | `password`                                          | has to match the existing database files                         |
-   | `sealed-music-library-regcred.json`        | `music-library/regcred`                | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`                               |
-   | `sealed-music-library-web-db.json`         | `music-library/web-db`                 | `password`                                          | any value: the page sets it in the database on start             |
-   | `sealed-music-library-web-login.json`      | `music-library/web-login`              | `login`                                             | shared login of the page, `user:password`                        |
-   | `sealed-music-library-web-webhook.json`    | `music-library/web-webhook`            | `secret`                                            | shared secret of the webhook of the page                         |
-   | `sealed-regcred-argocd.json`               | `argocd/regcred-argocd`                | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`                               |
-   | `sealed-regcred-homepage-production.json`  | `homepage-production/regcred-homepage` | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`                               |
-   | `sealed-regcred-homepage-staging.json`     | `homepage-staging/regcred-homepage`    | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`                               |
-   | `sealed-registry-htpasswd.json`            | `docker-registry/registry-htpasswd`    | `htpasswd`                                          | bcrypt hash of the registry password                             |
-   | `sealed-tp-rent-db.json`                   | `tp-rent/db-password`                  | `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` | has to match the existing database files                         |
-   | `sealed-tp-rent-regcred-forge.json`        | `tp-rent/regcred-forge`                | `.dockerconfigjson`                                 | `read:package` token of the `cluster-pull` user in Forgejo       |
+   | File in `sealed-secrets/`                  | Secret                                | Keys                                                | Source of the values                                             |
+   | ------------------------------------------ | ------------------------------------- | --------------------------------------------------- | ---------------------------------------------------------------- |
+   | `sealed-alertmanager-smtp.json`            | `monitoring/alertmanager-smtp`        | `password`                                          | SMTP password of the address Alertmanager sends from             |
+   | `sealed-ddns-digitalocean-token.json`      | `ddns/digitalocean-token`             | `token`                                             | DigitalOcean API token, scopes `domain:read` and `domain:update` |
+   | `sealed-forgejo-postgres.json`             | `forge/forgejo-postgres-secret`       | `postgres-password`                                 | has to match the existing database files                         |
+   | `sealed-forgejo-runner-token.json`         | `forgejo-runner/forgejo-runner-token` | `uuid`, `token`                                     | runner registered in Forgejo (Site Administration -> Actions)    |
+   | `sealed-forgejo-smtp.json`                 | `forge/forgejo-smtp`                  | `password`                                          | SMTP password of the address Forgejo sends from                  |
+   | `sealed-grafana-admin.json`                | `monitoring/grafana-admin`            | `admin-user`, `admin-password`                      | any, it is the login of Grafana                                  |
+   | `sealed-music-library-admin-password.json` | `music-library/admin-password`        | `password`                                          | has to match the existing database files                         |
+   | `sealed-music-library-web-db.json`         | `music-library/web-db`                | `password`                                          | any value: the page sets it in the database on start             |
+   | `sealed-music-library-web-login.json`      | `music-library/web-login`             | `login`                                             | shared login of the page, `user:password`                        |
+   | `sealed-music-library-web-webhook.json`    | `music-library/web-webhook`           | `secret`                                            | shared secret of the webhook of the page                         |
+   | `sealed-tp-rent-db.json`                   | `tp-rent/db-password`                 | `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` | has to match the existing database files                         |
+   | `sealed-tp-rent-regcred-forge.json`        | `tp-rent/regcred-forge`               | `.dockerconfigjson`                                 | `read:package` token of the `cluster-pull` user in Forgejo       |
 
    `scripts/` has a script for each secret that gets rotated: it asks for or generates the value, seals it and checks
    the result. The others are sealed with the commands under [Sealing the secrets again](#sealing-the-secrets-again).
-
-   All five registry secrets come from the same user and password: `registry-htpasswd` is the bcrypt hash the registry
-   checks against, the four `regcred` secrets are what the cluster logs in with. They have to be sealed again together
-   when the password changes.
 
 4. A dump of the tp-rent database, taken regularly:
 
@@ -77,15 +68,14 @@ Volumes are directories on the NAS, created by the NFS CSI driver and named afte
 policy is `Retain`, so the directories survive the cluster, but a new cluster creates new, empty directories with new
 names. Without this table there is no way to tell which old directory belonged to what.
 
-| Claim                                      | Directory on the NAS                            |
-| ------------------------------------------ | ----------------------------------------------- |
-| `tp-rent/db-pvc`                           | `/k8s/pvc-a17cd4de-4761-4060-9967-be89708a50a5` |
-| `docker-registry/docker-registry-pv-claim` | `/k8s/pvc-aa6d6c15-3c85-4950-92ed-eaf6ab74c855` |
-| `forge/gitea-shared-storage`               | `/k8s/pvc-aea39d3d-af29-4ba4-bf64-e8167a31d202` |
-| `forge/data-forgejo-db-0`                  | `/k8s/pvc-f212e744-2350-4ba5-b9dc-b06e9341d201` |
-| `forge/forgejo-db-backup`                  | `/k8s/pvc-a5d97835-7905-41c4-9a20-cd6fccdefbaa` |
-| `forgejo-runner/forgejo-runner-data`       | `/k8s/pvc-c65ac5f8-649e-44ed-954a-31e1ff1d15ec` |
-| `music-library/data-postgres-0`            | `/k8s/pvc-0ff2de14-ff60-410a-8385-dadfe31886e0` |
+| Claim                                | Directory on the NAS                            |
+| ------------------------------------ | ----------------------------------------------- |
+| `tp-rent/db-pvc`                     | `/k8s/pvc-a17cd4de-4761-4060-9967-be89708a50a5` |
+| `forge/gitea-shared-storage`         | `/k8s/pvc-aea39d3d-af29-4ba4-bf64-e8167a31d202` |
+| `forge/data-forgejo-db-0`            | `/k8s/pvc-f212e744-2350-4ba5-b9dc-b06e9341d201` |
+| `forge/forgejo-db-backup`            | `/k8s/pvc-a5d97835-7905-41c4-9a20-cd6fccdefbaa` |
+| `forgejo-runner/forgejo-runner-data` | `/k8s/pvc-c65ac5f8-649e-44ed-954a-31e1ff1d15ec` |
+| `music-library/data-postgres-0`      | `/k8s/pvc-0ff2de14-ff60-410a-8385-dadfe31886e0` |
 
 Update the table when claims are added:
 
@@ -174,8 +164,9 @@ LAN, the Talos API is not reachable from anywhere else.
    ArgoCD scales the workload back up on its own if this takes longer than its next sync. Disable auto-sync for the
    application in the ArgoCD UI for the duration if that gets in the way.
 
-   The homepage images are pulled from the registry in the cluster, so those pods stay in
-   `ImagePullBackOff` until the registry volume is restored or the images are pushed again from CI.
+   The homepage, music-library and tp-rent images are pulled from the Forgejo registry, which keeps them on the
+   `forge/gitea-shared-storage` volume. Those pods stay in `ImagePullBackOff` until that volume is restored, or until
+   the images are pushed again (homepage from its CI, the others by hand).
 
    Restoring the database from a dump instead of the files:
 
@@ -221,11 +212,11 @@ kubectl create secret generic db-password --namespace tp-rent \
   kubeseal --controller-name sealed-secrets-controller --controller-namespace kube-system -o json \
     > sealed-secrets/sealed-tp-rent-db.json
 
-kubectl create secret docker-registry regcred-homepage --namespace homepage-production \
-  --docker-server=registry.aarnihalinen.fi --docker-username=... --docker-password=... \
+kubectl create secret docker-registry regcred-forge --namespace tp-rent \
+  --docker-server=forge.aarnihalinen.fi --docker-username=cluster-pull --docker-password=... \
   --dry-run=client -o json |
   kubeseal --controller-name sealed-secrets-controller --controller-namespace kube-system -o json \
-    > sealed-secrets/sealed-regcred-homepage-production.json
+    > sealed-secrets/sealed-tp-rent-regcred-forge.json
 ```
 
 The name and namespace are part of the encryption, so they have to be exactly the ones in the table.

@@ -39,7 +39,7 @@ An Application in `apps/templates/` points at one of:
 
 - a directory in this repo with plain manifests (`caddy/`, `icecast/`, `tp-rent/`),
 - an upstream Helm chart with values inlined under `helm.valuesObject` (cilium, monitoring; nfs-storage takes its chart from the upstream git tag),
-- both at once via `sources:` — chart plus a repo directory of extra resources (cert-manager + its ClusterIssuers, sealed-secrets + the sealed secrets, docker-registry + its PVC/Certificate),
+- both at once via `sources:` — chart plus a repo directory of extra resources (cert-manager + its ClusterIssuers, sealed-secrets + the sealed secrets, forge + its database, backup and routes),
 - another repo (`homepage-*` → `Arskah/homepage`, `k8s/prod` and `k8s/staging`).
 
 ArgoCD manages itself: `argocd/` is a Kustomization that pulls the upstream `install.yaml` by version URL, adds the `argocd` namespace/AppProject/self-managing Application, and patches `argocd-cm`. `argocd-image-updater/` is a similar Kustomization, and holds the `ImageUpdater` resources that track `forge.aarnihalinen.fi/arska/homepage` (the Forgejo registry, pulled without a login) for the homepage apps.
@@ -51,7 +51,7 @@ Three AppProjects: `argocd` (`argocd/base/`), and `infra` and `applications` (`a
 - `infra` is unrestricted.
 - `applications` whitelists source repos and destination namespaces explicitly. **Adding a new app under this project means also adding its namespace (and repo/chart URL if new) to `argocd-projects/apps.yml`**, otherwise the sync is rejected.
 
-Startup order is expressed with `argocd.argoproj.io/sync-wave` annotations: 0 gateway-api (CRDs) → 1 cilium, nfs-storage → 2 sealed-secrets → 3 cert-manager, monitoring, gateway, ddns → 4 docker-registry, tuppr → 5 user-facing apps. Give new Applications a wave consistent with what they depend on. The waves only order when the Applications are created: ArgoCD has no health check for `Application` resources here, so the root app does not wait for one wave to be up before creating the next. What makes a fresh cluster converge is the `retry` block that every Application carries (a sync that fails because a namespace or CRD of another Application is not there yet is tried again, which automated sync does not do by itself for the same commit). Copy it to new Applications.
+Startup order is expressed with `argocd.argoproj.io/sync-wave` annotations: 0 gateway-api (CRDs) → 1 cilium, nfs-storage → 2 sealed-secrets → 3 cert-manager, monitoring, gateway, ddns → 4 tuppr → 5 user-facing apps. Give new Applications a wave consistent with what they depend on. The waves only order when the Applications are created: ArgoCD has no health check for `Application` resources here, so the root app does not wait for one wave to be up before creating the next. What makes a fresh cluster converge is the `retry` block that every Application carries (a sync that fails because a namespace or CRD of another Application is not there yet is tried again, which automated sync does not do by itself for the same commit). Copy it to new Applications.
 
 ### Cross-cutting conventions
 
