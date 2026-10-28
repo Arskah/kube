@@ -40,7 +40,7 @@ An Application in `apps/templates/` points at one of:
 - a directory in this repo with plain manifests (`caddy/`, `icecast/`),
 - an upstream Helm chart with values inlined under `helm.valuesObject` (cilium, monitoring; nfs-storage takes its chart from the upstream git tag),
 - both at once via `sources:` — chart plus a repo directory of extra resources (cert-manager + its ClusterIssuers, sealed-secrets + the sealed secrets, forge + its database, backup and routes),
-- another repo (`homepage-*` → `Arskah/homepage`, `k8s/prod` and `k8s/staging`; `toiletpaper.rent` → `arska/toiletpaper.rent` on the forge, `k8s/` on the `k8s` branch, which also holds its Certificate and HTTPRoute. Its `db-password` SealedSecret and Gateway listener stay here).
+- another repo (`homepage-*` → `Arskah/homepage`, `k8s/prod` and `k8s/staging`; `toiletpaper.rent` → `arska/toiletpaper.rent` on the forge, `k8s/` on the `main` branch, which also holds its Certificate and HTTPRoute. Its `db-password` SealedSecret and Gateway listener stay here).
 
 ArgoCD manages itself: `argocd/` is a Kustomization that pulls the upstream `install.yaml` by version URL, adds the `argocd` namespace/AppProject/self-managing Application, and patches `argocd-cm`. `argocd-image-updater/` is a similar Kustomization, and holds the `ImageUpdater` resources that track `forge.aarnihalinen.fi/public/homepage` for the homepage apps.
 

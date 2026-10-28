@@ -14,7 +14,7 @@ spec:
     directory:
       recurse: true
     repoURL: https://forge.aarnihalinen.fi/arska/toiletpaper.rent.git
-    targetRevision: k8s
+    targetRevision: main
     path: k8s
   syncPolicy:
     automated:
