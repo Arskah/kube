@@ -1,6 +1,3 @@
-# Served by Forgejo at /robots.txt, mounted into $GITEA_CUSTOM/public by the chart values in
-# apps/templates/forge.yml. Repository and profile pages may be crawled; the pages that are generated
-# per commit or file (history, blame, diffs, archives) are expensive and endless, so they are not.
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -8,7 +5,6 @@ metadata:
   namespace: forge
 data:
   robots.txt: |
-    # AI training crawlers
     User-agent: GPTBot
     User-agent: ClaudeBot
     User-agent: CCBot

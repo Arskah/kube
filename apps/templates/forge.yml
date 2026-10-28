@@ -51,7 +51,6 @@ spec:
             ssh:
               type: NodePort
               nodePort: 32222
-          # robots.txt from forgejo/robots.yml
           extraVolumes:
             - name: robots
               configMap:
@@ -74,11 +73,8 @@ spec:
                 ENABLED: true
               service:
                 DISABLE_REGISTRATION: true
-                # Public repositories and profiles can be viewed without logging in. Explicit, because the
-                # chart merges into the existing app.ini, so removing a key keeps its old value
                 REQUIRE_SIGNIN_VIEW: false
               repository:
-                # New repositories start private; publishing one is a choice per repository
                 DEFAULT_PRIVATE: private
               database:
                 DB_TYPE: postgres
