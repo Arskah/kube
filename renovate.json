@@ -53,6 +53,14 @@
     },
     {
       "customType": "regex",
+      "description": "Versions of tools in the workflows, marked with a renovate comment",
+      "managerFilePatterns": ["/^\\.github/workflows/.+\\.yml$/"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\n\\s*version: (?<currentValue>\\S+)"
+      ]
+    },
+    {
+      "customType": "regex",
       "description": "The copy of the Kubernetes version in the Talos README",
       "managerFilePatterns": ["/^talos/README\\.md$/"],
       "matchStrings": ["--kubernetes-version (?<currentValue>[0-9.]+)"],

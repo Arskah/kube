@@ -9,3 +9,6 @@ talos/talosconfig
 talos/kubeconfig
 old-config
 .DS_Store
+
+# Charts rendered for kube-linter, see scripts/render-charts.sh
+.rendered/
