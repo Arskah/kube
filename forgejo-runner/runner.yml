@@ -107,10 +107,16 @@ spec:
             requests:
               cpu: 500m
               memory: 1Gi
+              # Without a request it would default to the limit, which kube-control does not have
+              ephemeral-storage: 2Gi
             limits:
               # Leaves room for Forgejo and its database, which run on the same node
               cpu: 1500m
               memory: 4Gi
+              # With a limit on every container, the kubelet also evicts the pod when the writable
+              # layers and the emptyDirs together go over the sum of the limits. So each limit is
+              # 1Gi for the container itself plus the emptyDirs it writes to: here the image store
+              ephemeral-storage: 13Gi
           volumeMounts:
             - name: certs
               mountPath: /certs
@@ -157,8 +163,11 @@ spec:
             requests:
               cpu: 10m
               memory: 64Mi
+              ephemeral-storage: 100Mi
             limits:
               memory: 256Mi
+              # 1Gi plus /data and /tmp, see the daemon
+              ephemeral-storage: 3Gi
           volumeMounts:
             - name: data
               mountPath: /data
