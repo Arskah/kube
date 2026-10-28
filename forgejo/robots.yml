@@ -1,0 +1,42 @@
+# Served by Forgejo at /robots.txt, mounted into $GITEA_CUSTOM/public by the chart values in
+# apps/templates/forge.yml. Repository and profile pages may be crawled; the pages that are generated
+# per commit or file (history, blame, diffs, archives) are expensive and endless, so they are not.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: forgejo-robots
+  namespace: forge
+data:
+  robots.txt: |
+    # AI training crawlers
+    User-agent: GPTBot
+    User-agent: ClaudeBot
+    User-agent: CCBot
+    User-agent: Google-Extended
+    User-agent: Applebot-Extended
+    User-agent: Bytespider
+    User-agent: Amazonbot
+    User-agent: meta-externalagent
+    User-agent: PerplexityBot
+    Disallow: /
+
+    User-agent: *
+    Disallow: /api/
+    Disallow: /v2/
+    Disallow: /-/
+    Disallow: /user/
+    Disallow: /explore/
+    Disallow: /*/*/commit/
+    Disallow: /*/*/commits/
+    Disallow: /*/*/src/commit/
+    Disallow: /*/*/blame/
+    Disallow: /*/*/raw/
+    Disallow: /*/*/media/
+    Disallow: /*/*/archive/
+    Disallow: /*/*/compare/
+    Disallow: /*/*/graph
+    Disallow: /*/*/activity
+    Disallow: /*/*/search
+    Disallow: /*/*/releases/download/
+    Disallow: /*/*/issues?
+    Disallow: /*/*/pulls?
