@@ -11,7 +11,7 @@ spec:
     - namePattern: "homepage-staging"
       images:
         - alias: "staging"
-          imageName: "forge.aarnihalinen.fi/arska/homepage:staging"
+          imageName: "forge.aarnihalinen.fi/public/homepage:staging"
           manifestTargets:
             kustomize:
               name: homepage-image

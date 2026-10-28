@@ -14,11 +14,9 @@ spec:
         app: frontend
     spec:
       automountServiceAccountToken: false
-      imagePullSecrets:
-        - name: regcred-forge
       containers:
         - name: frontend
-          image: forge.aarnihalinen.fi/arska/tp-rent-frontend:latest@sha256:cdb16df333eeffc37652339cfc98423b63b99f69ac1280c6145bdbaee4437aa2
+          image: forge.aarnihalinen.fi/public/tp-rent-frontend:latest@sha256:cdb16df333eeffc37652339cfc98423b63b99f69ac1280c6145bdbaee4437aa2
           env:
             - name: REACT_APP_BACKEND_URL
               value: https://tp.aarnihalinen.fi/api
