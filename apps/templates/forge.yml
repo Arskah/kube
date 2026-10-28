@@ -17,7 +17,7 @@ spec:
       targetRevision: HEAD
       path: forgejo
     - repoURL: code.forgejo.org/forgejo-helm
-      targetRevision: 17.1.5
+      targetRevision: 17.3.2
       chart: forgejo
       helm:
         releaseName: forgejo
