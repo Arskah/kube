@@ -22,10 +22,14 @@ data:
     runner:
       file: /data/.runner
       capacity: 1
-    container:
-      options: "--add-host=forge.aarnihalinen.fi:192.168.86.73"
       labels:
         - "ubuntu-latest:docker://node:22-bookworm"
+    container:
+      # Jobs share the pod network, so they can reach the dind sidecar
+      # with DOCKER_HOST=tcp://127.0.0.1:2375. This gives every job access
+      # to the privileged daemon: only run CI for trusted repos.
+      network: host
+      options: "--add-host=forge.aarnihalinen.fi:192.168.86.73"
 ---
 apiVersion: apps/v1
 kind: Deployment
