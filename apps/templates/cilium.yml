@@ -50,9 +50,22 @@ spec:
         kubeProxyReplacement: true
         # k8sServiceHost: 192.168.86.73
         # k8sServicePort: 6443
+        # Requests put the agent, Envoy (the public Gateway) and the operator ahead of the pods
+        # without requests when CPU is short. No memory limit on the agent and Envoy: an agent
+        # killed for memory takes the network of its node down, and Envoy the public sites.
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
         operator:
           replicas: 1
           rollOutPods: true
+          resources:
+            requests:
+              cpu: 20m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
           prometheus:
             serviceMonitor:
               enabled: true
@@ -77,6 +90,10 @@ spec:
         envoy:
           # Restart when the configuration changes
           rollOutPods: true
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
           prometheus:
             serviceMonitor:
               enabled: true

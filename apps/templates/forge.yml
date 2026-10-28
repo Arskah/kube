@@ -64,6 +64,13 @@ spec:
             enabled: true
             storageClass: "nfs-retain"
             size: 50Gi
+          # Ahead of CI and the pods without requests when kube-node1 is short of CPU
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              memory: 1Gi
           gitea:
             admin:
               username: arska

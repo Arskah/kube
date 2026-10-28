@@ -105,7 +105,9 @@ spec:
             failureThreshold: 60
           resources:
             requests:
-              cpu: 500m
+              # Low on purpose: under contention CPU goes by requests, and CI should only get what
+              # Forgejo and the other services leave
+              cpu: 100m
               memory: 1Gi
               # Without a request it would default to the limit, which kube-control does not have
               ephemeral-storage: 2Gi

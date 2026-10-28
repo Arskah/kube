@@ -32,6 +32,14 @@ spec:
           ports:
             - containerPort: 5432
               name: postgres
+          # Ahead of CI and the pods without requests when kube-node1 is short of CPU; a database
+          # starved of it misses its readiness probe and drops out of the Service
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              memory: 1Gi
           readinessProbe:
             exec:
               command: ["pg_isready", "-U", "forgejo", "-d", "forgejo"]
