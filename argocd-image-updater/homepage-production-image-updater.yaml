@@ -11,7 +11,7 @@ spec:
     - namePattern: "homepage-production"
       images:
         - alias: "production"
-          imageName: "forge.aarnihalinen.fi/arska/homepage:vx.x.x"
+          imageName: "forge.aarnihalinen.fi/public/homepage:vx.x.x"
           manifestTargets:
             kustomize:
               name: homepage-image

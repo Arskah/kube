@@ -48,10 +48,10 @@ Store these in the password manager. None of them is taken automatically.
    | `sealed-music-library-web-login.json`      | `music-library/web-login`             | `login`                                             | shared login of the page, `user:password`                        |
    | `sealed-music-library-web-webhook.json`    | `music-library/web-webhook`           | `secret`                                            | shared secret of the webhook of the page                         |
    | `sealed-tp-rent-db.json`                   | `tp-rent/db-password`                 | `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` | has to match the existing database files                         |
-   | `sealed-tp-rent-regcred-forge.json`        | `tp-rent/regcred-forge`               | `.dockerconfigjson`                                 | `read:package` token of the `cluster-pull` user in Forgejo       |
 
    `scripts/` has a script for each secret that gets rotated: it asks for or generates the value, seals it and checks
-   the result. The others are sealed with the commands under [Sealing the secrets again](#sealing-the-secrets-again).
+   the result. `scripts/seal-forge-pull.sh` writes `sealed-<namespace>-forge-pull.json`, the pull secret for private
+   images in the Forgejo registry, for each namespace in its list; the value is the token of the `cluster-pull` user. The others are sealed with the commands under [Sealing the secrets again](#sealing-the-secrets-again).
 
 4. A dump of the tp-rent database, taken regularly:
 
@@ -211,12 +211,6 @@ kubectl create secret generic db-password --namespace tp-rent \
   --dry-run=client -o json |
   kubeseal --controller-name sealed-secrets-controller --controller-namespace kube-system -o json \
     > sealed-secrets/sealed-tp-rent-db.json
-
-kubectl create secret docker-registry regcred-forge --namespace tp-rent \
-  --docker-server=forge.aarnihalinen.fi --docker-username=cluster-pull --docker-password=... \
-  --dry-run=client -o json |
-  kubeseal --controller-name sealed-secrets-controller --controller-namespace kube-system -o json \
-    > sealed-secrets/sealed-tp-rent-regcred-forge.json
 ```
 
 The name and namespace are part of the encryption, so they have to be exactly the ones in the table.
