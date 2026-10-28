@@ -36,6 +36,15 @@ spec:
               path:
                 type: PathPrefix
                 value: /
+              # Container image layers and large git pushes take longer than the default request timeout
+              timeouts:
+                request: 0s
+            filters:
+              - type: ResponseHeaderModifier
+                responseHeaderModifier:
+                  set:
+                    - name: Strict-Transport-Security
+                      value: max-age=31536000; includeSubDomains
           # SSH does not go through the Gateway: Cilium does not support TCP listeners in host network
           # mode. The router forwards public port 2222 to this NodePort on kube-control instead.
           service:
