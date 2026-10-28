@@ -14,7 +14,7 @@ spec:
     - "https://github.com/Arskah/kube.git"
     - "https://github.com/Arskah/homepage.git"
     - "https://github.com/Arskah/music-library.git"
-    - "data.forgejo.org/forgejo-helm"
+    - "code.forgejo.org/forgejo-helm"
 
   # TODO: add stricter rules
   destinations:

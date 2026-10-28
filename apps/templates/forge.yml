@@ -16,7 +16,7 @@ spec:
     - repoURL: https://github.com/Arskah/kube.git
       targetRevision: HEAD
       path: forgejo
-    - repoURL: data.forgejo.org/forgejo-helm
+    - repoURL: code.forgejo.org/forgejo-helm
       targetRevision: 17.1.5
       chart: forgejo
       helm:

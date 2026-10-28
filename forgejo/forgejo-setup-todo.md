@@ -29,6 +29,6 @@ Started 2026-10-28 with the instance up over HTTPS and `ROOT_URL` correct.
 
 ## Things to watch
 
-- [ ] **Chart source.** `data.forgejo.org/forgejo-helm` at 17.1.5 works today. The verified source in the docs is `oci://code.forgejo.org/forgejo-helm/forgejo`. If Renovate bumps or a sync fails, change the repo URL here and in `argocd-projects/apps.yml` together.
+- [x] **Chart source.** `code.forgejo.org/forgejo-helm`, the source the Forgejo docs verify. It serves the same chart as `data.forgejo.org`, which was used at first (17.1.5 has the same digest on both).
 - [x] **Postgres image pin.** Pinned with a `@sha256:` digest, along with the runner images, so Renovate tracks them.
 - [ ] **Postgres password.** `POSTGRES_PASSWORD` only applies when the database is first initialized. Changing the sealed secret later does not change the password of the existing database.
