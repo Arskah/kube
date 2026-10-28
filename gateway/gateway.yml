@@ -90,21 +90,6 @@ spec:
           selector:
             matchLabels:
               kubernetes.io/metadata.name: tp-rent
-    - name: registry
-      protocol: HTTPS
-      port: 443
-      hostname: registry.aarnihalinen.fi
-      tls:
-        mode: Terminate
-        certificateRefs:
-          - name: docker-registry-tls
-            namespace: docker-registry
-      allowedRoutes:
-        namespaces:
-          from: Selector
-          selector:
-            matchLabels:
-              kubernetes.io/metadata.name: docker-registry
     # The homepage routes and ReferenceGrants are in github.com/Arskah/homepage, k8s/
     - name: homepage
       protocol: HTTPS

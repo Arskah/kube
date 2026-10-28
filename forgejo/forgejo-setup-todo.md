@@ -22,7 +22,8 @@ Started 2026-10-28 with the instance up over HTTPS and `ROOT_URL` correct.
 
 - [x] **CI.** Forgejo Actions needs a separate runner. Only worth it to move off GitHub Actions or the GitLab runners.
 - [x] **SSH access.** Done: router forwards public 2222 to NodePort 32222 on `kube-control` (the host network Gateway cannot do TCP listeners). Clone URLs use `ssh://git@forge.aarnihalinen.fi:2222/...`.
-- [ ] **Container and package registry.** Tested: the `tp-rent` images are on `forge.aarnihalinen.fi/arska/tp-rent-*`, pulled with the `read:package` token of the `cluster-pull` bot user (`sealed-tp-rent-regcred-forge.json`). Renovate skips `forge.aarnihalinen.fi/**`, it has no login. Left: moving the homepage images off `docker-registry`, which means their CI, the `regcred` secrets and the argocd-image-updater config.
+- [x] **Container and package registry.** All images are on `forge.aarnihalinen.fi/arska/` (`homepage`, `music-library`, `tp-rent-*`), public, and `docker-registry` is removed. homepage CI pushes with a `write:package` token of `arska` (GitHub secrets `REGISTRY_USER`/`REGISTRY_PWD`), tp-rent still pulls with the `cluster-pull` token although its images are public now. Renovate skips `forge.aarnihalinen.fi/**`, it has no login.
+- [ ] **Unify registry and CI credentials.** The personal CI token, the `cluster-pull` secret that tp-rent no longer needs, and maybe an organization that owns the packages, so that a bot can push.
 - [x] **Public view.** `REQUIRE_SIGNIN_VIEW: false`, so public repos and profiles, and the packages of public owners, can be viewed and pulled without logging in. New repos start private (`DEFAULT_PRIVATE: private`). `robots.txt` (`robots.yml`) keeps AI training crawlers out and other crawlers off the per-commit pages.
 - [x] **Metrics.** Enable `gitea.config.metrics` and add a ServiceMonitor with the `release: monitoring` label, like Cilium.
 
