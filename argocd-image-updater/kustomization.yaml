@@ -7,6 +7,7 @@ resources:
   - https://raw.githubusercontent.com/argoproj-labs/argocd-image-updater/v1.1.0/config/install.yaml
   - homepage-production-image-updater.yaml
   - homepage-staging-image-updater.yaml
+  - tp-rent-image-updater.yaml
 
 patches:
   - path: argocd-image-updater-cm.yaml

@@ -42,7 +42,7 @@ An Application in `apps/templates/` points at one of:
 - both at once via `sources:` — chart plus a repo directory of extra resources (cert-manager + its ClusterIssuers, sealed-secrets + the sealed secrets, forge + its database, backup and routes),
 - another repo (`homepage-*` → `Arskah/homepage`, `k8s/prod` and `k8s/staging`; `toiletpaper.rent` → `arska/toiletpaper.rent` on the forge, `k8s/` on the `main` branch, which also holds its Certificate and HTTPRoute. Its `db-password` SealedSecret and Gateway listener stay here).
 
-ArgoCD manages itself: `argocd/` is a Kustomization that pulls the upstream `install.yaml` by version URL, adds the `argocd` namespace/AppProject/self-managing Application, and patches `argocd-cm`. `argocd-image-updater/` is a similar Kustomization, and holds the `ImageUpdater` resources that track `forge.aarnihalinen.fi/public/homepage` for the homepage apps.
+ArgoCD manages itself: `argocd/` is a Kustomization that pulls the upstream `install.yaml` by version URL, adds the `argocd` namespace/AppProject/self-managing Application, and patches `argocd-cm`. `argocd-image-updater/` is a similar Kustomization, and holds the `ImageUpdater` resources that track `forge.aarnihalinen.fi/public/homepage` for the homepage apps and the `latest` digests of `forge.aarnihalinen.fi/public/tp-rent-*` for toiletpaper.rent, so a push to its `main` deploys.
 
 ### Projects and ordering
 

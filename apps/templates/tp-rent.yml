@@ -11,10 +11,6 @@ spec:
     server: https://kubernetes.default.svc
   project: applications
   source:
-    directory:
-      recurse: true
-      # Transitional: lets k8s/ gain a kustomization.yml before the switch to Kustomize
-      exclude: kustomization.yml
     repoURL: https://forge.aarnihalinen.fi/arska/toiletpaper.rent.git
     targetRevision: main
     path: k8s

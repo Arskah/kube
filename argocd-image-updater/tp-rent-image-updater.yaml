@@ -1,0 +1,28 @@
+apiVersion: argocd-image-updater.argoproj.io/v1alpha1
+kind: ImageUpdater
+metadata:
+  name: tp-rent-image-updater
+  namespace: argocd
+spec:
+  namespace: argocd
+  writeBackConfig:
+    method: "argocd"
+  applicationRefs:
+    - namePattern: "toiletpaper.rent"
+      # CI moves the `latest` tags on every push to main of arska/toiletpaper.rent. The Kustomize
+      # images are matched by their full name, the manifests pin a baseline digest.
+      images:
+        - alias: "backend"
+          imageName: "forge.aarnihalinen.fi/public/tp-rent-backend:latest"
+          manifestTargets:
+            kustomize:
+              name: forge.aarnihalinen.fi/public/tp-rent-backend
+          commonUpdateSettings:
+            updateStrategy: "digest"
+        - alias: "frontend"
+          imageName: "forge.aarnihalinen.fi/public/tp-rent-frontend:latest"
+          manifestTargets:
+            kustomize:
+              name: forge.aarnihalinen.fi/public/tp-rent-frontend
+          commonUpdateSettings:
+            updateStrategy: "digest"
