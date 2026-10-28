@@ -18,7 +18,7 @@ configs are generated from them together with a local secrets bundle.
 
 | File                        | Committed | Content                                                                                         |
 | --------------------------- | --------- | ----------------------------------------------------------------------------------------------- |
-| `patches/all.yaml`          | yes       | install disk and image, `eth0` NIC naming                                                       |
+| `patches/all.yaml`          | yes       | install disk and image, `eth0` NIC naming, user namespaces for rootless Docker                  |
 | `patches/controlplane.yaml` | yes       | hostname, API server cert SANs, no default CNI, kube-proxy disabled, Talos API access for tuppr |
 | `patches/worker.yaml`       | yes       | hostname                                                                                        |
 | `secrets.yaml`              | no        | cluster CAs, keys and tokens. Keep a backup outside of this machine                             |
@@ -59,6 +59,9 @@ export TALOSCONFIG=talos/talosconfig
 talosctl apply-config --nodes 192.168.86.73 --file talos/controlplane.yaml
 talosctl apply-config --nodes 192.168.86.76 --file talos/worker.yaml
 ```
+
+Generating with `--force` also replaces `talos/talosconfig` with one that has no endpoints, and `talosctl` then fails
+with `failed to determine endpoints`. Set it again with `talosctl config endpoint 192.168.86.73`.
 
 The generated configs also carry the Kubernetes version (the images of the kubelet and the control plane components),
 which [tuppr](#upgrades) changes on the nodes when it upgrades. So before applying: pull `main`, check that no upgrade

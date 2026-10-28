@@ -1,0 +1,46 @@
+# Jobs run arbitrary code with a Docker daemon at hand, so the runner pod gets nothing beyond what
+# CI needs: nothing can connect to it, and it can only reach DNS, Forgejo and the internet. The
+# internet rule leaves out private ranges, so the LAN (nodes, NAS, router) stays out of reach, and
+# cluster endpoints such as the API server never match a CIDR rule. The forge's public hostname
+# still works: it resolves to the public address, and the router sends that back to the Gateway.
+#
+# The rootless daemon sends the traffic of the job containers through slirp4netns in the pod, so
+# the policy covers the jobs as well.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: forgejo-runner
+  namespace: forgejo-runner
+spec:
+  endpointSelector: {}
+  enableDefaultDeny:
+    ingress: true
+    egress: true
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+            - port: "53"
+              protocol: TCP
+    # The runner fetches jobs and reports their logs here
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: forge
+            app.kubernetes.io/name: forgejo
+      toPorts:
+        - ports:
+            - port: "3000"
+              protocol: TCP
+    - toCIDRSet:
+        - cidr: 0.0.0.0/0
+          except:
+            - 10.0.0.0/8
+            - 100.64.0.0/10
+            - 169.254.0.0/16
+            - 172.16.0.0/12
+            - 192.168.0.0/16

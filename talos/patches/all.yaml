@@ -9,6 +9,13 @@ machine:
       # Keep the NIC named eth0, Cilium `devices` relies on it
       - net.ifnames=0
 ---
+# Talos disables user namespaces, which also stops root from creating them. The rootless Docker daemon of
+# forgejo-runner needs them for the containers of the jobs.
+apiVersion: v1alpha1
+kind: SysctlConfig
+params:
+  user.max_user_namespaces: "11255"
+---
 apiVersion: v1alpha1
 kind: UnattendedInstallConfig
 $patch: delete
