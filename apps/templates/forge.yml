@@ -51,6 +51,15 @@ spec:
             ssh:
               type: NodePort
               nodePort: 32222
+          extraVolumes:
+            - name: robots
+              configMap:
+                name: forgejo-robots
+          extraContainerVolumeMounts:
+            - name: robots
+              mountPath: /data/gitea/public/robots.txt
+              subPath: robots.txt
+              readOnly: true
           persistence:
             enabled: true
             storageClass: "nfs-retain"
@@ -64,7 +73,9 @@ spec:
                 ENABLED: true
               service:
                 DISABLE_REGISTRATION: true
-                REQUIRE_SIGNIN_VIEW: true
+                REQUIRE_SIGNIN_VIEW: false
+              repository:
+                DEFAULT_PRIVATE: private
               database:
                 DB_TYPE: postgres
                 HOST: forgejo-db.forge.svc.cluster.local:5432
