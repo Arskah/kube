@@ -16,12 +16,9 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: frontend
-          image: forge.aarnihalinen.fi/public/tp-rent-frontend:latest@sha256:cdb16df333eeffc37652339cfc98423b63b99f69ac1280c6145bdbaee4437aa2
-          env:
-            - name: REACT_APP_BACKEND_URL
-              value: https://tp.aarnihalinen.fi/api
+          image: forge.aarnihalinen.fi/public/tp-rent-frontend:371876db4298381ae5753b7d02f9b8d6fa033a6c@sha256:26880f23b840b431f03289f8036a1b5996e50bdc0fd0f9a956d489b649a38d51
           ports:
-            - containerPort: 80
+            - containerPort: 8080
               name: http
           # securityContext:
           #   allowPrivilegeEscalation: false

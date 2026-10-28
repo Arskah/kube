@@ -16,7 +16,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: backend
-          image: forge.aarnihalinen.fi/public/tp-rent-backend:latest@sha256:896df8b479bd9a0a22b69411431a6e983c5c40e5b2440c2f5c21ec5fdca1ee2c
+          image: forge.aarnihalinen.fi/public/tp-rent-backend:371876db4298381ae5753b7d02f9b8d6fa033a6c@sha256:90c0c13d31ce82816bcc2e88b64d5e340e1fe528ae25e9c66965996bb4a38c05
           env:
             - name: DATABASE_HOST
               value: db-svc.tp-rent.svc
