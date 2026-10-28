@@ -37,6 +37,9 @@ spec:
               command: ["pg_isready", "-U", "forgejo", "-d", "forgejo"]
             initialDelaySeconds: 10
             periodSeconds: 10
+            # The default of 1s is too short on the busy node: a timed out probe takes the only
+            # database pod out of the Service, and Forgejo gets "connection refused"
+            timeoutSeconds: 5
           volumeMounts:
             - name: data
               mountPath: /var/lib/postgresql/data
