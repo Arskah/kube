@@ -13,6 +13,8 @@ spec:
   source:
     directory:
       recurse: true
+      # Transitional: lets k8s/ gain a kustomization.yml before the switch to Kustomize
+      exclude: kustomization.yml
     repoURL: https://forge.aarnihalinen.fi/arska/toiletpaper.rent.git
     targetRevision: main
     path: k8s
