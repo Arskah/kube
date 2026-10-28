@@ -38,7 +38,7 @@ kubectl apply -f app-of-apps.yml
 An Application in `apps/templates/` points at one of:
 
 - a directory in this repo with plain manifests (`caddy/`, `icecast/`, `tp-rent/`),
-- an upstream Helm chart with values inlined under `helm.valuesObject` (cilium, monitoring, gitlab-runner; nfs-storage takes its chart from the upstream git tag),
+- an upstream Helm chart with values inlined under `helm.valuesObject` (cilium, monitoring; nfs-storage takes its chart from the upstream git tag),
 - both at once via `sources:` — chart plus a repo directory of extra resources (cert-manager + its ClusterIssuers, sealed-secrets + the sealed secrets, docker-registry + its PVC/Certificate),
 - another repo (`homepage-*` → `Arskah/homepage`, `k8s/prod` and `k8s/staging`).
 

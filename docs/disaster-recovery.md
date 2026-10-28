@@ -42,7 +42,6 @@ Store these in the password manager. None of them is taken automatically.
    | `sealed-forgejo-postgres.json`             | `forge/forgejo-postgres-secret`        | `postgres-password`                                 | has to match the existing database files                         |
    | `sealed-forgejo-runner-token.json`         | `forgejo-runner/forgejo-runner-token`  | `uuid`, `token`                                     | runner registered in Forgejo (Site Administration -> Actions)    |
    | `sealed-forgejo-smtp.json`                 | `forge/forgejo-smtp`                   | `password`                                          | SMTP password of the address Forgejo sends from                  |
-   | `sealed-gitlab-runner.json`                | `gitlab-runner/gitlab-runner`          | `runner-registration-token`, `runner-token`         | GitLab runner settings                                           |
    | `sealed-grafana-admin.json`                | `monitoring/grafana-admin`             | `admin-user`, `admin-password`                      | any, it is the login of Grafana                                  |
    | `sealed-music-library-admin-password.json` | `music-library/admin-password`         | `password`                                          | has to match the existing database files                         |
    | `sealed-music-library-regcred.json`        | `music-library/regcred`                | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`                               |
