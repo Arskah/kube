@@ -63,7 +63,7 @@
   ],
   "packageRules": [
     {
-      "description": "The Forgejo registry needs a login, which Renovate does not have. The tp-rent images are not rebuilt anymore",
+      "description": "The Forgejo registry needs a login, which Renovate does not have",
       "matchDepNames": ["forge.aarnihalinen.fi/**"],
       "enabled": false
     },

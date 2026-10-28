@@ -13,9 +13,9 @@ spec:
   source:
     directory:
       recurse: true
-    repoURL: https://github.com/Arskah/kube.git
-    targetRevision: HEAD
-    path: tp-rent
+    repoURL: https://forge.aarnihalinen.fi/arska/toiletpaper.rent.git
+    targetRevision: k8s
+    path: k8s
   syncPolicy:
     automated:
       prune: true
