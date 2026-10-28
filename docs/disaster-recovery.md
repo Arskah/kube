@@ -54,6 +54,7 @@ Store these in the password manager. None of them is taken automatically.
    | `sealed-regcred-homepage-staging.json`     | `homepage-staging/regcred-homepage`    | `.dockerconfigjson`                                 | user of `registry.aarnihalinen.fi`                               |
    | `sealed-registry-htpasswd.json`            | `docker-registry/registry-htpasswd`    | `htpasswd`                                          | bcrypt hash of the registry password                             |
    | `sealed-tp-rent-db.json`                   | `tp-rent/db-password`                  | `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` | has to match the existing database files                         |
+   | `sealed-tp-rent-regcred-forge.json`        | `tp-rent/regcred-forge`                | `.dockerconfigjson`                                 | `read:package` token of the `cluster-pull` user in Forgejo       |
 
    `scripts/` has a script for each secret that gets rotated: it asks for or generates the value, seals it and checks
    the result. The others are sealed with the commands under [Sealing the secrets again](#sealing-the-secrets-again).

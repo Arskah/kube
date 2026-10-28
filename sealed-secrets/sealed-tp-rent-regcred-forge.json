@@ -1,0 +1,20 @@
+{
+  "kind": "SealedSecret",
+  "apiVersion": "bitnami.com/v1alpha1",
+  "metadata": {
+    "name": "regcred-forge",
+    "namespace": "tp-rent"
+  },
+  "spec": {
+    "template": {
+      "metadata": {
+        "name": "regcred-forge",
+        "namespace": "tp-rent"
+      },
+      "type": "kubernetes.io/dockerconfigjson"
+    },
+    "encryptedData": {
+      ".dockerconfigjson": "AgA3LMHISoCpnKSx0xHrKETQvdaEiIQO+ZYmdKElOTtErZqxY1+0yLaCg8RRp5jgsdMUExEhVRCOwP6BxiQlKQb3vtndRS6r1MAe+JFLrJH0tdb08Hlc1lGiINnlfvw4b2i+2V7MASdScSYK6abS33LqJNRi58svshP98rCJ2x1ZvBHlTTPcD4bGz2URGxSK9SbGBdINQbTkviDPvoLLBiWwolR3/kgj9Z7eYZ6r8rr5jTHeM9glk+aJSr4qqghCycY9WQ45ecHQKrcN/1DySRT/WlAGo4A4V11em+kjXLYAb6l1FNRMN1LbOtxszudH0i1EjPe3wCT54KXXWC+3hWo0w8Elol25tkZqJaKbuYSxDHNqFAe+F4QeBwK7bE8qIUP1vVN1GRMmF8B+Db4YGZ+5NVjkHu2DS7Zbht0DwKSWha/8vfA/33ya+A+sJAyI6uxYoZlUH1HygDCuhqxi2XA9uO7KT8+cA9lC/F6YJSMLTKplASgvzYHQERPqc+YfWqkGp0iDYSm7CQEUOnbPUShk1xoaHWsCpoj+C9PuZt+XBqql41Uexmz6dJ+bWdBNjDZ4b/rt0UkuMuM21Tr1gAmRfUP911znMBBOzWIiLRRImSC4iqVxclJZH3HoQAm+2N5Wdofdn3O/3Sn+CeRualYZLIgVh4z2UaMXWzCacTS8mqdfcVRVPhI0lml2Atsy8BgzsSGJaLCT32Wa/UwP+8FxU6r/cWKa8fympQwRI7feaR/GM7uwilprPr6azi/7t/dGYOykkgkiPOMoV7XbNWrVwcXes35Ndpw6vgUkWYPix2CLZ/fe1Dj7i4kNSIiphR5ddHt4PBp9Ms9nHm0+lIt0QY33Lj8wUGgjr8VFcyf1iGsEPEy+jr8GXtbNQ2O8yPJgdh9xQ1TkW0iknDrl7BfCeyk2YbehyBhP9QScbnZH6pDubisgYvdUBRgeGjCu6tcrUxcsCX7O"
+    }
+  }
+}

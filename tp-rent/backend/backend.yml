@@ -14,9 +14,11 @@ spec:
         app: backend
     spec:
       automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: regcred-forge
       containers:
         - name: backend
-          image: registry.gitlab.com/arskah/toiletpaper.rent/backend:latest@sha256:dbebcc49919e963964f33e9b6cbfe0f296a241375b84002ab906ad86c382282a
+          image: forge.aarnihalinen.fi/arska/tp-rent-backend:latest@sha256:896df8b479bd9a0a22b69411431a6e983c5c40e5b2440c2f5c21ec5fdca1ee2c
           env:
             - name: DATABASE_HOST
               value: db-svc.tp-rent.svc
