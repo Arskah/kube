@@ -40,7 +40,7 @@ Store these in the password manager. None of them is taken automatically.
    | `sealed-alertmanager-smtp.json`            | `monitoring/alertmanager-smtp`        | `password`                                          | SMTP password of the address Alertmanager sends from             |
    | `sealed-ddns-digitalocean-token.json`      | `ddns/digitalocean-token`             | `token`                                             | DigitalOcean API token, scopes `domain:read` and `domain:update` |
    | `sealed-forgejo-postgres.json`             | `forge/forgejo-postgres-secret`       | `postgres-password`                                 | has to match the existing database files                         |
-   | `sealed-forgejo-runner-token.json`         | `forgejo-runner/forgejo-runner-token` | `uuid`, `token`                                     | runner registered in Forgejo (Site Administration -> Actions)    |
+   | `sealed-forgejo-runner-token.json`         | `forgejo-runner/forgejo-runner-token` | `token`                                             | runner of the user `arska` (Settings -> Actions -> Runners)      |
    | `sealed-forgejo-smtp.json`                 | `forge/forgejo-smtp`                  | `password`                                          | SMTP password of the address Forgejo sends from                  |
    | `sealed-grafana-admin.json`                | `monitoring/grafana-admin`            | `admin-user`, `admin-password`                      | any, it is the login of Grafana                                  |
    | `sealed-music-library-admin-password.json` | `music-library/admin-password`        | `password`                                          | has to match the existing database files                         |
@@ -68,14 +68,13 @@ Volumes are directories on the NAS, created by the NFS CSI driver and named afte
 policy is `Retain`, so the directories survive the cluster, but a new cluster creates new, empty directories with new
 names. Without this table there is no way to tell which old directory belonged to what.
 
-| Claim                                | Directory on the NAS                            |
-| ------------------------------------ | ----------------------------------------------- |
-| `tp-rent/db-pvc`                     | `/k8s/pvc-a17cd4de-4761-4060-9967-be89708a50a5` |
-| `forge/gitea-shared-storage`         | `/k8s/pvc-aea39d3d-af29-4ba4-bf64-e8167a31d202` |
-| `forge/data-forgejo-db-0`            | `/k8s/pvc-f212e744-2350-4ba5-b9dc-b06e9341d201` |
-| `forge/forgejo-db-backup`            | `/k8s/pvc-a5d97835-7905-41c4-9a20-cd6fccdefbaa` |
-| `forgejo-runner/forgejo-runner-data` | `/k8s/pvc-c65ac5f8-649e-44ed-954a-31e1ff1d15ec` |
-| `music-library/data-postgres-0`      | `/k8s/pvc-0ff2de14-ff60-410a-8385-dadfe31886e0` |
+| Claim                           | Directory on the NAS                            |
+| ------------------------------- | ----------------------------------------------- |
+| `tp-rent/db-pvc`                | `/k8s/pvc-a17cd4de-4761-4060-9967-be89708a50a5` |
+| `forge/gitea-shared-storage`    | `/k8s/pvc-aea39d3d-af29-4ba4-bf64-e8167a31d202` |
+| `forge/data-forgejo-db-0`       | `/k8s/pvc-f212e744-2350-4ba5-b9dc-b06e9341d201` |
+| `forge/forgejo-db-backup`       | `/k8s/pvc-a5d97835-7905-41c4-9a20-cd6fccdefbaa` |
+| `music-library/data-postgres-0` | `/k8s/pvc-0ff2de14-ff60-410a-8385-dadfe31886e0` |
 
 Update the table when claims are added:
 
