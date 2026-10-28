@@ -48,7 +48,7 @@ spec:
         fsGroup: 1001
       initContainers:
         - name: build-config
-          image: busybox:1.36
+          image: busybox:1.36@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662
           securityContext:
             runAsUser: 1001
             runAsGroup: 1001
@@ -88,7 +88,7 @@ spec:
               mountPath: /template
       containers:
         - name: runner
-          image: data.forgejo.org/forgejo/runner:13
+          image: data.forgejo.org/forgejo/runner:13@sha256:ca3d5eea46004789a175d1369eec6829d3ea9bfbe2011a06625b4bdaa55f7552
           securityContext:
             runAsUser: 1001
             runAsGroup: 1001
@@ -101,7 +101,7 @@ spec:
             - name: data
               mountPath: /data
         - name: dind
-          image: docker:dind
+          image: docker:dind@sha256:9e79b879b177fbd72c34376a3dd3d91747da5db49e1f560f76aea59561471977
           securityContext:
             privileged: true
           command: ["dockerd", "-H", "tcp://127.0.0.1:2375", "--tls=false"]
