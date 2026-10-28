@@ -1,0 +1,62 @@
+name: Argo CD diff preview
+
+on:
+  workflow_call:
+
+jobs:
+  argocd-diff-preview:
+    name: Argo CD diff preview
+    runs-on: ubuntu-26.04
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: pull-request
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          path: main
+
+      # Renders both branches with a real Argo CD in a throwaway kind cluster. Everything it reads
+      # is public (this repo, the charts, the other app repos), so it needs no credentials, and it
+      # never talks to the real cluster. The Applications of this repo that track HEAD are pointed
+      # at the PR branch.
+      - name: Render the Applications of both branches
+        run: |
+          docker run \
+            --network=host \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v "$PWD/main:/base-branch" \
+            -v "$PWD/pull-request:/target-branch" \
+            -v "$PWD/output:/output" \
+            -e TARGET_BRANCH="refs/pull/${{ github.event.number }}/merge" \
+            -e REPO="${{ github.repository }}" \
+            -e OUTPUT_APP_MANIFESTS=true \
+            -e ARGOCD_CHART_VERSION=10.11.6 \
+            dagandersen/argocd-diff-preview:v0.2.17@sha256:ea90848df29337b50d5058330210b38e39232360b78d9c60951fc92e454c6941
+
+      - name: Post the diff on the PR
+        # Replaces the comment of the previous run instead of adding one per push
+        run: |
+          gh pr comment "${{ github.event.number }}" --repo "${{ github.repository }}" \
+            --body-file output/diff.md --edit-last ||
+            gh pr comment "${{ github.event.number }}" --repo "${{ github.repository }}" \
+              --body-file output/diff.md
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      # Trial: lint what Argo CD rendered instead of scripts/render-charts.sh. Only the changed
+      # Applications are in output/target, and the ignorePaths of .kube-linter.yml do not match
+      # these paths yet, so this does not fail the check.
+      - name: List the rendered manifests
+        if: always()
+        run: find output -type f | sort
+
+      - uses: stackrox/kube-linter-action@87802a2f4e01abebb3ee3c67a3002fea71f6eae5 # v1.0.7
+        if: always()
+        continue-on-error: true
+        with:
+          directory: output/target
+          config: pull-request/.kube-linter.yml
+          # renovate: datasource=github-releases depName=stackrox/kube-linter
+          version: v0.8.3
