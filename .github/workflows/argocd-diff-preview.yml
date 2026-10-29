@@ -23,9 +23,20 @@ jobs:
       # at the PR branch.
       - name: Render the Applications of both branches
         run: |
+          # The Argo CD chart pulls Redis from ECR Public, whose anonymous rate limit the shared IPs
+          # of the GitHub runners hit when several runs start at once
+          # (https://github.com/dag-andersen/argocd-diff-preview/issues/507)
+          mkdir argocd-config
+          cat >argocd-config/values-override.yaml <<'VALUES'
+          redis:
+            image:
+              repository: mirror.gcr.io/library/redis
+          VALUES
+
           docker run \
             --network=host \
             -v /var/run/docker.sock:/var/run/docker.sock \
+            -v "$PWD/argocd-config:/argocd-config" \
             -v "$PWD/main:/base-branch" \
             -v "$PWD/pull-request:/target-branch" \
             -v "$PWD/output:/output" \
