@@ -29,7 +29,7 @@ spec:
                 readOnly: true
               - name: data
                 mountPath: /var/lib/alloy
-          # The export file is only readable by root
+          # Writes its read positions to the hostPath /var/lib/alloy, which is owned by root
           securityContext:
             runAsUser: 0
             runAsGroup: 0
