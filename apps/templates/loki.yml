@@ -1,0 +1,89 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: loki
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  destination:
+    namespace: monitoring
+    server: https://kubernetes.default.svc
+  project: infra
+  sources:
+    - repoURL: https://github.com/Arskah/kube.git
+      targetRevision: HEAD
+      path: traffic
+    - repoURL: https://grafana.github.io/helm-charts
+      targetRevision: 7.5.0
+      chart: loki
+      helm:
+        releaseName: loki
+        version: v3
+        valuesObject:
+          deploymentMode: SingleBinary
+          loki:
+            auth_enabled: false
+            commonConfig:
+              replication_factor: 1
+            storage:
+              type: filesystem
+            schemaConfig:
+              configs:
+                - from: "2026-10-01"
+                  store: tsdb
+                  object_store: filesystem
+                  schema: v13
+                  index:
+                    prefix: index_
+                    period: 24h
+            limits_config:
+              retention_period: 720h
+            compactor:
+              retention_enabled: true
+              delete_request_store: filesystem
+          singleBinary:
+            replicas: 1
+            persistence:
+              size: 5Gi
+            resources:
+              requests:
+                cpu: 50m
+                memory: 256Mi
+              limits:
+                memory: 512Mi
+          # The scalable targets of the default deployment mode
+          read:
+            replicas: 0
+          write:
+            replicas: 0
+          backend:
+            replicas: 0
+          # Alloy writes to the single binary directly
+          gateway:
+            enabled: false
+          chunksCache:
+            enabled: false
+          resultsCache:
+            enabled: false
+          lokiCanary:
+            enabled: false
+          test:
+            enabled: false
+          # Loki has no rules here, so the sidecar that loads them is not needed
+          sidecar:
+            rules:
+              enabled: false
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - ServerSideApply=true
+    retry:
+      limit: 10
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m

@@ -76,6 +76,33 @@ spec:
             enabled: true
           ui:
             enabled: true
+          # Envoy reports every request through the Gateway as an L7 flow, with the request headers.
+          # Redact unnecessary stuff
+          redact:
+            enabled: true
+            http:
+              urlQuery: true
+              userInfo: true
+              headers:
+                allow:
+                  - User-Agent
+                  - Referer
+          export:
+            static:
+              enabled: true
+              filePath: /var/run/cilium/hubble/events.log
+              allowList:
+                - '{"event_type":[{"type":129}],"source_label":["reserved:ingress"]}'
+                - '{"event_type":[{"type":129}],"destination_label":["reserved:ingress"]}'
+              fieldMask:
+                - time
+                - IP
+                - l7
+                - source.namespace
+                - destination.namespace
+                - node_name
+              fileMaxSizeMb: 10
+              fileMaxBackups: 5
         gatewayAPI:
           enabled: true
           # Offer HTTP/2 to clients
