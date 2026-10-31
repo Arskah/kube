@@ -82,6 +82,12 @@
       "dependencyDashboardApproval": true
     },
     {
+      "description": "A new PostgreSQL major cannot start on the data directory of the old one, so the database has to be dumped and restored by hand",
+      "matchDepNames": ["postgres"],
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true
+    },
+    {
       "description": "tuppr upgrades the cluster to these versions as soon as the PR is merged and does not check that the step is supported. Talos has to go through every minor version, so each one gets its own PR",
       "matchDepNames": [
         "ghcr.io/siderolabs/talos",

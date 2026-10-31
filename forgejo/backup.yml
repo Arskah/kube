@@ -31,7 +31,7 @@ spec:
           restartPolicy: OnFailure
           containers:
             - name: pg-dump
-              image: postgres:17@sha256:31ba9c94a03ada9988f2bb493a22a75eef3a185884533e5cdbcd498ea835b08f
+              image: postgres:17.11@sha256:31ba9c94a03ada9988f2bb493a22a75eef3a185884533e5cdbcd498ea835b08f
               command: ["bash", "-c"]
               args:
                 - |
