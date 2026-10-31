@@ -53,10 +53,11 @@ data:
         template = `{{ .type | lower }}`
       }
 
-      // The User-Agent is only on requests. An empty one counts as a bot.
+      // The User-Agent is only on requests. An empty one counts as a bot, and so does one with a
+      // contact URL ("+https://..."), which is how crawlers sign themselves.
       stage.template {
         source   = "client"
-        template = `{{ if eq .type "request" }}{{ if or (not .user_agent) (regexMatch "(?i)bot|crawl|spider|slurp|scrapy|curl|wget|python|go-http|go-git|java/|okhttp|axios|node-fetch|headless|httpclient|libwww|facebookexternalhit|meta-externalagent|bytespider|scan|zgrab|masscan|nmap|nuclei" .user_agent) }}bot{{ else }}browser{{ end }}{{ end }}`
+        template = `{{ if eq .type "request" }}{{ if or (not .user_agent) (regexMatch "(?i)bot|crawl|spider|slurp|scrapy|curl|wget|python|go-http|go-git|java/|okhttp|axios|node-fetch|headless|httpclient|libwww|facebookexternalhit|meta-externalagent|bytespider|scan|zgrab|masscan|nmap|nuclei|\\+https?://" .user_agent) }}bot{{ else }}browser{{ end }}{{ end }}`
       }
 
       // The client is the source of a request and the destination of a response. Requests
