@@ -77,8 +77,7 @@ spec:
           ui:
             enabled: true
           # Envoy reports every request through the Gateway as an L7 flow, with the request headers.
-          # Only the headers needed to tell crawlers from people are kept, so that tokens and cookies
-          # do not end up in the flows or in Loki.
+          # Redact unnecessary stuff
           redact:
             enabled: true
             http:
@@ -88,8 +87,6 @@ spec:
                 allow:
                   - User-Agent
                   - Referer
-          # Write the L7 flows of the Gateway (requests from Envoy, responses to it) to a file on the
-          # node, from where Alloy (alloy.yml) ships them to Loki.
           export:
             static:
               enabled: true

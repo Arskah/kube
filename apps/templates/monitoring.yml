@@ -62,7 +62,6 @@ spec:
           # with `helm template`, which cannot look up the existing one. Every sync then restarted Grafana.
           admin:
             existingSecret: grafana-admin
-          # The Gateway requests that Alloy ships to Loki (loki.yml, alloy.yml)
           additionalDataSources:
             - name: Loki
               uid: loki

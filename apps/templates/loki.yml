@@ -1,7 +1,3 @@
-# Log store for the requests that come in through the public Gateway. Alloy (alloy.yml) ships
-# the Hubble flow export of Envoy here, and the Grafana dashboard in traffic/ reads it (traffic/
-# also has the pipeline of Alloy). A single binary with its index and chunks on one NFS volume is
-# plenty for this volume of logs.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
