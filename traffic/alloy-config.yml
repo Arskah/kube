@@ -1,0 +1,109 @@
+# The pipeline of Alloy (apps/templates/alloy.yml): tails the Hubble export of the Gateway flows
+# on each node and ships them to Loki with labels for the host, the client type and the origin.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alloy-config
+  namespace: monitoring
+data:
+  config.alloy: |
+    local.file_match "hubble" {
+      path_targets = [{"__path__" = "/var/run/cilium/hubble/events.log"}]
+    }
+
+    loki.source.file "hubble" {
+      targets       = local.file_match.hubble.targets
+      forward_to    = [loki.process.gateway.receiver]
+      tail_from_end = true
+    }
+
+    loki.process "gateway" {
+      forward_to = [loki.write.loki.receiver]
+
+      stage.json {
+        expressions = {
+          time       = "flow.time",
+          type       = "flow.l7.type",
+          url        = "flow.l7.http.url",
+          source     = "flow.IP.source",
+          destination = "flow.IP.destination",
+          code       = "flow.l7.http.code",
+          user_agent = "flow.l7.http.headers[?key=='User-Agent'].value | [0]",
+        }
+      }
+
+      stage.timestamp {
+        source = "time"
+        format = "RFC3339Nano"
+      }
+
+      stage.regex {
+        source     = "url"
+        expression = "^[a-z]+://(?P<url_host>[^/:]+)(:[0-9]+)?(?P<path>[^?]*)"
+      }
+
+      // Port 80 accepts any Host header, so only the hostnames of the Gateway become label values
+      stage.template {
+        source   = "host"
+        template = `{{ if regexMatch "^((sik75|jellyfin|icecast|forge|tp|www|staging|music)\\.)?aarnihalinen\\.fi$" .url_host }}{{ .url_host }}{{ else }}other{{ end }}`
+      }
+
+      stage.template {
+        source   = "type"
+        template = `{{ .type | lower }}`
+      }
+
+      // The User-Agent is only on requests. An empty one counts as a bot.
+      stage.template {
+        source   = "client"
+        template = `{{ if eq .type "request" }}{{ if or (not .user_agent) (regexMatch "(?i)bot|crawl|spider|slurp|scrapy|curl|wget|python|go-http|go-git|java/|okhttp|axios|node-fetch|headless|httpclient|libwww|facebookexternalhit|meta-externalagent|bytespider|scan|zgrab|masscan|nmap|nuclei" .user_agent) }}bot{{ else }}browser{{ end }}{{ end }}`
+      }
+
+      // The client is the source of a request and the destination of a response. Requests
+      // from the LAN, and from the cluster itself through the router, come from the router.
+      stage.template {
+        source   = "client_ip"
+        template = `{{ if eq .type "response" }}{{ .destination }}{{ else }}{{ .source }}{{ end }}`
+      }
+
+      stage.template {
+        source   = "origin"
+        template = `{{ if hasPrefix "192.168.86." .client_ip }}lan{{ else }}internet{{ end }}`
+      }
+
+      // Unbounded values go to structured metadata, which queries can group by without
+      // making a stream for each value
+      stage.structured_metadata {
+        values = {
+          client_ip  = "",
+          user_agent = "",
+          path       = "",
+          code       = "",
+        }
+      }
+
+      stage.labels {
+        values = {
+          host   = "",
+          type   = "",
+          client = "",
+          origin = "",
+        }
+      }
+
+      stage.label_drop {
+        values = ["filename"]
+      }
+
+      stage.static_labels {
+        values = {
+          job = "gateway",
+        }
+      }
+    }
+
+    loki.write "loki" {
+      endpoint {
+        url = "http://loki.monitoring.svc:3100/loki/api/v1/push"
+      }
+    }

@@ -1,0 +1,88 @@
+# Ships the requests that come in through the public Gateway to Loki (loki.yml), to see how much
+# of the traffic is crawlers. The Cilium agents write the L7 flows of Envoy to a file (see
+# hubble.export in cilium.yml), so Alloy runs on every node and tails that file. Only a few
+# low-cardinality labels are set: the client IP, User-Agent, path and status go to structured
+# metadata.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: alloy
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  destination:
+    namespace: monitoring
+    server: https://kubernetes.default.svc
+  project: infra
+  source:
+    repoURL: https://grafana.github.io/helm-charts
+    targetRevision: 1.15.0
+    chart: alloy
+    helm:
+      releaseName: alloy
+      version: v3
+      valuesObject:
+        alloy:
+          # The read positions survive restarts on the node, so lines are not shipped twice
+          storagePath: /var/lib/alloy
+          enableReporting: false
+          mounts:
+            extra:
+              - name: hubble
+                mountPath: /var/run/cilium/hubble
+                readOnly: true
+              - name: data
+                mountPath: /var/lib/alloy
+          # The export file is only readable by root
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+          resources:
+            requests:
+              cpu: 20m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
+          # In traffic/alloy-config.yml, because the chart runs an inline config through tpl,
+          # which would take the templates of the pipeline for its own
+          configMap:
+            create: false
+            name: alloy-config
+            key: config.alloy
+        configReloader:
+          resources:
+            requests:
+              cpu: 10m
+              memory: 50Mi
+            limits:
+              memory: 64Mi
+        controller:
+          type: daemonset
+          # Envoy also runs on the control plane node, where the router sends the public traffic
+          tolerations:
+            - key: node-role.kubernetes.io/control-plane
+              operator: Exists
+              effect: NoSchedule
+          volumes:
+            extra:
+              - name: hubble
+                hostPath:
+                  path: /var/run/cilium/hubble
+                  type: DirectoryOrCreate
+              - name: data
+                hostPath:
+                  path: /var/lib/alloy
+                  type: DirectoryOrCreate
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+    retry:
+      limit: 10
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m

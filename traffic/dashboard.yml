@@ -1,0 +1,683 @@
+# The Grafana dashboard of the requests through the public Gateway (Loki, from alloy.yml) and of
+# what serving them costs (Envoy bytes and backend CPU, from Prometheus). The sidecar of Grafana
+# loads every ConfigMap with the grafana_dashboard label in this namespace.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-traffic-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  gateway-traffic.json: |
+    {
+      "uid": "gateway-traffic",
+      "title": "Gateway traffic",
+      "tags": [
+        "gateway",
+        "loki"
+      ],
+      "timezone": "browser",
+      "schemaVersion": 39,
+      "editable": true,
+      "refresh": "5m",
+      "time": {
+        "from": "now-24h",
+        "to": "now"
+      },
+      "templating": {
+        "list": [
+          {
+            "name": "origin",
+            "label": "Origin",
+            "type": "custom",
+            "query": "internet,lan",
+            "current": {
+              "text": "internet",
+              "value": "internet"
+            },
+            "includeAll": true,
+            "allValue": ".+",
+            "multi": false,
+            "options": []
+          },
+          {
+            "name": "host",
+            "label": "Host",
+            "type": "query",
+            "datasource": {
+              "type": "loki",
+              "uid": "loki"
+            },
+            "query": {
+              "label": "host",
+              "stream": "{job=\"gateway\"}",
+              "type": 1
+            },
+            "definition": "label_values(host)",
+            "includeAll": true,
+            "allValue": ".+",
+            "multi": true,
+            "refresh": 2,
+            "current": {
+              "text": "All",
+              "value": "$__all"
+            }
+          }
+        ]
+      },
+      "panels": [
+        {
+          "type": "stat",
+          "title": "Requests",
+          "description": "Requests in the selected time range",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": {
+                "type": "loki",
+                "uid": "loki"
+              },
+              "expr": "sum(count_over_time({job=\"gateway\", type=\"request\", origin=~\"$origin\", host=~\"$host\"}[$__range]))",
+              "queryType": "instant"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "decimals": 0
+            },
+            "overrides": []
+          },
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ]
+            },
+            "colorMode": "none",
+            "graphMode": "none"
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 0,
+            "w": 6,
+            "h": 4
+          },
+          "id": 1
+        },
+        {
+          "type": "stat",
+          "title": "Share from bots",
+          "description": "Requests whose User-Agent looks like a crawler, script or scanner, or is missing",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": {
+                "type": "loki",
+                "uid": "loki"
+              },
+              "expr": "sum(count_over_time({job=\"gateway\", type=\"request\", client=\"bot\", origin=~\"$origin\", host=~\"$host\"}[$__range])) / sum(count_over_time({job=\"gateway\", type=\"request\", origin=~\"$origin\", host=~\"$host\"}[$__range]))",
+              "queryType": "instant"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percentunit",
+              "decimals": 1
+            },
+            "overrides": []
+          },
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ]
+            },
+            "colorMode": "none",
+            "graphMode": "none"
+          },
+          "gridPos": {
+            "x": 6,
+            "y": 0,
+            "w": 6,
+            "h": 4
+          },
+          "id": 2
+        },
+        {
+          "type": "stat",
+          "title": "Distinct clients",
+          "description": "Distinct client IPs",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": {
+                "type": "loki",
+                "uid": "loki"
+              },
+              "expr": "count(sum by (client_ip) (count_over_time({job=\"gateway\", type=\"request\", origin=~\"$origin\", host=~\"$host\"}[$__range])))",
+              "queryType": "instant"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "decimals": 0
+            },
+            "overrides": []
+          },
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ]
+            },
+            "colorMode": "none",
+            "graphMode": "none"
+          },
+          "gridPos": {
+            "x": 12,
+            "y": 0,
+            "w": 6,
+            "h": 4
+          },
+          "id": 3
+        },
+        {
+          "type": "stat",
+          "title": "Errors (4xx/5xx)",
+          "description": "Responses with status 4xx or 5xx. Scanners probing for /wp-login.php and the like show up as 404s.",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": {
+                "type": "loki",
+                "uid": "loki"
+              },
+              "expr": "sum(count_over_time({job=\"gateway\", type=\"response\", origin=~\"$origin\", host=~\"$host\"} | code=~\"[45]..\"[$__range]))",
+              "queryType": "instant"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "decimals": 0
+            },
+            "overrides": []
+          },
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ]
+            },
+            "colorMode": "none",
+            "graphMode": "none"
+          },
+          "gridPos": {
+            "x": 18,
+            "y": 0,
+            "w": 6,
+            "h": 4
+          },
+          "id": 4
+        },
+        {
+          "type": "timeseries",
+          "title": "Requests by host and client",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": {
+                "type": "loki",
+                "uid": "loki"
+              },
+              "expr": "sum by (host, client) (count_over_time({job=\"gateway\", type=\"request\", origin=~\"$origin\", host=~\"$host\"}[$__auto]))",
+              "legendFormat": "{{host}} {{client}}"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "custom": {
+                "stacking": {
+                  "mode": "normal"
+                },
+                "fillOpacity": 30,
+                "drawStyle": "line",
+                "lineWidth": 1
+              }
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": {
+              "displayMode": "table",
+              "placement": "right",
+              "calcs": [
+                "sum"
+              ]
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 4,
+            "w": 24,
+            "h": 9
+          },
+          "id": 5
+        },
+        {
+          "type": "table",
+          "title": "Top User-Agents",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": {
+                "type": "loki",
+                "uid": "loki"
+              },
+              "expr": "topk(25, sum by (user_agent, client) (count_over_time({job=\"gateway\", type=\"request\", origin=~\"$origin\", host=~\"$host\"}[$__range])))",
+              "queryType": "instant",
+              "legendFormat": ""
+            }
+          ],
+          "transformations": [
+            {
+              "id": "labelsToFields",
+              "options": {
+                "mode": "columns"
+              }
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true
+                },
+                "renameByName": {
+                  "Value": "Requests"
+                }
+              }
+            },
+            {
+              "id": "sortBy",
+              "options": {
+                "sort": [
+                  {
+                    "field": "Requests",
+                    "desc": true
+                  }
+                ]
+              }
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
+          "options": {
+            "showHeader": true
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 13,
+            "w": 12,
+            "h": 11
+          },
+          "id": 6
+        },
+        {
+          "type": "table",
+          "title": "Top client IPs",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": {
+                "type": "loki",
+                "uid": "loki"
+              },
+              "expr": "topk(25, sum by (client_ip) (count_over_time({job=\"gateway\", type=\"request\", origin=~\"$origin\", host=~\"$host\"}[$__range])))",
+              "queryType": "instant",
+              "legendFormat": ""
+            }
+          ],
+          "transformations": [
+            {
+              "id": "labelsToFields",
+              "options": {
+                "mode": "columns"
+              }
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true
+                },
+                "renameByName": {
+                  "Value": "Requests"
+                }
+              }
+            },
+            {
+              "id": "sortBy",
+              "options": {
+                "sort": [
+                  {
+                    "field": "Requests",
+                    "desc": true
+                  }
+                ]
+              }
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
+          "options": {
+            "showHeader": true
+          },
+          "description": "Look an address up with whois to see who runs it",
+          "gridPos": {
+            "x": 12,
+            "y": 13,
+            "w": 12,
+            "h": 11
+          },
+          "id": 7
+        },
+        {
+          "type": "table",
+          "title": "Top paths of bots",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": {
+                "type": "loki",
+                "uid": "loki"
+              },
+              "expr": "topk(25, sum by (host, path) (count_over_time({job=\"gateway\", type=\"request\", client=\"bot\", origin=~\"$origin\", host=~\"$host\"}[$__range])))",
+              "queryType": "instant",
+              "legendFormat": ""
+            }
+          ],
+          "transformations": [
+            {
+              "id": "labelsToFields",
+              "options": {
+                "mode": "columns"
+              }
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true
+                },
+                "renameByName": {
+                  "Value": "Requests"
+                }
+              }
+            },
+            {
+              "id": "sortBy",
+              "options": {
+                "sort": [
+                  {
+                    "field": "Requests",
+                    "desc": true
+                  }
+                ]
+              }
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
+          "options": {
+            "showHeader": true
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 24,
+            "w": 12,
+            "h": 11
+          },
+          "id": 8
+        },
+        {
+          "type": "timeseries",
+          "title": "Responses by status",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": {
+                "type": "loki",
+                "uid": "loki"
+              },
+              "expr": "sum by (code) (count_over_time({job=\"gateway\", type=\"response\", origin=~\"$origin\", host=~\"$host\"}[$__auto]))",
+              "legendFormat": "{{code}}"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "custom": {
+                "stacking": {
+                  "mode": "normal"
+                },
+                "fillOpacity": 30,
+                "drawStyle": "line",
+                "lineWidth": 1
+              }
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": {
+              "displayMode": "table",
+              "placement": "right",
+              "calcs": [
+                "sum"
+              ]
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "gridPos": {
+            "x": 12,
+            "y": 24,
+            "w": 12,
+            "h": 11
+          },
+          "id": 9
+        },
+        {
+          "type": "timeseries",
+          "title": "Bytes sent per backend",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum by (backend) (label_replace(rate(envoy_cluster_upstream_cx_rx_bytes_total{envoy_cluster_name=~\"gateway/cilium-gateway-public/.*\"}[$__rate_interval]), \"backend\", \"$1\", \"envoy_cluster_name\", \"gateway/cilium-gateway-public/(.*)\"))",
+              "legendFormat": "{{backend}}"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "Bps",
+              "custom": {
+                "stacking": {
+                  "mode": "none"
+                },
+                "fillOpacity": 10,
+                "drawStyle": "line",
+                "lineWidth": 1
+              }
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": {
+              "displayMode": "table",
+              "placement": "right",
+              "calcs": [
+                "mean",
+                "max"
+              ]
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "description": "Bytes Envoy received from each backend, which is about what it sent to the clients. Includes LAN traffic.",
+          "gridPos": {
+            "x": 0,
+            "y": 35,
+            "w": 12,
+            "h": 9
+          },
+          "id": 10
+        },
+        {
+          "type": "timeseries",
+          "title": "CPU of the public backends",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum by (namespace) (rate(container_cpu_usage_seconds_total{namespace=~\"forge|tp-rent|caddy|homepage-production|homepage-staging|icecast|music-library\", container!=\"\"}[$__rate_interval]))",
+              "legendFormat": "{{namespace}}"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "cores",
+              "custom": {
+                "stacking": {
+                  "mode": "normal"
+                },
+                "fillOpacity": 30,
+                "drawStyle": "line",
+                "lineWidth": 1
+              }
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": {
+              "displayMode": "table",
+              "placement": "right",
+              "calcs": [
+                "mean",
+                "max"
+              ]
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "description": "CPU is what turns traffic into electricity, more than the bytes",
+          "gridPos": {
+            "x": 12,
+            "y": 35,
+            "w": 12,
+            "h": 9
+          },
+          "id": 11
+        },
+        {
+          "type": "logs",
+          "title": "Bot requests",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": {
+                "type": "loki",
+                "uid": "loki"
+              },
+              "expr": "{job=\"gateway\", type=\"request\", client=\"bot\", origin=~\"$origin\", host=~\"$host\"} | line_format \"{{.client_ip}} {{.host}}{{.path}} {{.user_agent}}\""
+            }
+          ],
+          "options": {
+            "showTime": true,
+            "wrapLogMessage": false,
+            "sortOrder": "Descending",
+            "enableLogDetails": true
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 44,
+            "w": 24,
+            "h": 12
+          },
+          "id": 12
+        }
+      ]
+    }

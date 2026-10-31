@@ -76,6 +76,9 @@ names. Without this table there is no way to tell which old directory belonged t
 | `forge/forgejo-db-backup`       | `/k8s/pvc-a5d97835-7905-41c4-9a20-cd6fccdefbaa` |
 | `music-library/data-postgres-0` | `/k8s/pvc-0ff2de14-ff60-410a-8385-dadfe31886e0` |
 
+`monitoring/storage-loki-0` is left out on purpose: it only holds the last 30 days of Gateway request logs, and a new
+cluster can start with an empty one.
+
 Update the table when claims are added:
 
 ```sh
