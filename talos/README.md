@@ -34,7 +34,7 @@ All commands below are run from the repo root.
 ```sh
 talosctl gen config talos https://192.168.86.73:6443 \
   --with-secrets talos/secrets.yaml \
-  --talos-version v1.14.2 \
+  --talos-version v1.14.5 \
   --kubernetes-version 1.36.5 \
   --config-patch @talos/patches/all.yaml \
   --config-patch-control-plane @talos/patches/controlplane.yaml \
@@ -89,7 +89,7 @@ also has the recommended VM settings.
    [Image Factory](https://factory.talos.dev/) with the `siderolabs/qemu-guest-agent` extension, so enable the QEMU
    guest agent in the VM options.
 
-   <https://factory.talos.dev/image/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515/v1.14.2/metal-amd64.iso>
+   <https://factory.talos.dev/image/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515/v1.14.5/metal-amd64.iso>
 
 2. Create new cluster secrets. Skip this to rebuild the existing cluster with its current secrets.
 
