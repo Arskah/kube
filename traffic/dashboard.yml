@@ -113,7 +113,7 @@ data:
         {
           "type": "stat",
           "title": "Share from bots",
-          "description": "Requests whose User-Agent looks like a crawler, script or scanner, or is missing",
+          "description": "Requests the pipeline in traffic/alloy-config.yml counts as bots: crawlers and tools by User-Agent, and clients with a browser User-Agent that do not behave like a browser (see Bot requests by reason)",
           "datasource": {
             "type": "loki",
             "uid": "loki"
@@ -649,6 +649,179 @@ data:
           "id": 11
         },
         {
+          "type": "table",
+          "title": "Bot requests by reason",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": {
+                "type": "loki",
+                "uid": "loki"
+              },
+              "expr": "sum by (bot_reason) (count_over_time({job=\"gateway\", type=\"request\", client=\"bot\", origin=~\"$origin\", host=~\"$host\"}[$__range]))",
+              "queryType": "instant",
+              "legendFormat": ""
+            }
+          ],
+          "transformations": [
+            {
+              "id": "labelsToFields",
+              "options": {
+                "mode": "columns"
+              }
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true
+                },
+                "renameByName": {
+                  "Value": "Requests"
+                }
+              }
+            },
+            {
+              "id": "sortBy",
+              "options": {
+                "sort": [
+                  {
+                    "field": "Requests",
+                    "desc": true
+                  }
+                ]
+              }
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
+          "options": {
+            "showHeader": true
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 44,
+            "w": 10,
+            "h": 10
+          },
+          "id": 13,
+          "description": "The first rule that matched: known-bot (crawler or tool name in the User-Agent), no-user-agent, not-a-browser (no platform in the User-Agent), old-browser, no-accept-language, http1 (HTTP/1 over TLS), no-sec-fetch (Chrome or Firefox without Sec-Fetch-Mode)"
+        },
+        {
+          "type": "stat",
+          "title": "Clients that fetched an icon",
+          "description": "Distinct client IPs that requested a favicon or touch icon. Browsers do, scripts and most headless browsers do not. Browsers cache icons, so returning visitors may not show up.",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": {
+                "type": "loki",
+                "uid": "loki"
+              },
+              "expr": "count(sum by (client_ip) (count_over_time({job=\"gateway\", type=\"request\", origin=~\"$origin\", host=~\"$host\"} | path=~\"/(favicon|apple-touch-icon)[^/]*\"[$__range])))",
+              "queryType": "instant"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "decimals": 0
+            },
+            "overrides": []
+          },
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ]
+            },
+            "colorMode": "none",
+            "graphMode": "none"
+          },
+          "gridPos": {
+            "x": 10,
+            "y": 44,
+            "w": 4,
+            "h": 10
+          },
+          "id": 14
+        },
+        {
+          "type": "table",
+          "title": "Top clients by 404s",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": {
+                "type": "loki",
+                "uid": "loki"
+              },
+              "expr": "topk(25, sum by (client_ip) (count_over_time({job=\"gateway\", type=\"response\", origin=~\"$origin\", host=~\"$host\"} | code=\"404\"[$__range])))",
+              "queryType": "instant",
+              "legendFormat": ""
+            }
+          ],
+          "transformations": [
+            {
+              "id": "labelsToFields",
+              "options": {
+                "mode": "columns"
+              }
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true
+                },
+                "renameByName": {
+                  "Value": "404s"
+                }
+              }
+            },
+            {
+              "id": "sortBy",
+              "options": {
+                "sort": [
+                  {
+                    "field": "404s",
+                    "desc": true
+                  }
+                ]
+              }
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
+          "options": {
+            "showHeader": true
+          },
+          "gridPos": {
+            "x": 14,
+            "y": 44,
+            "w": 10,
+            "h": 10
+          },
+          "id": 15,
+          "description": "Client IPs with the most responses not found. Scanners guess paths, so a client with many 404s is probing whatever its User-Agent says."
+        },
+        {
           "type": "logs",
           "title": "Bot requests",
           "datasource": {
@@ -662,7 +835,7 @@ data:
                 "type": "loki",
                 "uid": "loki"
               },
-              "expr": "{job=\"gateway\", type=\"request\", client=\"bot\", origin=~\"$origin\", host=~\"$host\"} | line_format \"{{.client_ip}} {{.host}}{{.path}} {{.user_agent}}\""
+              "expr": "{job=\"gateway\", type=\"request\", client=\"bot\", origin=~\"$origin\", host=~\"$host\"} | line_format \"{{.client_ip}} {{.bot_reason}} {{.host}}{{.path}} {{.user_agent}}\""
             }
           ],
           "options": {
@@ -673,7 +846,7 @@ data:
           },
           "gridPos": {
             "x": 0,
-            "y": 44,
+            "y": 54,
             "w": 24,
             "h": 12
           },
