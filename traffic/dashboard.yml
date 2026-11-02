@@ -711,7 +711,7 @@ data:
             "h": 10
           },
           "id": 13,
-          "description": "The first rule that matched: known-bot (crawler or tool name in the User-Agent), no-user-agent, not-a-browser (no platform in the User-Agent), old-browser, no-accept-language, http1 (HTTP/1 over TLS), no-sec-fetch (Chrome or Firefox without Sec-Fetch-Mode)"
+          "description": "The first rule that matched: known-bot (crawler or tool name in the User-Agent), probe-path (a path only scanners ask for, such as /.env or /wp-login.php), no-user-agent, not-a-browser (no platform in the User-Agent), old-browser, no-accept-language, http1 (HTTP/1 over TLS), no-sec-fetch (Chrome or Firefox without Sec-Fetch-Mode)"
         },
         {
           "type": "stat",
