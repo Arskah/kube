@@ -35,7 +35,7 @@ All commands below are run from the repo root.
 talosctl gen config talos https://192.168.86.73:6443 \
   --with-secrets talos/secrets.yaml \
   --talos-version v1.14.2 \
-  --kubernetes-version 1.36.5 \
+  --kubernetes-version 1.36.6 \
   --config-patch @talos/patches/all.yaml \
   --config-patch-control-plane @talos/patches/controlplane.yaml \
   --config-patch-worker @talos/patches/worker.yaml \
