@@ -13,3 +13,10 @@ jobs:
 
   kube-linter:
     uses: ./.github/workflows/kube-linter.yml
+
+  argocd-diff-preview:
+    uses: ./.github/workflows/argocd-diff-preview.yml
+    # Posts the diff as a comment on the PR
+    permissions:
+      contents: read
+      pull-requests: write
