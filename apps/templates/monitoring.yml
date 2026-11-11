@@ -33,6 +33,13 @@ spec:
           enabled: false
         kubeScheduler:
           enabled: false
+        # The overcommit alerts fire when the requests would not fit on the remaining nodes after losing the largest
+        # one. Almost every workload runs on kube-node1 and the control plane is tainted, so that is never true here
+        # and the alerts were always firing.
+        defaultRules:
+          disabled:
+            KubeCPUOvercommit: true
+            KubeMemoryOvercommit: true
         alertmanager:
           alertmanagerSpec:
             # Mounted at /etc/alertmanager/secrets/alertmanager-smtp
