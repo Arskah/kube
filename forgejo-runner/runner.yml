@@ -114,7 +114,8 @@ spec:
             limits:
               # Leaves room for Forgejo and its database, which run on the same node
               cpu: 1500m
-              memory: 4Gi
+              # Keeps the sum of the memory limits on kube-node1 under its allocatable memory
+              memory: 3Gi
               # With a limit on every container, the kubelet also evicts the pod when the writable
               # layers and the emptyDirs together go over the sum of the limits. So each limit is
               # 1Gi for the container itself plus the emptyDirs it writes to: here the image store
