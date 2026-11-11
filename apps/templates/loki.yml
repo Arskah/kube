@@ -15,7 +15,7 @@ spec:
       targetRevision: HEAD
       path: traffic
     - repoURL: https://grafana.github.io/helm-charts
-      targetRevision: 7.5.0
+      targetRevision: 7.6.0
       chart: loki
       helm:
         releaseName: loki
