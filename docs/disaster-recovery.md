@@ -100,6 +100,9 @@ Checked from the outside, the router configuration itself has not been reviewed:
 - The node addresses come from DHCP and are hardcoded in this repo, so they need DHCP reservations: `192.168.86.73`
   (`kube-control`), `192.168.86.76` (`kube-node1`) and `192.168.86.87` (NAS). New VMs get new MAC addresses, so the
   reservations have to be made again.
+- The router forwards DNS to AdGuard Home at `192.168.86.33`, and the nodes, and through CoreDNS every pod, resolve
+  through the router. Its blocklists answer `0.0.0.0` for some hosts, which is why the `ddns` CronJob uses public
+  resolvers.
 - The DHCP pool of the router is `192.168.86.20`-`192.168.86.99`. `192.168.86.100`-`192.168.86.254` is handed out by
   Cilium to LoadBalancer services (`apps/templates/ip-pool.yml`), so the DHCP pool must not grow into it.
 

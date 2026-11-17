@@ -18,6 +18,14 @@ spec:
         spec:
           restartPolicy: Never
           automountServiceAccountToken: false
+          # The router forwards DNS to AdGuard Home (192.168.86.33), whose blocklists answer 0.0.0.0 for the
+          # what-is-my-IP services. The job needs nothing from inside the cluster, so it resolves through
+          # public resolvers instead
+          dnsPolicy: None
+          dnsConfig:
+            nameservers:
+              - 1.1.1.1
+              - 9.9.9.9
           securityContext:
             runAsNonRoot: true
             runAsUser: 65534
