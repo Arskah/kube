@@ -68,6 +68,26 @@ data:
         expression = "Version/(?P<safari_version>[0-9]+)[.0-9]* (Mobile/[0-9A-Z]+ )?Safari/"
       }
 
+      // The client is the source of a request and the destination of a response. Requests
+      // from the LAN, and from the cluster itself through the router, come from the router.
+      stage.template {
+        source   = "client_ip"
+        template = `{{ if eq .type "response" }}{{ .destination }}{{ else }}{{ .source }}{{ end }}`
+      }
+
+      stage.template {
+        source   = "origin"
+        template = `{{ if hasPrefix "192.168.86." .client_ip }}lan{{ else }}internet{{ end }}`
+      }
+
+      // argocd-image-updater polls the registry on forge for new tags and digests. It is the
+      // cluster's own traffic through the router, so it gets a client type of its own and is not
+      // counted as a bot.
+      stage.template {
+        source   = "image_updater"
+        template = `{{ if and (eq .type "request") (eq .origin "lan") (eq .host "forge.aarnihalinen.fi") (hasPrefix "/v2/" .path) (eq .user_agent "Go-http-client/2.0") }}true{{ end }}`
+      }
+
       // Why a request looks like a bot, empty for a browser. Scanners send browser User-Agents, so
       // besides the names of crawlers and tools this checks what real browsers do: they have a
       // platform in the User-Agent, keep up to date, send Accept-Language, use HTTP/2 over TLS
@@ -93,19 +113,7 @@ data:
 
       stage.template {
         source   = "client"
-        template = `{{ if eq .type "request" }}{{ if .bot_reason }}bot{{ else }}browser{{ end }}{{ end }}`
-      }
-
-      // The client is the source of a request and the destination of a response. Requests
-      // from the LAN, and from the cluster itself through the router, come from the router.
-      stage.template {
-        source   = "client_ip"
-        template = `{{ if eq .type "response" }}{{ .destination }}{{ else }}{{ .source }}{{ end }}`
-      }
-
-      stage.template {
-        source   = "origin"
-        template = `{{ if hasPrefix "192.168.86." .client_ip }}lan{{ else }}internet{{ end }}`
+        template = `{{ if eq .type "request" }}{{ if .image_updater }}image-updater{{ else if .bot_reason }}bot{{ else }}browser{{ end }}{{ end }}`
       }
 
       // Unbounded values go to structured metadata, which queries can group by without

@@ -105,7 +105,7 @@ data:
           "gridPos": {
             "x": 0,
             "y": 0,
-            "w": 6,
+            "w": 5,
             "h": 4
           },
           "id": 1
@@ -113,7 +113,7 @@ data:
         {
           "type": "stat",
           "title": "Share from bots",
-          "description": "Requests the pipeline in traffic/alloy-config.yml counts as bots: crawlers and tools by User-Agent, and clients with a browser User-Agent that do not behave like a browser (see Bot requests by reason)",
+          "description": "Requests the pipeline in traffic/alloy-config.yml counts as bots: crawlers and tools by User-Agent, and clients with a browser User-Agent that do not behave like a browser (see Bot requests by reason). Leaves out the registry polls of argocd-image-updater.",
           "datasource": {
             "type": "loki",
             "uid": "loki"
@@ -125,7 +125,7 @@ data:
                 "type": "loki",
                 "uid": "loki"
               },
-              "expr": "sum(count_over_time({job=\"gateway\", type=\"request\", client=\"bot\", origin=~\"$origin\", host=~\"$host\"}[$__range])) / sum(count_over_time({job=\"gateway\", type=\"request\", origin=~\"$origin\", host=~\"$host\"}[$__range]))",
+              "expr": "sum(count_over_time({job=\"gateway\", type=\"request\", client=\"bot\", origin=~\"$origin\", host=~\"$host\"}[$__range])) / sum(count_over_time({job=\"gateway\", type=\"request\", client!=\"image-updater\", origin=~\"$origin\", host=~\"$host\"}[$__range]))",
               "queryType": "instant"
             }
           ],
@@ -146,12 +146,55 @@ data:
             "graphMode": "none"
           },
           "gridPos": {
-            "x": 6,
+            "x": 5,
             "y": 0,
-            "w": 6,
+            "w": 5,
             "h": 4
           },
           "id": 2
+        },
+        {
+          "type": "stat",
+          "title": "Image updater registry polls",
+          "description": "Requests of argocd-image-updater to the registry on forge, which it polls for new image tags and digests. They come through the router from the LAN, so they show here whatever the origin is set to, and are neither bots nor browsers.",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "datasource": {
+                "type": "loki",
+                "uid": "loki"
+              },
+              "expr": "sum(count_over_time({job=\"gateway\", type=\"request\", client=\"image-updater\", host=~\"$host\"}[$__range]))",
+              "queryType": "instant"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "decimals": 0
+            },
+            "overrides": []
+          },
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ]
+            },
+            "colorMode": "none",
+            "graphMode": "none"
+          },
+          "gridPos": {
+            "x": 10,
+            "y": 0,
+            "w": 4,
+            "h": 4
+          },
+          "id": 16
         },
         {
           "type": "stat",
@@ -189,9 +232,9 @@ data:
             "graphMode": "none"
           },
           "gridPos": {
-            "x": 12,
+            "x": 14,
             "y": 0,
-            "w": 6,
+            "w": 5,
             "h": 4
           },
           "id": 3
@@ -232,9 +275,9 @@ data:
             "graphMode": "none"
           },
           "gridPos": {
-            "x": 18,
+            "x": 19,
             "y": 0,
-            "w": 6,
+            "w": 5,
             "h": 4
           },
           "id": 4
