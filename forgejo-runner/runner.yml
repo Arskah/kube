@@ -83,7 +83,7 @@ spec:
         # /proc and /sys masked, which stops it from mounting them for the job containers), and user
         # namespaces enabled on the nodes (talos/patches/all.yaml).
         - name: dind
-          image: docker:29.9.2-dind-rootless@sha256:ae083cc7de51e7a8e5a597f8fb774ca7914c408a95fc0f1477826a913479518a
+          image: docker:29.10.0-dind-rootless@sha256:5a703ad0d72cd5e4fb4beca8024d6eddef6d22a46ed1d9812bf3d24ff43ccbce
           restartPolicy: Always
           securityContext:
             privileged: true
