@@ -24,7 +24,7 @@ Started 2026-10-28 with the instance up over HTTPS and `ROOT_URL` correct.
 - [x] **SSH access.** Done: router forwards public 2222 to NodePort 32222 on `kube-control` (the host network Gateway cannot do TCP listeners). Clone URLs use `ssh://git@forge.aarnihalinen.fi:2222/...`.
 - [x] **Container and package registry.** All images are on `forge.aarnihalinen.fi/public/` (`homepage`, `music-library`, `tp-rent-*`) and pulled without a login; `docker-registry` is removed. Renovate skips `forge.aarnihalinen.fi/**`, it has no login.
 - [x] **Registry credentials.** Packages belong to the orgs `public` (public) and `private` (members only), since Forgejo decides visibility per owner. The `ci` bot user writes to both (team `ci`, Packages: Write), and its `write:package` token is what CI pushes with. The `cluster-pull` bot user reads `private` (team `cluster`, Packages: Read); `scripts/seal-forge-pull.sh` seals its token as `forge-pull` for the namespaces that run private images.
-- [x] **Public view.** `REQUIRE_SIGNIN_VIEW: false`, so public repos and profiles, and the packages of public owners, can be viewed and pulled without logging in. New repos start private (`DEFAULT_PRIVATE: private`). `robots.txt` (`robots.yml`) keeps AI training crawlers out and other crawlers off the per-commit pages.
+- [x] **Public view.** `REQUIRE_SIGNIN_VIEW: false`, so public repos and profiles, and the packages of public owners, can be viewed and pulled without logging in. New repos start private (`DEFAULT_PRIVATE: private`). `robots.txt` (`robots.yml`) disallows the whole site for every crawler.
 - [x] **Metrics.** Enable `gitea.config.metrics` and add a ServiceMonitor with the `release: monitoring` label, like Cilium.
 
 ## Things to watch
