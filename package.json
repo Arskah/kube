@@ -3,18 +3,15 @@
   "version": "0.1.0",
   "description": "K8s setup with Talos & ArgoCD",
   "scripts": {
-    "prepare": "husky"
+    "prepare": "prek install"
   },
   "author": "Aarni Halinen",
   "license": "UNLICENSED",
+  "packageManager": "pnpm@12.16.1",
   "devDependencies": {
     "@commitlint/cli": "21.2.4",
     "@commitlint/config-conventional": "21.2.4",
-    "husky": "9.1.7",
-    "lint-staged": "17.6.1",
-    "prettier": "3.10.1"
-  },
-  "lint-staged": {
-    "*": "prettier --write --ignore-unknown"
+    "@j178/prek": "0.5.11",
+    "oxfmt": "0.80.0"
   }
 }

@@ -8,8 +8,8 @@ jobs:
   check-pr-title:
     uses: ./.github/workflows/pr-title.yml
 
-  prettier:
-    uses: ./.github/workflows/prettier.yml
+  format:
+    uses: ./.github/workflows/format.yml
 
   kube-linter:
     uses: ./.github/workflows/kube-linter.yml

@@ -8,18 +8,18 @@ GitOps configuration for a single home-lab Kubernetes cluster, reconciled by Arg
 
 ## Commands
 
-Node is only used for formatting and commit linting (version in `.nvmrc`).
+Node is only used for formatting and commit linting (version in `.nvmrc`, package manager pnpm, version in `packageManager` of `package.json`).
 
 ```sh
-npm ci                      # installs husky hooks via `prepare`
-npx prettier --check .      # what CI runs
-npx prettier --write <file>
+pnpm install                # installs the prek Git hooks via `prepare`
+pnpm exec oxfmt --check     # what CI runs
+pnpm exec oxfmt <file>
 kubectl kustomize argocd    # render the ArgoCD install + patches locally
 kubectl kustomize argocd-image-updater
 ```
 
-- Pre-commit runs `prettier --write` on all staged files (lint-staged); commit-msg runs commitlint with `config-conventional`.
-- CI (`.github/workflows/check-pr.yml`) runs Prettier and lints the **PR title** with commitlint, so PR titles must be Conventional Commits too.
+- The Git hooks are run by prek (`prek.toml`): pre-commit runs oxfmt (Prettier-compatible, config in `.oxfmtrc.json`) on the staged files and fails if it changed any, so they have to be staged again; commit-msg runs commitlint with `config-conventional`.
+- CI (`.github/workflows/check-pr.yml`) runs oxfmt and lints the **PR title** with commitlint, so PR titles must be Conventional Commits too.
 
 Cluster bootstrap (from the README), only needed on a fresh cluster:
 
