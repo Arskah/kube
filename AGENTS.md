@@ -11,8 +11,7 @@ GitOps configuration for a single home-lab Kubernetes cluster, reconciled by Arg
 The tools for formatting and linting, locally and in CI, are pinned in `mise.toml` (Renovate bumps them). Node is only there for oxfmt.
 
 ```sh
-mise install                # the tools of mise.toml
-prek install                # once per clone: the Git hooks
+mise install                # the tools of mise.toml, and the Git hooks (postinstall hook)
 prek run --all-files        # the hooks below on every file, as CI does
 oxfmt <file>
 scripts/render-charts.sh && scripts/validate-manifests.sh  # kubeconform, as CI does
