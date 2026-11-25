@@ -8,18 +8,19 @@ GitOps configuration for a single home-lab Kubernetes cluster, reconciled by Arg
 
 ## Commands
 
-Node is only used for formatting and commit linting (version in `.nvmrc`).
+The tools for formatting and linting, locally and in CI, are pinned in `mise.toml` (Renovate bumps them). Node is only there for oxfmt.
 
 ```sh
-npm ci                      # installs husky hooks via `prepare`
-npx prettier --check .      # what CI runs
-npx prettier --write <file>
+mise install                # the tools of mise.toml, and the Git hooks (postinstall hook)
+prek run --all-files        # the hooks below on every file, as CI does
+oxfmt <file>
+scripts/render-charts.sh && scripts/validate-manifests.sh  # kubeconform, as CI does
 kubectl kustomize argocd    # render the ArgoCD install + patches locally
 kubectl kustomize argocd-image-updater
 ```
 
-- Pre-commit runs `prettier --write` on all staged files (lint-staged); commit-msg runs commitlint with `config-conventional`.
-- CI (`.github/workflows/check-pr.yml`) runs Prettier and lints the **PR title** with commitlint, so PR titles must be Conventional Commits too.
+- The Git hooks are run by prek (`prek.toml`): pre-commit runs oxfmt (Prettier-compatible, config in `.oxfmtrc.json`), shellcheck, actionlint and zizmor (security of the workflows) on the staged files, and fails if oxfmt changed any, so they have to be staged again; commit-msg runs committed (`committed.toml`, Conventional Commits).
+- CI (`.github/workflows/check-pr.yml`) runs the pre-commit hooks on every file, kube-linter (`.kube-linter.yml`), kubeconform (schemas of Kubernetes and of the CRDs, `scripts/validate-manifests.sh`), and checks the **PR title** with committed, so PR titles must be Conventional Commits too.
 
 Cluster bootstrap (from the README), only needed on a fresh cluster:
 

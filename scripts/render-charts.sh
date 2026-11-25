@@ -16,6 +16,7 @@ mkdir -p "$OUT"
 
 for app in apps/templates/*.yml; do
   # One line per chart source: repo, chart, version, release name, namespace
+  # shellcheck disable=SC2016 # $ns is a variable of yq, not of the shell
   yq -N 'select(.kind == "Application") | .spec.destination.namespace as $ns |
     ([.spec.source] + (.spec.sources // [])) | .[] | select(. != null and .chart != null) |
     [.repoURL, .chart, .targetRevision, (.helm.releaseName // .chart), $ns] | join(" ")' "$app" |

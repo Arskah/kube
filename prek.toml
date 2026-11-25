@@ -1,0 +1,43 @@
+default_install_hook_types = ["pre-commit", "commit-msg"]
+
+# The tools come from mise.toml
+[[repos]]
+repo = "local"
+
+[[repos.hooks]]
+id = "oxfmt"
+name = "oxfmt"
+entry = "oxfmt --no-error-on-unmatched-pattern"
+language = "system"
+types = ["text"]
+
+[[repos.hooks]]
+id = "shellcheck"
+name = "shellcheck"
+entry = "shellcheck"
+language = "system"
+types = ["shell"]
+
+[[repos.hooks]]
+id = "actionlint"
+name = "actionlint"
+entry = "actionlint"
+language = "system"
+files = "^\\.github/workflows/"
+types = ["yaml"]
+
+[[repos.hooks]]
+id = "zizmor"
+name = "zizmor"
+entry = "zizmor --no-progress"
+language = "system"
+files = "^\\.github/workflows/"
+types = ["yaml"]
+require_serial = true
+
+[[repos.hooks]]
+id = "committed"
+name = "committed"
+entry = "committed --commit-file"
+language = "system"
+stages = ["commit-msg"]

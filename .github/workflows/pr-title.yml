@@ -3,6 +3,9 @@ name: Check PR title
 on:
   workflow_call:
 
+permissions:
+  contents: read
+
 jobs:
   check-pr-title:
     name: Check PR title
@@ -10,14 +13,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version-file: .nvmrc
-          cache: "npm"
-      - shell: bash
-        run: npm ci
+          persist-credentials: false
+      - uses: jdx/mise-action@924e7c586e33d7d4bae9c14e26c5d22e2beb6e78 # v5.3.0
+        with:
+          install_args: committed
 
       - name: Check PR title
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
-        run: npx commitlint <<< "$PR_TITLE"
+        run: committed --commit-file - <<< "$PR_TITLE"

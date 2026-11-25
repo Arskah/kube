@@ -10,8 +10,7 @@
     "template": {
       "metadata": {
         "name": "db-password",
-        "namespace": "tp-rent",
-        "creationTimestamp": null
+        "namespace": "tp-rent"
       }
     },
     "encryptedData": {

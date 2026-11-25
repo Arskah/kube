@@ -1,0 +1,21 @@
+# Conventional Commits, as the config-conventional of commitlint checked them before: lower-case
+# subjects, no imperative mood required, and headers up to 100 characters (Renovate's are long)
+style = "conventional"
+allowed_types = [
+  "build",
+  "chore",
+  "ci",
+  "docs",
+  "feat",
+  "fix",
+  "perf",
+  "refactor",
+  "revert",
+  "style",
+  "test",
+]
+subject_length = 100
+line_length = 100
+subject_capitalized = false
+imperative_subject = false
+no_fixup = false
