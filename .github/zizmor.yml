@@ -1,0 +1,5 @@
+rules:
+  # The `$/` syntax for workflows of the same repository is not known to actionlint yet, which
+  # rejects it. `./` is fine: the reusable workflows are called from this repository only
+  self-repository:
+    disable: true

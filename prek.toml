@@ -1,21 +1,43 @@
 default_install_hook_types = ["pre-commit", "commit-msg"]
 
-# The tools are called from node_modules directly, not with `pnpm exec`: prek
-# stashes the unstaged changes while the hooks run, and pnpm would reinstall the
-# dependencies if package.json differs from the lockfile in that state.
+# The tools come from mise.toml
 [[repos]]
 repo = "local"
 
 [[repos.hooks]]
 id = "oxfmt"
 name = "oxfmt"
-entry = "node_modules/.bin/oxfmt --no-error-on-unmatched-pattern"
+entry = "oxfmt --no-error-on-unmatched-pattern"
 language = "system"
 types = ["text"]
 
 [[repos.hooks]]
-id = "commitlint"
-name = "commitlint"
-entry = "node_modules/.bin/commitlint --edit"
+id = "shellcheck"
+name = "shellcheck"
+entry = "shellcheck"
+language = "system"
+types = ["shell"]
+
+[[repos.hooks]]
+id = "actionlint"
+name = "actionlint"
+entry = "actionlint"
+language = "system"
+files = "^\\.github/workflows/"
+types = ["yaml"]
+
+[[repos.hooks]]
+id = "zizmor"
+name = "zizmor"
+entry = "zizmor --no-progress"
+language = "system"
+files = "^\\.github/workflows/"
+types = ["yaml"]
+require_serial = true
+
+[[repos.hooks]]
+id = "committed"
+name = "committed"
+entry = "committed --commit-file"
 language = "system"
 stages = ["commit-msg"]

@@ -4,12 +4,18 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+permissions:
+  contents: read
+
 jobs:
   check-pr-title:
     uses: ./.github/workflows/pr-title.yml
 
-  format:
-    uses: ./.github/workflows/format.yml
+  lint:
+    uses: ./.github/workflows/lint.yml
 
   kube-linter:
     uses: ./.github/workflows/kube-linter.yml
+
+  kubeconform:
+    uses: ./.github/workflows/kubeconform.yml

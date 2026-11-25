@@ -1,0 +1,10 @@
+# The tools of the Git hooks and of CI. `mise install`, then `prek install` once to install the hooks.
+[tools]
+node = "26.13.1"
+"npm:oxfmt" = "0.80.0"
+prek = "0.5.11"
+committed = "1.1.12"
+shellcheck = "0.11.0"
+actionlint = "1.7.12"
+zizmor = "1.33.1"
+kubeconform = "0.8.0"
