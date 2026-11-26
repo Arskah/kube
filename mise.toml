@@ -2,7 +2,7 @@
 [tools]
 node = "26.13.1"
 "npm:oxfmt" = "0.80.0"
-prek = "0.5.11"
+prek = "0.5.12"
 committed = "1.1.12"
 shellcheck = "0.11.0"
 actionlint = "1.7.12"
